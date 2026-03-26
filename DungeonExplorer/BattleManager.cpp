@@ -6,10 +6,11 @@
 #include <cstdlib>
 
 void BattleManager::StartBattle(Character& c, Monster& m){
-	/* Start condition
-	 * + Check Character live
-	 * + Skip store 
-	 * + Check invite store
+	/* TODO: Check Start condition?
+	 *	+ Check Character live
+	 *	+ Skip store 
+	 *	+ Check invite store
+	 * TODO: StoreSystem? 
 	*/
 	bool isWin = AutoBattle(c, m);
 	if (isWin)
@@ -47,6 +48,8 @@ void BattleManager::BattleReward(Character& c){
 
 	c.experience += expReward;
 	c.gold += goldReward;
+	
+	// TODO: decide item get logic 
 	if (rand() % 100 < maxRand) // 30% get item
 	{
 		if (rand() % 2 == 0) // 50% get item 
