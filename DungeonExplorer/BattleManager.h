@@ -1,7 +1,16 @@
-#include <iostream>
+// BattleManager.h
+#pragma once
+#include "Character.h"
+#include "Monster.h"
 
-using namespace std;
+class Character;
+class Monster;
 
-int main() {
-	//cout << "던전 탐험대" << endl;
-}
+class BattleManager{
+public:
+	void StartBattle(Character& c, Monster& m);   
+    
+	bool AutoBattle(Character& c, Monster& m);
+	void BattleReward(Character& c);
+
+};
