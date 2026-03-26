@@ -1,5 +1,7 @@
 // BattleManager.cpp
 #include "BattleManager.h"
+#include "Character.h"
+#include "Monster.h"
 #include <iostream>
 #include <cstdlib>
 

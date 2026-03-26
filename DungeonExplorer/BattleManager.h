@@ -1,7 +1,5 @@
 // BattleManager.h
 #pragma once
-#include "Character.h"
-#include "Monster.h"
 
 class Character;
 class Monster;
