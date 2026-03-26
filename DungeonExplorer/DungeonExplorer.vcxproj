@@ -132,6 +132,7 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="ItemManager.h" />
+    <ClInclude Include="LogSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
