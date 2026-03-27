@@ -116,7 +116,7 @@ void Inventory::EquipItem(int index)
     }
 
     // Assign the item address to the corresponding slot
-    equippedSlots[slotIndex] = &selectedItem;
+    equippedSlots[slotIndex] = selectedItem.id;
 
     cout << "[System] Equipped " << selectedItem.name << " to " << (slotIndex == 0 ? "Weapon" : "Armor") << " slot." << endl;
 }
@@ -148,4 +148,12 @@ void Inventory::PrintByRarity(const Item& item) const
 
     // Reset color to White (7) immediately!
     SetColor(7);
+}
+
+void Inventory::RemoveItem(int index)
+{
+    if (index >= 0 && index < (int)ownedItems.size()) 
+    {
+        ownedItems.erase(ownedItems.begin() + index);
+    }
 }
