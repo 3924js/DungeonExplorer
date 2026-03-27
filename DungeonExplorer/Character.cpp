@@ -1,4 +1,4 @@
-//Character.cpp
+﻿//Character.cpp
 
 #include "Character.h"
 #include <iostream>
@@ -44,9 +44,25 @@ void Character::displayStatus() const {
 
 //Level UP
 void Character::LevelUP() {
+	// if already at max level
+	if (Level >= 10) {
+		std::cout << "Can't LevelUp anymore...\n";
+		return;
+	}
+
+
 	if (EXP >= 100) {
 		++Level;
+		MaxHP += 20;
+		Attack += 5;
+		HP = MaxHP;
+		MP = MaxMP;
 		EXP = EXP - 100;
+		std::cout << "level Up!!\nCurrent Level: " << Level << "\n";
+		std::cout << "restored your HP and MP to full\n\n";
+	}
+	else {
+		std::cout << "Not enough experience to level up.\n";
 	}
 }
 
