@@ -8,6 +8,7 @@ using namespace std;
 
 // Constructor
 GameManager::GameManager(): enemy(nullptr), player(nullptr) {
+	bManager = new BattleManager();
 	// Move this to another place such as main
 	/*
 	string name;
@@ -63,3 +64,20 @@ void GameManager::generateMonster(int level) {
 	if (enemy == nullptr && player != nullptr) enemy = new Goblin("Goblin", 0, 0);
 }
 
+void GameManager::battle() {
+	if (enemy == nullptr) {
+		// 1. print a message and end the function
+		cout << "There is no Monster to Fight.\n";
+		return;
+
+		// 2. create monster and start the battle
+		//generateMonster();
+	}
+	bManager->StartBattle(*player, *enemy);
+}
+
+// Display all items in the inventory
+void GameManager::displayInventory() {
+	// use this after the inventory has benn added to the Character class
+	//player->getInven().ShowInventory();
+}

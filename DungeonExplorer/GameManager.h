@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "BattleManager.h"
 
 class Monster;
 class Character;
@@ -12,6 +13,8 @@ private:
 
 	Monster* enemy;
 	Character* player;
+	BattleManager* bManager;
+
 public:
 	static GameManager& GetInstance();
 
@@ -21,15 +24,10 @@ public:
 
 	void generateMonster(int level = 0);
 
-	void battle(Character* player);
+	void battle();
 
-	void displayInventory(Character* player);
+	void displayInventory();
 
-	Monster* getEnemy() {
-		return enemy;
-	}
-
-	Character* getPlayer() {
-		return player;
-	}
+	Monster* getEnemy() { return enemy; }
+	Character* getPlayer() { return player; }
 };
