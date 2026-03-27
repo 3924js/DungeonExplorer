@@ -7,6 +7,7 @@
 #include "Character.h"
 #include "Monster.h"
 #include "Item.h"
+#include "iomanip"
 
 
 //Statistics enum
@@ -45,6 +46,18 @@ namespace TextFormat {
 	const std::string CYAN = "\033[1;3;4;96m";
 	const std::string WHITE = "\033[1;3;4;97m";
 }
+static std::string GetHighlightColor(const Item& i) {
+	switch (i.rarity) {
+	case Rarity::Common:
+		return TextFormat::BLUE;
+	case Rarity::Rare:
+		return TextFormat::MAGENTA;
+	case Rarity::Legendary:
+		return TextFormat::YELLOW;
+	default:
+		return TextFormat::DEFAULT;
+	}
+}
 
 //Log Management Class
 class LogSystem {
@@ -69,20 +82,7 @@ private:
 
 	//print message separation line in the console
 	static void PrintLine() {
-		std::cout << "= = = = = = = = = = = = = = = = = = = = " << std::endl;
-	}
-
-	static std::string GetHighlightColor(const Item& i) {
-		switch (i.rarity) {
-		case Rarity::Common:
-			return TextFormat::BLUE;
-		case Rarity::Rare:
-			return TextFormat::MAGENTA;
-		case Rarity::Legendary:
-			return TextFormat::YELLOW;
-		default:
-			return TextFormat::DEFAULT;
-		}
+		std::cout << TextFormat::GREEN << "------------------------------" << TextFormat::DEFAULT << std::endl;
 	}
 public:
 	/* Previous String Version
@@ -187,6 +187,19 @@ public:
 		PrintLine();
 	}
 
+	static void ShowItems(std::vector<Item> Items) {
+		std::cout << ">>> There are some items... " << std::endl;
+		for (Item i : Items) {
+			std::cout << "-> " << GetHighlightColor(i) << i.name << TextFormat::DEFAULT
+				//<< std::setw(15 - i.name.size()) << i.rarity
+				//<< std::setw(15 - i.name.size()) << i.type
+				<< std::setw(15 - i.name.size()) << i.value << " Gold(s): "
+				<< i.desc
+				<< std::endl;
+		}
+		PrintLine();
+	}
+
 	static void PlayerDied() {	//Change needed if statistics counts each item separately.
 		std::cout << ">>> The player has defeated!" << std::endl;
 		PrintLine();
@@ -196,6 +209,7 @@ public:
 		std::cout << ">>> Dice has rolled: " << spots << std::endl;
 		GetInstance().Stats[IntStatTypes::ROLLED_DICE]++;
 		GetInstance().Stats[IntStatTypes::TOTAL_SPOTS] += spots;
+		PrintLine();
 	}
 
 	static void ShowStatistics() {
