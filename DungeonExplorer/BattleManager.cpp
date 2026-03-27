@@ -2,82 +2,38 @@
 #include "BattleManager.h"
 #include "Character.h"
 #include "Monster.h"
+#include "StageManager.h"
 #include <iostream>
-#include <cstdlib>
 
 void BattleManager::StartBattle(Character& c, Monster& m){
-    /* TODO: Check Start condition?
-     *	+ Check Character live
-     *	+ Skip store 
-     *	+ Check invite store
-     * TODO: StoreSystem? 
-    */
-
-    /*
     bool isWin = AutoBattle(c, m);
     if (isWin)
     {
-        std::cout << "Kill " << m.name << "win character\n"
-        BattleReward(c);
+        std::cout << "Kill " << m.getName() << "win character\n";
     }
-    else if (!isWin)
+    else
     {
-        std::cout << c.name << " die. Game Over.\n"; 
+        std::cout << c.GetName() << " die. Game Over.\n"; 
     }
-    */
 }
 
 bool BattleManager::AutoBattle(Character& c, Monster& m){
-    /*
-    std::cout << "Spawn " << m.name 
-    << " Health : " << m.health << ", Attack : " << m.attack << std::endl;
+    // TODO: Random monster spawn. to Stage
+    std::cout << "Spawn " << m.getName()
+    << " Health : " << m.getHealth() << ", Attack : " << m.getAttack() << std::endl;
 	
-    while (m.health > 0 && c.health > 0)
+    while (m.getHealth() > 0 && c.GetHP() > 0)
     {
-        m.setHealth(m.health - c.attack);
-        std::cout << c.name << " attack " << m.name 
-        << m.name << " Health  : " << m.health << std::endl;
-
-        c.setHealth(c.health - m.attack);
-        std::cout << m.name << " attack " << c.name 
-        << c.name << " Health : " << c.health << std::endl;
+        // Player attack monster
+        m.takeDamage(c.GetAttack());
+        std::cout << c.GetName() << " attack " << m.getName() 
+        << m.getName() << " Health  : " << m.getHealth() << std::endl;
+        // Monster attack player
+        c.SetHP(c.GetHP() - m.getAttack());
+        std::cout << m.getName() << " attack " << c.GetName()
+        << c.GetName() << " Health : " << c.GetHP() << std::endl;
+        // 20% Random Event
+        StageManager::GetInstance().RunRandomEvent(20);
     }
-    return c.health > 0;
-    */
-    return false; //temporary, Please delete during the process
-}
-
-void BattleManager::BattleReward(Character& c){
-    /*
-    int expReward = 50;
-    int goldReward = (rand() % 11) + 10; // 10 ~ 20 
-    int maxRand = 30;
-
-    c.experience += expReward;
-    c.gold += goldReward;
-	
-    // TODO: decide item get logic 
-    if (rand() % 100 < maxRand) // 30% get item
-    {
-        if (rand() % 2 == 0) // 50% get item 
-        {
-            c.inventory.push_back(new HealthPotion());
-        }
-        else
-        {
-            c.inventory.push_back(new AttackBoost());
-        }
-    }
-
-    if (c.experience > 99) // EXP > 99  -> Level up
-    {
-        while (c.experience > 99)
-        {
-            c.levelUP();
-            c.experience -= 100; // turn over EXP 
-        }
-    }
-    std::cout << c.name << expReward << goldReward << 
-    "Character EXP, Gold" << c.experience << c.gold << "\n";
-    */
+    return c.GetHP() > 0;
 }
