@@ -14,7 +14,7 @@ class Inventory
 private:
     // Container for owned items
     std::vector<Item> ownedItems;
-    Item* equippedSlots[(int)EquipSlot::Max];
+    int equippedSlots[(int)EquipSlot::Max];
 
 public:
     Inventory() 
@@ -22,7 +22,7 @@ public:
         // Initialize all slots to nullptr
         for (int i = 0; i < (int)EquipSlot::Max; ++i) 
         {
-            equippedSlots[i] = nullptr;
+            equippedSlots[i] = -1;
         }
     }
 
@@ -43,5 +43,9 @@ public:
     void SetColor(int color)const;
 
     void PrintByRarity(const Item& item) const;
+
+    std::vector<Item>& GetOwnedItems() { return ownedItems; }
+
+    void RemoveItem(int index);
 
 };
