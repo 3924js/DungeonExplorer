@@ -36,6 +36,7 @@
     <ClCompile Include="BattleManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RollDice.cpp">
     <ClCompile Include="GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -68,6 +69,13 @@
     <ClInclude Include="BattleManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AttackStrategy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RollDice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MakeRandom.h">
     <ClInclude Include="GameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>

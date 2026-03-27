@@ -3,10 +3,7 @@
 #include <string>
 class Goblin :public Monster {
 public:
-	Goblin(std::string name, int health, int attack) :Monster(name, health, attack) {
-		health = 10;
-		attack = 20;
-	};
+	Goblin(std::string name, int health, int attack) :Monster(name, health, attack) {};
 
 	virtual std::string getName() override;
 
@@ -19,4 +16,5 @@ public:
 
 	virtual void takeDamage(int damage) override;
 
+	virtual int Attack() override;
 };

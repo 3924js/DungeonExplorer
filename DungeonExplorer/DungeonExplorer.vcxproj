@@ -132,12 +132,18 @@
     <ClCompile Include="BattleManager.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="ItemManager.cpp" />
+<<<<<<< HEAD
+    <ClCompile Include="RollDice.cpp" />
+=======
     <ClCompile Include="MonsterFactory.cpp" />
+>>>>>>> a9995d0229de933d1e457745255b051c5d610049
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttackStrategy.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="GameFlowManager.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="MakeRandom.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="CreateMonster.h" />
     <ClInclude Include="Goblin.h" />
@@ -147,7 +153,11 @@
     <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="LogSystem.h" />
+<<<<<<< HEAD
+    <ClInclude Include="RollDice.h" />
+=======
     <ClInclude Include="MonsterFactory.h" />
+>>>>>>> a9995d0229de933d1e457745255b051c5d610049
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
