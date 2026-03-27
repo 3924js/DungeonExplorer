@@ -6,7 +6,7 @@
 class Character
 {
 public:
-	static Character* GetInstance(std::string name); //YH add
+	static Character* GetInstance(std::string name);
 	static void DestroyInstance(); //singleton instance delete
 
 	void displayStatus() const;
@@ -20,7 +20,7 @@ public:
 	int GetMP() const;
 	int GetAttack() const;
 	int GetEXP() const;
-	int GetGold() const;	//YH add
+	int GetGold() const;
 
 	void SetName(std::string name);
 	void SetLevel(int level);
@@ -30,15 +30,15 @@ public:
 	void SetMP(int mp);
 	void SetAttack(int attack);
 	void SetEXP(int exp);
-	void SetGold(int gold);	//YH add
+	void SetGold(int gold);
 
 private:
 	//Singleton Pattern
-	Character(const std::string& name);  //YH move
-	Character(const Character&) = delete; //YH add
-	Character& operator = (const Character&) = delete; //YH add
+	Character(const std::string& name); 
+	Character(const Character&) = delete;
+	Character& operator = (const Character&) = delete;
 	
-	static Character* Instance; //YH add
+	static Character* Instance;
 
 	std::string Name;
 	int Level;
@@ -48,6 +48,6 @@ private:
 	int MP;
 	int Attack;
 	int EXP;
-	int Gold;	//YH add
+	int Gold;
 };
 

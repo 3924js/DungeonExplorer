@@ -9,7 +9,7 @@ Character::Character(const std::string& name) : Name(name), Level(1), MaxHP(200)
 	MP = GetMaxMP();
 }
 
-//Singleton Pattern, YH add
+//Singleton Pattern
 Character* Character::Instance = nullptr;
 
 Character* Character::GetInstance(std::string name) {
@@ -19,7 +19,7 @@ Character* Character::GetInstance(std::string name) {
 	return Instance;
 }
 
-//singleton instance delete, YH add
+//singleton instance delete
 void Character::DestroyInstance() {
 	delete Instance;
 	Instance = nullptr;
@@ -38,8 +38,9 @@ void Character::displayStatus() const {
 	std::cout << "HP: " << HP << "/" << MaxHP << std::endl;
 	std::cout << "MP: " << MP << "/" << MaxMP << std::endl;
 	std::cout << "Attack: " << Attack << std::endl;
-	std::cout << std::endl;	//YH add
-	std::cout << "Gold: " << Gold << std::endl;	//YH add
+	std::cout << std::endl;
+	std::cout << "Gold: " << Gold << std::endl;
+	std::cout << std::endl;
 }
 
 //Level UP
@@ -49,7 +50,6 @@ void Character::LevelUP() {
 		std::cout << "Can't LevelUp anymore...\n";
 		return;
 	}
-
 
 	if (EXP >= 100) {
 		++Level;
@@ -76,7 +76,7 @@ int Character::GetHP() const { return HP; }
 int Character::GetMP() const { return MP; }
 int Character::GetAttack() const { return Attack; }
 int Character::GetEXP() const { return EXP; }
-int Character::GetGold() const { return Gold; }	//YH add
+int Character::GetGold() const { return Gold; }
 
 
 //Setter
@@ -96,9 +96,13 @@ void Character::SetMaxHP(int maxhp) {
 	if (maxhp < 0) {
 		maxhp = 0;
 	}
+	MaxHP = maxhp;
 }
 void Character::SetMaxMP(int maxmp) {
-
+	if (maxmp < 0) {
+		maxmp = 0;
+	}
+	MaxMP = maxmp;
 }
 void Character::SetHP(int hp) {
 	//HP underflow/overflow prevention
@@ -126,7 +130,6 @@ void Character::SetAttack(int attack) {
 void Character::SetEXP(int exp) {
 	EXP = exp;
 }
-//YH add
 void Character::SetGold(int gold) {
 	
 	if (gold < 0) {
