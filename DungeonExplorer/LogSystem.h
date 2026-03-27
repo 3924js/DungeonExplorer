@@ -4,6 +4,10 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "Character.h"
+#include "Monster.h"
+#include "Item.h"
+
 
 //Statistics enum
 enum IntStatTypes {
@@ -16,6 +20,7 @@ enum IntStatTypes {
 	BOUGHT_ITEM,
 	USED_ITEM,
 	ROLLED_DICE,
+	TOTAL_SPOTS,
 	COUNT
 };
 static const std::string IntStatNames[IntStatTypes::COUNT] = { "Total Battles",
@@ -26,7 +31,20 @@ static const std::string IntStatNames[IntStatTypes::COUNT] = { "Total Battles",
 															"Earned Money",
 															"Bought Items",
 															"Used Items",
-															"Rolled Dice" };
+															"Rolled Dice",
+															"Total Spots" };
+//Text Hightlight Formats
+namespace TextFormat {
+	const std::string DEFAULT = "\033[0m";
+	//bold, italic, underline, color
+	const std::string RED = "\033[1;3;4;91m";
+	const std::string GREEN = "\033[1;3;4;92m";
+	const std::string YELLOW = "\033[1;3;4;93m";
+	const std::string BLUE = "\033[1;3;4;94m";
+	const std::string MAGENTA = "\033[1;3;4;95m";
+	const std::string CYAN = "\033[1;3;4;96m";
+	const std::string WHITE = "\033[1;3;4;97m";
+}
 
 //Log Management Class
 class LogSystem {
@@ -53,7 +71,21 @@ private:
 	static void PrintLine() {
 		std::cout << "= = = = = = = = = = = = = = = = = = = = " << std::endl;
 	}
+
+	static std::string GetHighlightColor(const Item& i) {
+		switch (i.rarity) {
+		case Rarity::Common:
+			return TextFormat::BLUE;
+		case Rarity::Rare:
+			return TextFormat::MAGENTA;
+		case Rarity::Legendary:
+			return TextFormat::YELLOW;
+		default:
+			return TextFormat::DEFAULT;
+		}
+	}
 public:
+	/* Previous String Version
 	static void EnterBattle(std::vector<std::string> monsters) {
 		std::cout << ">>> The player encounters enemies!" << std::endl;
 		GetInstance().Stats[IntStatTypes::TOTAL_BATTLES]++;
@@ -62,95 +94,108 @@ public:
 			GetInstance().MonstersEncountered[name]++;
 		}
 		PrintLine();
-	}
+	}*/
 
-	/*Replace after Monster class added
-	static void EnterBattle(const std::vector<Monster>& monsters) {
+	static void EnterBattle(const std::vector<Monster*>& monsters) {
 		std::cout << ">>> The player encounters enemies!" << std::endl;
 		GetInstance().Stats[IntStatTypes::TOTAL_BATTLES]++;
-		for (Monster monster : monsters) {
-			std::cout << "-> " << monster.GetName() << " is preparing for a battle!" << std::endl;
-			GetInstance().MonsterEncountered[name]++;
+		for (Monster* monster : monsters) {
+			std::cout << "-> " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << " is preparing for a battle!" << std::endl;
+			GetInstance().MonstersEncountered[monster->getName()]++;
 		}
 		PrintLine();
 	}
-	}*/
-
+	
+	/* Previous String Version
 	static void AttackMonster(std::string monsterName, int Damage) {
 		std::cout << ">>> The player attacks the monster " << monsterName << "!" << std::endl;
 		std::cout << "-> The Monster has taken "<< Damage << " damage!" << std::endl;
 		GetInstance().Stats[IntStatTypes::ATTACKS]++;
 		GetInstance().Stats[IntStatTypes::DEALT_DAMAGE] += Damage;
 		PrintLine();
-	}
-	/*Replace after Monster class added
-	static void AttackMonster(const Monster& monster, int Damage) {
-		std::cout << ">>> The player attacks the monster " << monster.GetName() << "!" << std::endl;
-		std::cout << "-> The Monster has taken "<< Damage << " damage!" << std::endl;
-		GetInstance().Stats[IntStatTypes::ATTACKS]++;
-		GetInstance().Stats[IntStatTypes::DEALT_DAMAGE]++;
-		PrintLine();
-	}
 	}*/
 
+	static void AttackMonster(Monster* monster, int Damage) {
+		std::cout << ">>> The player attacks the monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << "!" << std::endl;
+		std::cout << "-> The Monster has taken "<< Damage << " damage!" << std::endl;
+		GetInstance().Stats[IntStatTypes::ATTACKS]++;
+		GetInstance().Stats[IntStatTypes::DEALT_DAMAGE] += Damage;
+		PrintLine();
+	}
+
+	/* Previous String Version
 	static void AttackPlayer(std::string monsterName, int Damage) {
 		std::cout << ">>> The monster " << monsterName << " attacks the player!" << std::endl;
 		std::cout << "-> The player has taken " << Damage << " damage!" << std::endl;
 		GetInstance().Stats[IntStatTypes::TAKEN_DAMAGE] += Damage;
 		PrintLine();
-	}
-	/*Replace after Monster class added
-	static void AttackPlayer(const Monster& monster, int Damage) {
-		std::cout << ">>> The monster " << monster.GetName() << " attacks the player!" << std::endl;
-		std::cout << "-> The player has taken " << Damage << " damage!" << std::endl;
-		GetInstance().Stats[IntStatTypes::TAKEN_DAMAGE]++;
-		PrintLine();
-	}
 	}*/
 
+	static void AttackPlayer(Monster* monster, int Damage) {
+		std::cout << ">>> The monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << " attacks the player!" << std::endl;
+		std::cout << "-> The player has taken " << Damage << " damage!" << std::endl;
+		GetInstance().Stats[IntStatTypes::TAKEN_DAMAGE] += Damage;
+		PrintLine();
+	}
+	/* Previous String Version
 	static void KillMonster(std::string monsterName) {
 		std::cout << ">>> The player has defeated the monster " << monsterName << "!" << std::endl;
 		GetInstance().MonstersKilled[monsterName]++;
 		PrintLine();
-	}
-	/*Replace after Monster class added
-	static void KillMonster(const Monster& monster) {
-		std::cout << ">>> The player has defeated the monster " << monster.GetName() << "!" << std::endl;
-		GetInstance().MonsterKilled[monsterName]++;
-		PrintLine();
 	}*/
 
+	static void KillMonster(Monster* monster) {
+		std::cout << ">>> The player has defeated the monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << "!" << std::endl;
+		GetInstance().MonstersKilled[monster->getName()]++;
+		PrintLine();
+	}
+
+	/* Previous String Version
 	static void BuyItem(std::string name) {	//Change needed if statistics counts each item separately.
 		std::cout << ">>> The player Bought the item " << name << "!" << std::endl;
 		GetInstance().Stats[IntStatTypes::BOUGHT_ITEM]++;
 		PrintLine();
+	}*/
+
+	static void GetReward(int Exp, int Gold, const std::vector<Item>& Items) {
+		std::cout << ">>> The player gets the rewards!" << std::endl;
+		std::cout << "-> Earend experience point: " << Exp << std::endl;
+		std::cout << "-> Earned gold: " << Exp << std::endl;
+		for (Item i : Items) {
+			std::cout << "-> Collected an item: " << GetHighlightColor(i) << i.name << TextFormat::DEFAULT << std::endl;
+		}
+		PrintLine();
 	}
 
-	/*Replace after item class added
 	static void BuyItem(Item item) {	//Change needed if statistics counts each item separately.
-		std::cout << ">>> The player Bought the item " << item.GetName() << "!" << std::endl;
+
+		std::cout << ">>> The player Bought the item " << GetHighlightColor(item) << item.name << TextFormat::DEFAULT << "!" << std::endl;
 		GetInstance().Stats[IntStatTypes::BOUGHT_ITEM]++;
 		PrintLine();
 	}
-	}*/
 
+	/* Previous String Version
 	static void UseItem(std::string name) {	//Change needed if statistics counts each item separately.
 		std::cout << ">>> The player used the item " << name << "!" << std::endl;
 		GetInstance().Stats[IntStatTypes::USED_ITEM]++;
 		PrintLine();
-	}
+	}*/
 	
-	/*Replace after item class added
 	static void UseItem(Item item) {
-		std::cout << ">>> The player used the item " << item.GetName() << "!" << std::endl;
+		std::cout << ">>> The player used the item " << GetHighlightColor(item) << item.name << TextFormat::DEFAULT << "!" << std::endl;
 		GetInstance().Stats[IntStatTypes::USED_ITEM]++;
 		PrintLine();
 	}
-	}*/
 
 	static void PlayerDied() {	//Change needed if statistics counts each item separately.
 		std::cout << ">>> The player has defeated!" << std::endl;
 		PrintLine();
+	}
+
+	static void RollDice(int spots) {
+		std::cout << ">>> Dice has rolled: " << spots << std::endl;
+		GetInstance().Stats[IntStatTypes::ROLLED_DICE]++;
+		GetInstance().Stats[IntStatTypes::TOTAL_SPOTS] += spots;
 	}
 
 	static void ShowStatistics() {
@@ -176,7 +221,6 @@ public:
 			std::cout << "-> " << i->first << ": " << i->second << " times" << std::endl;
 		}
 		std::cout << std::endl;
-		
 		PrintLine();
 	}
 };
