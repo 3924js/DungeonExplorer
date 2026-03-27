@@ -1,8 +1,9 @@
 ﻿#pragma once
-#include "BattleManager.h"
 
 class Monster;
 class Character;
+class BattleManager;
+class MonsterFactory;
 
 class GameManager {
 private:
@@ -14,6 +15,7 @@ private:
 	Monster* enemy;
 	Character* player;
 	BattleManager* bManager;
+	MonsterFactory* mFactory;
 
 public:
 	static GameManager& GetInstance();

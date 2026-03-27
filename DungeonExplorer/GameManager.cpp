@@ -1,14 +1,16 @@
 ﻿#include <iostream>
 #include <string>
 #include "GameManager.h"
-#include "Goblin.h"
 #include "Character.h"
+#include "BattleManager.h"
+#include "MonsterFactory.h";
 
 using namespace std;
 
 // Constructor
 GameManager::GameManager(): enemy(nullptr), player(nullptr) {
 	bManager = new BattleManager();
+	mFactory = new MonsterFactory();
 	// Move this to another place such as main
 	/*
 	string name;
@@ -60,8 +62,7 @@ void GameManager::generateMonster(int level) {
 	if (level == 0) level = player->GetLevel();
 
 	// Create a monster only if there is no current monster
-	// To-Do -> The monster type will be determined based on the player's current level
-	if (enemy == nullptr && player != nullptr) enemy = new Goblin("Goblin", 0, 0);
+	if (enemy == nullptr && player != nullptr) enemy = mFactory->createRandomMonster();
 }
 
 void GameManager::battle() {
