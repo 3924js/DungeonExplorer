@@ -134,6 +134,10 @@
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="RollDice.cpp" />
     <ClCompile Include="MonsterFactory.cpp" />
+    <ClCompile Include="Store.cpp" />
+    <ClCompile Include="StageManager.cpp" />
+    <ClCompile Include="StageDarkCave.cpp" />
+    <ClCompile Include="StageDirtySwamp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackStrategy.h" />
@@ -152,6 +156,12 @@
     <ClInclude Include="LogSystem.h" />
     <ClInclude Include="RollDice.h" />
     <ClInclude Include="MonsterFactory.h" />
+    <ClInclude Include="Store.h" />
+    <ClInclude Include="RandomManager.h" />
+    <ClInclude Include="Stage.h" />
+    <ClInclude Include="StageDarkCave.h" />
+    <ClInclude Include="StageDirtySwamp.h" />
+    <ClInclude Include="StageManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
