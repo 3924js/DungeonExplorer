@@ -130,9 +130,12 @@
     <ClCompile Include="BattleManager.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="ItemManager.cpp" />
+    <ClCompile Include="RollDice.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttackStrategy.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="MakeRandom.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="CreateMonster.h" />
     <ClInclude Include="Goblin.h" />
@@ -142,6 +145,7 @@
     <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="LogSystem.h" />
+    <ClInclude Include="RollDice.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
