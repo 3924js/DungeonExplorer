@@ -1,12 +1,28 @@
-//Character.cpp
+﻿//Character.cpp
 
 #include "Character.h"
 #include <iostream>
 
 //constructor
-Character::Character(const std::string& name) : Name(name), Level(1), MaxHP(200), MaxMP(100), Attack(30), EXP(0) {
+Character::Character(const std::string& name) : Name(name), Level(1), MaxHP(200), MaxMP(100), Attack(30), EXP(0), Gold(0) {
 	HP = GetMaxHP();
 	MP = GetMaxMP();
+}
+
+//Singleton Pattern
+Character* Character::Instance = nullptr;
+
+Character* Character::GetInstance(std::string name) {
+	if (Instance == nullptr) {
+		Instance = new Character(name);
+	}
+	return Instance;
+}
+
+//singleton instance delete
+void Character::DestroyInstance() {
+	delete Instance;
+	Instance = nullptr;
 }
 
 
@@ -22,12 +38,31 @@ void Character::displayStatus() const {
 	std::cout << "HP: " << HP << "/" << MaxHP << std::endl;
 	std::cout << "MP: " << MP << "/" << MaxMP << std::endl;
 	std::cout << "Attack: " << Attack << std::endl;
+	std::cout << std::endl;
+	std::cout << "Gold: " << Gold << std::endl;
+	std::cout << std::endl;
 }
 
 //Level UP
 void Character::LevelUP() {
+	// if already at max level
+	if (Level >= 10) {
+		std::cout << "Can't LevelUp anymore...\n";
+		return;
+	}
+
 	if (EXP >= 100) {
 		++Level;
+		MaxHP += 20;
+		Attack += 5;
+		HP = MaxHP;
+		MP = MaxMP;
+		EXP = EXP - 100;
+		std::cout << "level Up!!\nCurrent Level: " << Level << "\n";
+		std::cout << "restored your HP and MP to full\n\n";
+	}
+	else {
+		std::cout << "Not enough experience to level up.\n";
 	}
 }
 
@@ -41,6 +76,7 @@ int Character::GetHP() const { return HP; }
 int Character::GetMP() const { return MP; }
 int Character::GetAttack() const { return Attack; }
 int Character::GetEXP() const { return EXP; }
+int Character::GetGold() const { return Gold; }
 
 
 //Setter
@@ -60,9 +96,13 @@ void Character::SetMaxHP(int maxhp) {
 	if (maxhp < 0) {
 		maxhp = 0;
 	}
+	MaxHP = maxhp;
 }
 void Character::SetMaxMP(int maxmp) {
-
+	if (maxmp < 0) {
+		maxmp = 0;
+	}
+	MaxMP = maxmp;
 }
 void Character::SetHP(int hp) {
 	//HP underflow/overflow prevention
@@ -89,4 +129,11 @@ void Character::SetAttack(int attack) {
 }
 void Character::SetEXP(int exp) {
 	EXP = exp;
+}
+void Character::SetGold(int gold) {
+	
+	if (gold < 0) {
+		gold = 0;
+	}
+	Gold = gold;
 }
