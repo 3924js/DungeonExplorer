@@ -24,6 +24,7 @@ enum IntStatTypes {
 	TOTAL_SPOTS,
 	COUNT
 };
+//Statistics enum names, have to be in a same order!
 static const std::string IntStatNames[IntStatTypes::COUNT] = { "Total Battles",
 															"Attacks",
 															"Dealt Damage",
@@ -160,14 +161,14 @@ public:
 	static void GetReward(int Exp, int Gold, const std::vector<Item>& Items) {
 		std::cout << ">>> The player gets the rewards!" << std::endl;
 		std::cout << "-> Earend experience point: " << Exp << std::endl;
-		std::cout << "-> Earned gold: " << Exp << std::endl;
+		std::cout << "-> Earned gold: " << Gold << std::endl;
 		for (Item i : Items) {
 			std::cout << "-> Collected an item: " << GetHighlightColor(i) << i.name << TextFormat::DEFAULT << std::endl;
 		}
 		PrintLine();
 	}
 
-	static void BuyItem(Item item) {	//Change needed if statistics counts each item separately.
+	static void BuyItem(const Item& item) {	//Change needed if statistics counts each item separately.
 
 		std::cout << ">>> The player Bought the item " << GetHighlightColor(item) << item.name << TextFormat::DEFAULT << "!" << std::endl;
 		GetInstance().Stats[IntStatTypes::BOUGHT_ITEM]++;
@@ -181,13 +182,13 @@ public:
 		PrintLine();
 	}*/
 	
-	static void UseItem(Item item) {
+	static void UseItem(const Item& item) {
 		std::cout << ">>> The player used the item " << GetHighlightColor(item) << item.name << TextFormat::DEFAULT << "!" << std::endl;
 		GetInstance().Stats[IntStatTypes::USED_ITEM]++;
 		PrintLine();
 	}
 
-	static void ShowItems(std::vector<Item> Items) {
+	static void ShowItems(const std::vector<Item>& Items) {
 		std::cout << ">>> There are some items... " << std::endl;
 		for (Item i : Items) {
 			std::cout << "-> " << GetHighlightColor(i) << i.name << TextFormat::DEFAULT
