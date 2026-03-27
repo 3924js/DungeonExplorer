@@ -1,8 +1,8 @@
 ﻿#pragma once
+#include <string>
 
 class Monster;
 class Character;
-class BattleManager;
 class MonsterFactory;
 
 class GameManager {
@@ -14,7 +14,6 @@ private:
 
 	Monster* enemy;
 	Character* player;
-	BattleManager* bManager;
 	MonsterFactory* mFactory;
 
 public:
@@ -25,8 +24,6 @@ public:
 	void createPlayer(std::string name = "player");
 
 	void generateMonster(int level = 0);
-
-	void battle();
 
 	void displayInventory();
 

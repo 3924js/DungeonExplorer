@@ -2,52 +2,24 @@
 #include <string>
 #include "GameManager.h"
 #include "Character.h"
-#include "BattleManager.h"
-#include "MonsterFactory.h";
+#include "MonsterFactory.h"
 
 using namespace std;
 
 // Constructor
 GameManager::GameManager(): enemy(nullptr), player(nullptr) {
-	bManager = new BattleManager();
 	mFactory = new MonsterFactory();
-	// Move this to another place such as main
-	/*
-	string name;
-	cout << "Input Player Name: ";
-	// Enter name allowing spces
-	while(true) {
-		getline(cin, name);
-
-		//Remove leading whitespaces from the string
-		size_t startBlank = name.find_first_not_of(" \t\n\r\f\v");
-
-		// if the input contains only whitespace
-		if (startBlank == string::npos) {
-			cout  << "is InValid value\n Input Player Name: ";
-		}
-		else {
-			// Store the input after removing leading whitespace
-			name = name.substr(startBlank);
-			cout << "Your Name is " << name << "\n";
-			break;
-		}
-	}
-	*/
 }
 
 // Destructor
 GameManager::~GameManager() {
 	if (enemy != nullptr) delete enemy;
 	if (player != nullptr) delete player;
+	if (mFactory != nullptr) delete mFactory;
 }
 
 // Create the player only if it does not exist
 void GameManager::createPlayer(string name) {
-	if (player != nullptr) {
-		cout << "The player already exists.\n ";
-		return;
-	}
 	player = new Character(name);
 }
 
@@ -63,18 +35,6 @@ void GameManager::generateMonster(int level) {
 
 	// Create a monster only if there is no current monster
 	if (enemy == nullptr && player != nullptr) enemy = mFactory->createRandomMonster();
-}
-
-void GameManager::battle() {
-	if (enemy == nullptr) {
-		// 1. print a message and end the function
-		cout << "There is no Monster to Fight.\n";
-		return;
-
-		// 2. create monster and start the battle
-		//generateMonster();
-	}
-	bManager->StartBattle(*player, *enemy);
 }
 
 // Display all items in the inventory

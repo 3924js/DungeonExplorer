@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameFlowManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -131,9 +132,11 @@
     <ClCompile Include="BattleManager.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="ItemManager.cpp" />
+    <ClCompile Include="MonsterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
+    <ClInclude Include="GameFlowManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="CreateMonster.h" />
@@ -144,6 +147,7 @@
     <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="LogSystem.h" />
+    <ClInclude Include="MonsterFactory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
