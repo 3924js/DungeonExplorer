@@ -12,6 +12,8 @@ void BattleManager::StartBattle(Character& c, Monster& m){
      *	+ Check invite store
      * TODO: StoreSystem? 
     */
+
+    /*
     bool isWin = AutoBattle(c, m);
     if (isWin)
     {
@@ -22,9 +24,11 @@ void BattleManager::StartBattle(Character& c, Monster& m){
     {
         std::cout << c.name << " die. Game Over.\n"; 
     }
+    */
 }
 
 bool BattleManager::AutoBattle(Character& c, Monster& m){
+    /*
     std::cout << "Spawn " << m.name 
     << " Health : " << m.health << ", Attack : " << m.attack << std::endl;
 	
@@ -39,9 +43,12 @@ bool BattleManager::AutoBattle(Character& c, Monster& m){
         << c.name << " Health : " << c.health << std::endl;
     }
     return c.health > 0;
+    */
+    return false; //temporary, Please delete during the process
 }
 
 void BattleManager::BattleReward(Character& c){
+    /*
     int expReward = 50;
     int goldReward = (rand() % 11) + 10; // 10 ~ 20 
     int maxRand = 30;
@@ -72,4 +79,5 @@ void BattleManager::BattleReward(Character& c){
     }
     std::cout << c.name << expReward << goldReward << 
     "Character EXP, Gold" << c.experience << c.gold << "\n";
+    */
 }
