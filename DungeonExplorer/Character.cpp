@@ -4,9 +4,25 @@
 #include <iostream>
 
 //constructor
-Character::Character(const std::string& name) : Name(name), Level(1), MaxHP(200), MaxMP(100), Attack(30), EXP(0) {
+Character::Character(const std::string& name) : Name(name), Level(1), MaxHP(200), MaxMP(100), Attack(30), EXP(0), Gold(0) {
 	HP = GetMaxHP();
 	MP = GetMaxMP();
+}
+
+//Singleton Pattern, YH add
+Character* Character::Instance = nullptr;
+
+Character* Character::GetInstance(std::string name) {
+	if (Instance == nullptr) {
+		Instance = new Character(name);
+	}
+	return Instance;
+}
+
+//singleton instance delete, YH add
+void Character::DestroyInstance() {
+	delete Instance;
+	Instance = nullptr;
 }
 
 
@@ -22,12 +38,15 @@ void Character::displayStatus() const {
 	std::cout << "HP: " << HP << "/" << MaxHP << std::endl;
 	std::cout << "MP: " << MP << "/" << MaxMP << std::endl;
 	std::cout << "Attack: " << Attack << std::endl;
+	std::cout << std::endl;	//YH add
+	std::cout << "Gold: " << Gold << std::endl;	//YH add
 }
 
 //Level UP
 void Character::LevelUP() {
 	if (EXP >= 100) {
 		++Level;
+		EXP = EXP - 100;
 	}
 }
 
@@ -41,6 +60,7 @@ int Character::GetHP() const { return HP; }
 int Character::GetMP() const { return MP; }
 int Character::GetAttack() const { return Attack; }
 int Character::GetEXP() const { return EXP; }
+int Character::GetGold() const { return Gold; }	//YH add
 
 
 //Setter
@@ -89,4 +109,12 @@ void Character::SetAttack(int attack) {
 }
 void Character::SetEXP(int exp) {
 	EXP = exp;
+}
+//YH add
+void Character::SetGold(int gold) {
+	
+	if (gold < 0) {
+		gold = 0;
+	}
+	Gold = gold;
 }
