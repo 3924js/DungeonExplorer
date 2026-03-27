@@ -1,10 +1,11 @@
 #include "Goblin.h"
-
-std::string Goblin::getName() {
+#include <iostream>
+#include "AttackStrategy.h"
+std::string Goblin::getName()  {
 	return name;
 }
 
-int Goblin::getHealth() {
+int Goblin::getHealth(){
 	return health;
 }
 
@@ -13,5 +14,11 @@ int Goblin::getAttack() {
 }
 
 void Goblin::takeDamage(int damage) {
-	health -= damage;
+	int getDamage = health - damage;
+	if (getDamage <= 0) health = 0;
+	else health = getDamage;
+}
+
+int Goblin::Attack() {
+	
 }

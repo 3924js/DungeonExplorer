@@ -130,13 +130,19 @@
     <ClCompile Include="BattleManager.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="ItemManager.cpp" />
+<<<<<<< HEAD
+    <ClCompile Include="RollDice.cpp" />
+=======
     <ClCompile Include="Store.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="StageDarkCave.cpp" />
     <ClCompile Include="StageDirtySwamp.cpp" />
+>>>>>>> a9995d0229de933d1e457745255b051c5d610049
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttackStrategy.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="MakeRandom.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="CreateMonster.h" />
     <ClInclude Include="Goblin.h" />
@@ -146,12 +152,16 @@
     <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="LogSystem.h" />
+<<<<<<< HEAD
+    <ClInclude Include="RollDice.h" />
+=======
     <ClInclude Include="Store.h" />
     <ClInclude Include="RandomManager.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageDarkCave.h" />
     <ClInclude Include="StageDirtySwamp.h" />
     <ClInclude Include="StageManager.h" />
+>>>>>>> a9995d0229de933d1e457745255b051c5d610049
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

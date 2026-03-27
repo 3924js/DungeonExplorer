@@ -36,7 +36,11 @@
     <ClCompile Include="BattleManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="RollDice.cpp">
+=======
     <ClCompile Include="Store.cpp">
+>>>>>>> a9995d0229de933d1e457745255b051c5d610049
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,7 +72,17 @@
     <ClInclude Include="BattleManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="AttackStrategy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RollDice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MakeRandom.h">
+=======
     <ClInclude Include="Store.h">
+>>>>>>> a9995d0229de933d1e457745255b051c5d610049
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
