@@ -133,9 +133,10 @@
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="StageDarkCave.cpp" />
     <ClCompile Include="StageDirtySwamp.cpp" />
+    <ClCompile Include="BattleDice.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BattleDice.cpp" />
+
     <ClInclude Include="BattleDice.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Monster.h" />

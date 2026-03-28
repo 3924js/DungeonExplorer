@@ -39,6 +39,9 @@ BattleDice::BattleDice(){
         {"A perfect hit! You feel no pain.", 15, 15, 0},
         {"Your blade never misses today.", 25, 5, 0}
     };
+    missTable[0] = "Bad luck! You missed.";
+    missTable[1] = "Too slow! You missed.";
+    missTable[2] = "Wow, that was a big miss!";
 }
 
 DiceResult BattleDice::Roll(){
@@ -51,4 +54,10 @@ DiceResult BattleDice::Roll(){
     result.diceNum = dice;
     
     return result;
+}
+
+std::string BattleDice::missMessage(){
+    int num = RandomManager::GetInstance().GetRange(0,2);
+    
+    return missTable[num];
 }

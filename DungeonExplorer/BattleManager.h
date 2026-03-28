@@ -1,14 +1,18 @@
 ﻿// BattleManager.h
 #pragma once
 #include "BattleDice.h"
+#include "Character.h"
+
 
 class Character;
 class Monster;
 
-struct DiceResult;
 
 class BattleManager{
-    BattleManager();
+    BattleManager() = default; 
+    BattleDice rollDice;
+    DiceResult diceResult;
+    Character& c = *Character::GetInstance();
 public:
     static BattleManager& GetInstance(){
         static BattleManager instance;
@@ -18,7 +22,7 @@ public:
     BattleManager(const BattleManager&) = delete;
     BattleManager operator=(const BattleManager&) = delete;
     
-    void StartBattle(Character& c, Monster& m);   
-    bool AutoBattle(Character& c, Monster& m);
-    void CalculateDiceResult(DiceResult result);
+    void StartBattle(std::vector<Monster*> m);   
+    bool AutoBattle(std::vector<Monster*> m);
+    void DiceResultMessage(DiceResult result);
 };

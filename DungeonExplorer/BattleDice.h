@@ -14,17 +14,11 @@ struct DiceResult{
 
 class BattleDice{
 private:
-    BattleDice();
     std::map<int, std::vector<DiceResult>> eventTable;
+    std::map<int, std::string> missTable;
 public:
-    // Singleton 
-    static BattleDice& GetInstance(){
-        static BattleDice instance;
-        return instance; 
-    }
-    
-    BattleDice(const BattleDice&) = delete;
-    BattleDice operator=(const BattleDice&) = delete;
+    BattleDice();
     
     DiceResult Roll();
+    std::string missMessage();
 };
