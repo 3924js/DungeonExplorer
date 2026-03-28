@@ -135,6 +135,8 @@
     <ClCompile Include="StageDirtySwamp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BattleDice.cpp" />
+    <ClInclude Include="BattleDice.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="CreateMonster.h" />

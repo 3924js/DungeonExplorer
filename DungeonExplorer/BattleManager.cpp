@@ -5,11 +5,16 @@
 #include "StageManager.h"
 #include <iostream>
 
+BattleManager::BattleManager(){
+    // Roll dice event
+}
+
 void BattleManager::StartBattle(Character& c, Monster& m){
     bool isWin = AutoBattle(c, m);
     if (isWin)
     {
         std::cout << "Kill " << m.getName() << "win character\n";
+        // Reward 
     }
     else
     {
@@ -24,7 +29,11 @@ bool BattleManager::AutoBattle(Character& c, Monster& m){
 	
     while (m.getHealth() > 0 && c.GetHP() > 0)
     {
+        // Roll Dice
+        DiceResult diceResult = BattleDice::GetInstance().Roll();
         // Player attack monster
+        CalculateDiceResult(diceResult);
+        
         m.takeDamage(c.GetAttack());
         std::cout << c.GetName() << " attack " << m.getName() 
         << m.getName() << " Health  : " << m.getHealth() << std::endl;
@@ -36,4 +45,24 @@ bool BattleManager::AutoBattle(Character& c, Monster& m){
         StageManager::GetInstance().RunRandomEvent(20);
     }
     return c.GetHP() > 0;
+}
+
+void BattleManager::CalculateDiceResult(DiceResult result){
+    // TODO: Slow output 
+    std::cout << "Roll Dice.." << std::endl;
+    std::cout << "Complete Roll Dice. \nYour dice : " << result.diceNum << std::endl;
+    std::cout << "[Event] \"" << result.description << "\"" << std::endl;
+    // result ! = 0 output message
+    if (result.hpDelta != 0)
+    {
+        std::cout << "[Event] Player hp add : " << result.hpDelta << std::endl;
+    }
+
+    if (result.atkDelta != 0)
+    {
+        std::cout << "[Event] Player attack add : " << result.atkDelta << std::endl;
+    }
+    if (result.missChance != 0){
+        std::cout << "[Event] Player miss Chance -" << result.missChance << std::endl;
+    }
 }

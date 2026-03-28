@@ -1,11 +1,14 @@
 ﻿// BattleManager.h
 #pragma once
+#include "BattleDice.h"
 
 class Character;
 class Monster;
 
+struct DiceResult;
+
 class BattleManager{
-    BattleManager() = default;
+    BattleManager();
 public:
     static BattleManager& GetInstance(){
         static BattleManager instance;
@@ -16,7 +19,6 @@ public:
     BattleManager operator=(const BattleManager&) = delete;
     
     void StartBattle(Character& c, Monster& m);   
-    
     bool AutoBattle(Character& c, Monster& m);
-    // void BattleReward(Character& c); -> Move GameManager 
+    void CalculateDiceResult(DiceResult result);
 };
