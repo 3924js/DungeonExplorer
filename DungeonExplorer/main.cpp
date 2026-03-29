@@ -1,18 +1,17 @@
 #include <iostream>
 #include "BattleManager.h"
-#include "Goblin.h"
-#include "Monster.h"
+#include "StageManager.h"
+#include "Character.h"
+#include "ItemManager.h"
 
 using namespace std;
 
 int main() {
 	//cout << "던전 탐험대" << endl;
-	std::vector<Monster*> monster;
-	monster.push_back(new Goblin("Goblin1" , 300, 10));
-	monster.push_back(new Goblin("Goblin2" , 300, 10));
-	monster.push_back(new Goblin("Goblin3" , 300, 10));
+	ItemManager::GetInstance().Initialize();
+	StageManager::GetInstance().SetStage(DARK_CAVE);
 	
-	BattleManager::GetInstance().StartBattle(monster);
+	BattleManager::GetInstance().StartBattle();
 	
-	
+	Character::GetInstance()->GetInventory().ShowInventory();
 }

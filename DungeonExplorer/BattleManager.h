@@ -24,7 +24,7 @@ public:
     BattleManager(const BattleManager&) = delete;
     BattleManager operator=(const BattleManager&) = delete;
     
-    void StartBattle(std::vector<Monster*>& m);   
+    void StartBattle();   
     bool AutoBattle(std::vector<Monster*>& m);
     bool PlayerTurn(std::vector<Monster*>& m, Monster*& target);
     void MonstersTurn(std::vector<Monster*>& m);

@@ -20,5 +20,5 @@ public:
     void RunRandomEvent(int chance);
     
     void SetStage(EStage stageType);
-    Stage* GetCurrentStage();
+    EStage GetCurrentStage();
 };

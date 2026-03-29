@@ -4,11 +4,17 @@
 #include "Monster.h"
 #include "StageManager.h"
 #include "RandomManager.h"
+#include "BattleSupply.h"
 #include <iostream>
 
 
-void BattleManager::StartBattle(std::vector<Monster*>& m){
-    std::cout << "Spawn monsters!" << std::endl;
+void BattleManager::StartBattle(){
+    // Random monster spawn required
+    // 1. Current stage spawn monster
+    // 2. Random count monster
+    // 3. Different monster name
+    std::vector<Monster*> m = BattleSupply::GetInstance().BattleSpawnMonster(); 
+    std::cout << "[Spawn] Spawn monsters!" << std::endl;
     for (auto& monsters : m)
     {
         std::cout << "[Spawn] " << monsters->getName() << ", Health : " << monsters->getHealth() << ", Attack : " <<
@@ -20,20 +26,30 @@ void BattleManager::StartBattle(std::vector<Monster*>& m){
     ApplyDiceResult(diceResult);
 
     // Enter Battle
-    std::cout << "Spawn Monster count : " << m.size() << std::endl;
+    std::cout << "[Spawn] Spawn Monster count : " << m.size() << std::endl;
     bool isWin = AutoBattle(m);
 
     // End battle, stage random event.
     StageManager::GetInstance().RunRandomEvent(20);
     if (isWin && c.GetHP() > 0)
     {
-        std::cout << "Kill all monster! win character!!!\n";
+        std::cout << "[System] Kill all monster! win character!!!\n";
         // Reward 
+        BattleSupply::GetInstance().BattleReward(); 
     }
     else
     {
-        std::cout << c.GetName() << " die. Game Over.\n";
+        std::cout << c.GetName() << "[System] die. Game Over.\n";
         // Game End 
+    }
+    // Delete new monsters
+    for (Monster* monsters : m)
+    {
+        if (monsters != nullptr)
+        {
+            delete monsters;
+            monsters = nullptr;
+        }
     }
 }
 
@@ -41,7 +57,7 @@ bool BattleManager::AutoBattle(std::vector<Monster*>& m){
     turnCount = 1;
     while (c.GetHP() > 0)
     {
-        // Set attack target
+        // Set attack target && Check die monster
         Monster* target = nullptr;
         for (auto monster : m)
         {
@@ -51,7 +67,7 @@ bool BattleManager::AutoBattle(std::vector<Monster*>& m){
                 break;
             }   
         }
-        // Check die monsters
+        // Check die all monsters -> Win 
         if (target == nullptr)
             break;
         std::cout << "[Turn] Turn count : " << turnCount << std::endl;
@@ -88,7 +104,7 @@ bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target){
         {
             if (monsters->getHealth() > 0)
             {
-                // TODO: monsters->takeDamage(c.skillAttack); ,
+                // TODO: monsters->takeDamage(c.skillAttack); and monsterHP dead HP == 0
                 monsters->takeDamage(300);
                 std::cout << "[Attack] " << c.GetName() << " attack " << monsters->getName() << ". "
                     << monsters->getName() << " Health  : " << monsters->getHealth() << ". " << std::endl;
@@ -129,8 +145,8 @@ void BattleManager::MonstersTurn(std::vector<Monster*>& m){
 void BattleManager::ApplyDiceResult(DiceResult result){
     // TODO: Slow output 
     std::cout << "[Dice] " << "Roll Dice..." << std::endl;
-    std::cout << "[Dice] " << "Complete Roll Dice. \nYour dice : " << result.diceNum << std::endl;
-    std::cout << "[Dice] " << "[Event] \"" << result.description << "\"" << std::endl;
+    std::cout << "[Dice] " << "Complete Roll Dice. \n[Dice] Your dice : " << result.diceNum << std::endl;
+    std::cout << "[Event] \"" << result.description << "\"" << std::endl;
     if (result.hpDelta != 0)
     {
         // Set Character hp

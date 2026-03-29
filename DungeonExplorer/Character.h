@@ -1,6 +1,6 @@
 #pragma once 
 //Character.h
-
+#include "Inventory.h"
 #include <string>
 
 class Character
@@ -31,6 +31,9 @@ public:
 	void SetAttack(int attack);
 	void SetEXP(int exp);
 	void SetGold(int gold);
+	Inventory& GetInventory(){
+		return inv;
+	}
 
 private:
 	//Singleton Pattern
@@ -49,4 +52,5 @@ private:
 	int Attack;
 	int EXP;
 	int Gold;
+	Inventory inv;
 };
