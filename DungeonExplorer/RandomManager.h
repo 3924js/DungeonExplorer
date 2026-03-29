@@ -1,0 +1,26 @@
+﻿// RandomManager.h
+#pragma once
+#include <random>
+
+class RandomManager{
+private:
+    std::mt19937 gen;
+    RandomManager(){
+        std::random_device rd;
+        gen.seed(rd());
+    }
+
+public:
+    static RandomManager& GetInstance(){
+        static RandomManager instance;
+        return instance;
+    }
+    
+    RandomManager(const RandomManager&) = delete;
+    RandomManager operator=(const RandomManager&) = delete;
+    
+    int GetRange(int min, int max){
+        std::uniform_int_distribution<int> dis(min, max);
+        return dis(gen);
+    }
+};
