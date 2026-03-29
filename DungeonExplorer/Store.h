@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <vector>
 #include <iostream>
 #include "ItemManager.h"
@@ -25,4 +25,5 @@ public:
 
     // Process item sale from inventory
     void SellItem(int selection, int& playerGold, Inventory& playerInventory);
+
 };

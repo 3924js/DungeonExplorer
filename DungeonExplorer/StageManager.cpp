@@ -12,6 +12,7 @@ void StageManager::EnterStageEvent(){
         currentStage->EnterStage();
     }
 }
+
 void StageManager::RunRandomEvent(int chance){
     if (currentStage != nullptr)
     {

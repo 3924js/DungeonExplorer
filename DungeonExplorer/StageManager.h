@@ -7,6 +7,7 @@ class StageManager{
 private:
     std::unique_ptr<Stage> currentStage;
     StageManager() = default;
+
 public:
     static StageManager& GetInstance(){
         static StageManager instance;

@@ -8,4 +8,5 @@ public:
     
     void EnterStage() override;
     void RandomEvent(int chance) override;
+
 };

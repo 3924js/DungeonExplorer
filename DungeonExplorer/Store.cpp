@@ -1,9 +1,8 @@
-#include "Store.h"
+﻿#include "Store.h"
 
 using namespace std;
 
 Store::Store() {}
-
 
 void Store::InitializeStore()
 {

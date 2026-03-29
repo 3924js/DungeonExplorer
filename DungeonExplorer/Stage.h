@@ -8,6 +8,7 @@ enum EStage{
     DIRTY_SWAMP,
     STAGE_COUNT  // 3
 };
+
 static const std::string StageNames[EStage::STAGE_COUNT] = {"Dark Cave",
                                                             "Dirty Swamp"
 };

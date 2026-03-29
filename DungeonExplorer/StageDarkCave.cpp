@@ -13,6 +13,7 @@ StageDarkCave::StageDarkCave() : Stage(EStage::DARK_CAVE){
     eventTable[5] = {"I just swung my sword, and the monster got hit.", 0, 5};
     eventTable[6] = {"You loved the night time.", 10, 10};
 }
+
 void StageDarkCave::EnterStage(){
     std::cout << "========================================" << std::endl;
     std::cout << " [ Stage : Dark Cave ] " << std::endl;

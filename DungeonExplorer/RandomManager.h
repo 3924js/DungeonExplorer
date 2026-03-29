@@ -9,6 +9,7 @@ private:
         std::random_device rd;
         gen.seed(rd());
     }
+
 public:
     static RandomManager& GetInstance(){
         static RandomManager instance;

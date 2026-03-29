@@ -7,6 +7,7 @@ StageDirtySwamp::StageDirtySwamp() : Stage(EStage::DIRTY_SWAMP) {}
 void StageDirtySwamp::EnterStage(){
 
 }
+
 void StageDirtySwamp::RandomEvent(int chance){
     
 }
