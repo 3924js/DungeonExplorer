@@ -7,24 +7,22 @@
 #include <iostream>
 
 
-
-
-void BattleManager::StartBattle(std::vector<Monster*> m){
+void BattleManager::StartBattle(std::vector<Monster*>& m){
     std::cout << "Spawn monsters!" << std::endl;
     for (auto& monsters : m)
     {
         std::cout << "[Spawn] " << monsters->getName() << ", Health : " << monsters->getHealth() << ", Attack : " <<
             monsters->getAttack() << std::endl;
     }
-    
+
     // first Turn Roll Dice
     diceResult = rollDice.Roll();
-    DiceResultMessage(diceResult);
-    
+    ApplyDiceResult(diceResult);
+
     // Enter Battle
     std::cout << "Spawn Monster count : " << m.size() << std::endl;
     bool isWin = AutoBattle(m);
-    
+
     // End battle, stage random event.
     StageManager::GetInstance().RunRandomEvent(20);
     if (isWin && c.GetHP() > 0)
@@ -39,13 +37,11 @@ void BattleManager::StartBattle(std::vector<Monster*> m){
     }
 }
 
-bool BattleManager::AutoBattle(std::vector<Monster*> m){
-    int turnCount = 0;
+bool BattleManager::AutoBattle(std::vector<Monster*>& m){
+    turnCount = 1;
     while (c.GetHP() > 0)
     {
-        int aliveCount = 0;
-        std::cout << "[Turn] Turn count : " << turnCount << std::endl;
-        // Set attack target 
+        // Set attack target
         Monster* target = nullptr;
         for (auto monster : m)
         {
@@ -53,62 +49,84 @@ bool BattleManager::AutoBattle(std::vector<Monster*> m){
             {
                 target = monster;
                 break;
-            }
+            }   
         }
         // Check die monsters
         if (target == nullptr)
             break;
-
-
-        // Check miss 
-        int randomResult = RandomManager::GetInstance().GetRange(1, 100);
-        if (randomResult <= diceResult.missChance) { std::cout << "[Miss] \"" << rollDice.missMessage() << "\"\n"; }
-        // Player attack monster(target)
-        else if (turnCount == 0 || turnCount % 3 != 0)
-        {
-            target->takeDamage(c.GetAttack());
-            std::cout << "[Attack] "<< c.GetName() << " attack " << target->getName() << ". "
-                << target->getName() << " Health  : " << target->getHealth() << ". " << std::endl;
-        }
-        // 3 Turn use skill
-        else if (turnCount != 0 && turnCount % 3 == 0)
-        {
-            // TODO: target->takeDamage(c.skillAttack); , c.skillName() W
-            std::cout << "[Attack] " << c.GetName() << " use skill " << target->getName() << ". " <<
-               target->getName() << " Health  : " << target->getHealth() << ". " << std::endl;
-        }
-        
-        // if Kill monster = nullptr
-        if (target->getHealth() <= 0)
-        {
-            std::cout << "[Kill] monster " << target->getName() << std::endl;
-            target = nullptr;
-        }
-        // Check alive monster count
-        for (auto monsters : m)
-        {
-            if (monsters != nullptr && monsters->getHealth() > 0)
-            {
-                aliveCount++;
-            }
-        }
-        std::cout << "[Monster] " << "Alive Monsters count : " << aliveCount << std::endl;
-        
-        // Monsters attack Player
-        for (auto monsters : m)
-        {
-            if (monsters->getHealth() > 0){
-            c.SetHP(c.GetHP() - monsters->getAttack());
-            std::cout << "[Damage] "<<monsters->getName() << " attack " << c.GetName() << ", "
-                << c.GetName() << " Health : " << c.GetHP() << std::endl;
-            }
-        }
+        std::cout << "[Turn] Turn count : " << turnCount << std::endl;
+        PlayerTurn(m, target);
+        MonstersTurn(m);
         ++turnCount;
     }
     return c.GetHP() > 0;
 }
 
-void BattleManager::DiceResultMessage(DiceResult result){
+bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target){
+    std::vector<Monster*> killedMonster;
+    // Check miss 
+    int randomResult = RandomManager::GetInstance().GetRange(1, 100);
+    if (randomResult <= diceResult.missChance) { std::cout << "[Miss] \"" << rollDice.missMessage() << "\"\n"; }
+    // Player attack monster(target)
+    else if (turnCount % 3 != 0)
+    {
+        target->takeDamage(c.GetAttack());
+        std::cout << "[Attack] " << c.GetName() << " attack " << target->getName() << ". "
+            << target->getName() << " Health  : " << target->getHealth() << ". " << std::endl;
+        if (target != nullptr && target->getHealth() <= 0)
+        {
+            killedMonster.push_back(target);
+            target = nullptr;
+        }
+    }
+    // 3 Turn use skill
+    else if (turnCount % 3 == 0)
+    {
+        std::cout << "[Attack] " << c.GetName() << " use skill !!" << std::endl; // TODO: c.skillName() 
+        // Skill All monster attack
+        for (auto& monsters : m)
+        {
+            if (monsters->getHealth() > 0)
+            {
+                // TODO: monsters->takeDamage(c.skillAttack); ,
+                monsters->takeDamage(300);
+                std::cout << "[Attack] " << c.GetName() << " attack " << monsters->getName() << ". "
+                    << monsters->getName() << " Health  : " << monsters->getHealth() << ". " << std::endl;
+                // if Kill monster
+                if (monsters->getHealth() <= 0){ killedMonster.push_back(monsters); }
+            }
+        }
+    }
+    // if kill monsters message
+    if (!killedMonster.empty())
+    {
+        for (auto& killMonster : killedMonster)
+        {
+            std::cout << "[Kill] monster " << killMonster->getName() << std::endl;
+        }
+    }
+    return true;
+}
+
+void BattleManager::MonstersTurn(std::vector<Monster*>& m){
+    // Check alive monster count
+    int aliveCount = 0;
+    for (auto monsters : m) { if (monsters != nullptr && monsters->getHealth() > 0) { aliveCount++; } }
+    std::cout << "[Monster] " << "Alive Monsters count : " << aliveCount << std::endl;
+
+    // Monsters attack Player
+    for (auto monsters : m)
+    {
+        if (monsters->getHealth() > 0)
+        {
+            c.SetHP(c.GetHP() - monsters->getAttack());
+            std::cout << "[Damage] " << monsters->getName() << " attack " << c.GetName() << ", "
+                << c.GetName() << " Health : " << c.GetHP() << std::endl;
+        }
+    }
+}
+
+void BattleManager::ApplyDiceResult(DiceResult result){
     // TODO: Slow output 
     std::cout << "[Dice] " << "Roll Dice..." << std::endl;
     std::cout << "[Dice] " << "Complete Roll Dice. \nYour dice : " << result.diceNum << std::endl;
@@ -128,7 +146,8 @@ void BattleManager::DiceResultMessage(DiceResult result){
     {
         // Set Character Attack
         c.SetAttack(c.GetAttack() + result.atkDelta);
-        std::cout << "[Event] Player attack add : " << result.atkDelta << ", Player Atk : " << c.GetAttack() << std::endl;
+        std::cout << "[Event] Player attack add : " << result.atkDelta << ", Player Atk : " << c.GetAttack() <<
+            std::endl;
     }
     if (result.missChance != 0) { std::cout << "[Event] Player miss Chance -" << result.missChance << std::endl; }
 }

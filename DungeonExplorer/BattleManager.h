@@ -9,10 +9,12 @@ class Monster;
 
 
 class BattleManager{
-    BattleManager() = default; 
+private:
+    int turnCount;
     BattleDice rollDice;
     DiceResult diceResult;
     Character& c = *Character::GetInstance();
+    BattleManager() = default; 
 public:
     static BattleManager& GetInstance(){
         static BattleManager instance;
@@ -22,7 +24,9 @@ public:
     BattleManager(const BattleManager&) = delete;
     BattleManager operator=(const BattleManager&) = delete;
     
-    void StartBattle(std::vector<Monster*> m);   
-    bool AutoBattle(std::vector<Monster*> m);
-    void DiceResultMessage(DiceResult result);
+    void StartBattle(std::vector<Monster*>& m);   
+    bool AutoBattle(std::vector<Monster*>& m);
+    bool PlayerTurn(std::vector<Monster*>& m, Monster*& target);
+    void MonstersTurn(std::vector<Monster*>& m);
+    void ApplyDiceResult(DiceResult result);
 };
