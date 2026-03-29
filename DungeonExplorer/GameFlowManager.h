@@ -2,11 +2,14 @@
 
 class GameManager;
 class BattleManager;
+class StageManager;
 
 class GameFlowManager {
 private:
 	GameManager& gm;
+	StageManager& sManager;
 	BattleManager* bManager;
+
 	bool isGameClear;
 public:
 	GameFlowManager();

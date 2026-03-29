@@ -2,20 +2,22 @@
 #include <string>
 #include "GameManager.h"
 #include "Character.h"
-#include "MonsterFactory.h"
+#include "CreateMonster.h"
+#include "Inventory.h"
 
 using namespace std;
 
 // Constructor
 GameManager::GameManager(): enemy(nullptr), player(nullptr) {
-	mFactory = new MonsterFactory();
+	cMonster = new CreateMonster();
+	inven = new Inventory;
 }
 
 // Destructor
 GameManager::~GameManager() {
 	if (enemy != nullptr) delete enemy;
 	if (player != nullptr) delete player;
-	if (mFactory != nullptr) delete mFactory;
+	if (cMonster != nullptr) delete cMonster;
 }
 
 // Create the player only if it does not exist
@@ -34,11 +36,16 @@ void GameManager::generateMonster(int level) {
 	if (level == 0) level = player->GetLevel();
 
 	// Create a monster only if there is no current monster
-	if (enemy == nullptr && player != nullptr) enemy = mFactory->createRandomMonster();
+	if (enemy == nullptr && player != nullptr) enemy = cMonster->create(MonsterType::Goblin, "Goblin", level);
 }
 
 // Display all items in the inventory
 void GameManager::displayInventory() {
 	// use this after the inventory has benn added to the Character class
-	//player->getInven().ShowInventory();
+	inven->ShowInventory();
+}
+
+void GameManager::useItem() {
+	inven->ShowInventory();
+	inven->UseItem();
 }

@@ -133,7 +133,6 @@
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="RollDice.cpp" />
-    <ClCompile Include="MonsterFactory.cpp" />
     <ClCompile Include="Store.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="StageDarkCave.cpp" />
@@ -155,7 +154,6 @@
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="LogSystem.h" />
     <ClInclude Include="RollDice.h" />
-    <ClInclude Include="MonsterFactory.h" />
     <ClInclude Include="Store.h" />
     <ClInclude Include="RandomManager.h" />
     <ClInclude Include="Stage.h" />

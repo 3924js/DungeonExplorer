@@ -3,19 +3,20 @@
 #include "Character.h"
 #include "LogSystem.h"
 #include "BattleManager.h"
+#include "StageManager.h"
 #include <string>
 #include <iostream>
 
 using namespace std;
 
 // Constructor
-GameFlowManager::GameFlowManager() :gm(GameManager::GetInstance()), bManager(nullptr), isGameClear(false) {}
+GameFlowManager::GameFlowManager() :gm(GameManager::GetInstance()), bManager(nullptr), sManager(StageManager::GetInstance()), isGameClear(false) {}
 
 // Overall game flow
 void GameFlowManager::run() {
 	setupPlayer();
 
-	while(isGameClear) {
+	while(!isGameClear) {
 		if (gm.getPlayer()->GetHP() > 0) {
 			selectNextNode();
 		}
@@ -51,6 +52,8 @@ void GameFlowManager::setupPlayer() {
 		}
 	}
 
+	// Select Player Jobs
+
 	gm.createPlayer(name);
 }
 
@@ -59,13 +62,10 @@ void GameFlowManager::selectNextNode() {
 	Character* player = gm.getPlayer();
 
 	int nextNode = 0;
-	int currentLevel = player->GetLevel();
-	bool canBossSelect = currentLevel > 5;
 
 	while (true) {
 		cout << "Select Next path\n";
 		cout << "1. Monster\n2. Store\n";
-		if (canBossSelect) cout << "3. Boss\n";
 		cout << "Select next path : ";
 
 		if (!(cin >> nextNode)) {
@@ -75,7 +75,12 @@ void GameFlowManager::selectNextNode() {
 			continue;
 		}
 
-		if (nextNode == 1 || nextNode == 2 || (nextNode == 3 && canBossSelect)){
+		if (nextNode == 1 || nextNode == 2){
+			battleNode();
+			break;
+		}
+		else if (nextNode == 2) {
+			storeNode();
 			break;
 		}
 
@@ -83,25 +88,26 @@ void GameFlowManager::selectNextNode() {
 		cin.ignore(1000, '\n');
 		cout << "Invaild Input\n";
 	}
-
-	switch (nextNode)
-	{
-	case 1:
-		battleNode();
-		break;
-	case 2:
-		storeNode();
-		break;
-	case 3:
-		bossNode();
-		break;
-	default:
-		break;
-	}
 }
 
 // Generate Monster & Battle
 void GameFlowManager::battleNode() {
+	Stage* currentStage = sManager.GetCurrentStage();
+	int level = gm.getPlayer()->GetLevel();
+	if (level <= 3 && currentStage->GetType() != EStage::DARK_CAVE) {
+		cout << gm.getPlayer()->GetName() << " move to " << currentStage->GetType() << "\n";
+	}
+	else if (level <= 6 && currentStage->GetType() != EStage::DIRTY_SWAMP) {
+		cout << gm.getPlayer()->GetName() << " move to " << currentStage->GetType() << "\n";
+	}
+	else if (level <= 9) {
+		cout << "Stage 3\n";
+	}
+	else if(level == 10) {
+		bossNode();
+		return;
+	}
+
 	cout << "Encounter Monster\n";
 	gm.generateMonster();
 	if (bManager == nullptr) bManager = new BattleManager();

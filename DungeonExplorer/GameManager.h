@@ -3,7 +3,8 @@
 
 class Monster;
 class Character;
-class MonsterFactory;
+class CreateMonster;
+class Inventory;
 
 class GameManager {
 private:
@@ -14,7 +15,8 @@ private:
 
 	Monster* enemy;
 	Character* player;
-	MonsterFactory* mFactory;
+	CreateMonster* cMonster;
+	Inventory* inven;
 
 public:
 	static GameManager& GetInstance();
@@ -26,6 +28,8 @@ public:
 	void generateMonster(int level = 0);
 
 	void displayInventory();
+
+	void useItem();
 
 	Monster* getEnemy() { return enemy; }
 	Character* getPlayer() { return player; }
