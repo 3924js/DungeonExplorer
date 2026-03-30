@@ -8,18 +8,21 @@ using namespace std;
 
 FStat Wizard::GetBaseStat() const {
 	//MaxHP, HP, Attack
-	return { 30, 30, 50 };
+	return { 40, 30, 50, 10 };
 }
 
 FStat Wizard::GetLevelUpBonus() const {
 	//MaxHP, HP, Attack
-	return { 10, 10, 20 };
+	return { 10, 10, 20, 10 };
 }
 
-int Wizard::Skill(const Character& character) const {
-	cout << "Fireball !" << endl;
+int Wizard::SkillDamage(const Character& character) const {
 
 	int SkillAttack = 50 + character.GetLevel() * 20;
 
 	return SkillAttack;
+}
+
+std::string Wizard::SkillName() const {
+	return "Fireball !";
 }
