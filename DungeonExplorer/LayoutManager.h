@@ -20,7 +20,7 @@ private:
 	LayoutManager& operator=(const LayoutManager&) = delete;
 
 	//Each display section size
-	const int MainLength = 90;
+	const int MainLength = 95;
 	const int MainHeight = 15;
 
 	const int SideLength = 20;
@@ -89,6 +89,17 @@ public:
 		}
 	}
 
+	//Select How long to replace and overlap
+	static void ForceOverlapMain(const std::vector<std::string>& content, int x, int y, int ReplaceLength) {
+		LayoutManager& LM = GetInstance();
+		//place the content to the coordinate
+		for (int i = 0; i < content.size() && y + i < LM.MainHeight - 2; i++) {
+			if (!content[i].empty()) {
+				LM.MainBuffer[y + i + 1].replace(x + 1, GetPrintLength(content[i]), content[i]);
+			}
+		}
+	}
+
 	static void ResetSide() {
 		//Top and bottom border
 		LayoutManager& LM = GetInstance();
@@ -153,5 +164,8 @@ public:
 	}
 	static int GetSideHeight() {
 		return GetInstance().SideHeight;
+	}
+	static int GetMainLength() {
+		return GetInstance().MainLength;
 	}
 };

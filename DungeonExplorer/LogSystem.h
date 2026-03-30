@@ -190,11 +190,11 @@ private:
 		LayoutManager::UpdateMain(Content, 0, 0);
 	}
 
-	//update to LayoutManager SideBuffer, from top to bottom unlikely to the others
+	//update to LayoutManager SideBuffer
 	static void PushToSideBuffer(const std::deque<std::string>& Deque) {
 		LayoutManager::ResetSide();
 		std::vector<std::string> Content;
-		for (auto line = Deque.begin(); line != Deque.end(); line++) {
+		for (auto line = Deque.rbegin(); line != Deque.rend(); line++) {
 			Content.push_back(*line);
 		}
 		LayoutManager::UpdateSide(Content, 0, 0);
@@ -497,10 +497,18 @@ public:
 		SS << "Defence: " << player->GetDefense();
 		LS.PushSide(SS);
 
-		PushToMainBuffer(LS.SideDeque);
+		PushToSideBuffer(LS.SideDeque);
 		UpdateFrame();
 	}
 
-	void 
+	void PrintStringsOnMain(std::vector <std::string> inputs) {	//for other class to push content on the main buffer
+		LogSystem& LS = GetInstance();
+		for (std::string input : inputs) {
+			LS.PushMain(input);
+		}
+		LS.PushMain(TextFormat::SPLIT_LINE);
+		PushToMainBuffer(LS.SideDeque);
+		UpdateFrame();
+	}
 	
 };
