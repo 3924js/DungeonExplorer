@@ -8,6 +8,7 @@
 #include "Warrior.h"
 #include "Wizard.h"
 #include "Archer.h"
+#include "Store.h"
 #include <string>
 #include <iostream>
 
@@ -62,7 +63,10 @@ void GameFlowManager::setupPlayer() {
 	int jNum = 0;
 	cout << "Select Player Job\n";
 	cout << "1. Warrior\n2. Wizard\n3. Archer\n";
-	cout << "Input Job Number: ";
+	cout << "Enter Job Number: ";
+	while (!cin >> jNum) {
+		cout << "InVaild Input\nEnter Job Number: ";
+	}
 	
 	switch (jNum)
 	{
@@ -82,6 +86,7 @@ void GameFlowManager::setupPlayer() {
 		break;
 	}
 
+	LogSystem::CreateCharacter(name, jobName);
 	gm.createPlayer(name, playerJob);
 }
 
@@ -92,7 +97,7 @@ void GameFlowManager::selectNextNode() {
 	int nextNode = 0;
 
 	while (true) {
-		cout << "Select Next path\n";
+		cout << "Choose the next path\n";
 		cout << "1. Monster\n2. Store\n";
 		cout << "Select next path : ";
 
@@ -103,7 +108,7 @@ void GameFlowManager::selectNextNode() {
 			continue;
 		}
 
-		if (nextNode == 1 || nextNode == 2){
+		if (nextNode == 1){
 			battleNode();
 			break;
 		}
@@ -130,14 +135,14 @@ void GameFlowManager::battleNode() {
 
 	if (level <= 3) {
 		if (currentStage != EStage::DARK_CAVE) {
-			cout << gm.getPlayer()->GetName() << " move to DARK_CAVE\n\n";
+			cout << gm.getPlayer()->GetName() << " move to the DARK_CAVE\n\n";
 			sManager.SetStage(EStage::DARK_CAVE);
 			currentStage = sManager.GetCurrentStage();
 		}
 	}
 	else if (level <= 6) {
 		if (currentStage != EStage::DIRTY_SWAMP) {
-			cout << gm.getPlayer()->GetName() << " move to DIRTY_SWAMP\n\n";
+			cout << gm.getPlayer()->GetName() << " move to the DIRTY_SWAMP\n\n";
 			sManager.SetStage(EStage::DIRTY_SWAMP);
 			currentStage = sManager.GetCurrentStage();
 		}
@@ -161,7 +166,34 @@ void GameFlowManager::battleNode() {
 // Enter Store
 void GameFlowManager::storeNode() {
 	cout << "Enter Store\n";
-	// after Store Mergy
+	Store store;
+	store.InitializeStore();
+	int selection;
+	while (1) {
+		cout << "Select Action\n";
+		cout << "1. buy Item\n2. Sell Item\n3. Leave Store\n Enter Choice: ";
+		cin >> selection;
+		int gold = gm.getPlayer()->GetGold();
+		if (selection == 1) {
+			store.ShowShopMenu(gold);
+			int ItemSelect;
+			cout << "Enter the Item Number to Buy: ";
+			cin >> ItemSelect;
+			store.BuyItem(ItemSelect, gold, *gm.getInventory());
+		}
+		else if (selection == 2) {
+			gm.getInventory()->ShowInventory();
+			int ItemSelect;
+			cout << "Enter the Item Number to Sell: ";
+			cin >> ItemSelect;
+			store.SellItem(ItemSelect, gold, *gm.getInventory());
+		}
+		else if (selection == 3) {
+			cout << "Leave the Store\n";
+			break;
+
+		}
+	}
 }
 
 // Generate Boss & Battle
