@@ -8,12 +8,12 @@ using namespace std;
 
 FStat Archer::GetBaseStat() const {
 	//MaxHP, HP, Attack
-	return { 60, 60, 40, 20 };
+	return { 100, 100, 40, 10 };
 }
 
 FStat Archer::GetLevelUpBonus() const {
 	//MaxHP, HP, Attack
-	return { 20, 20, 20, 10 };
+	return { 20, 20, 20, 5 };
 }
 
 int Archer::SkillDamage(const Character& character) const {
@@ -25,4 +25,9 @@ int Archer::SkillDamage(const Character& character) const {
 
 std::string Archer::SkillName() const {
 	return "Barrage !";
+}
+
+
+std::string Archer::JobName() const {
+	return "Archer";
 }

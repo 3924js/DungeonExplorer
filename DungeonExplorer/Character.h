@@ -18,6 +18,7 @@ public:
 	void LevelUP(const Job& job);
 
 	std::string GetName() const;
+	std::string GetJob() const;
 	int GetLevel() const;
 	int GetMaxHP() const;
 	//int GetMaxMP() const;
@@ -48,6 +49,7 @@ private:
 	static Character* Instance;
 
 	std::string Name;
+	std::string CurrentJob;
 	int Level;
 	FStat stat; //MaxHP, HP, Attack, Defense
 	int EXP;

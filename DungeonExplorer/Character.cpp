@@ -6,7 +6,7 @@
 #include <iostream>
 
 //constructor
-Character::Character(const std::string& name, const Job& job) : Name(name), Level(1), stat(job.GetBaseStat()), EXP(0), Gold(0) {}
+Character::Character(const std::string& name, const Job& job) : Name(name), CurrentJob(job.JobName()), Level(1), stat(job.GetBaseStat()), EXP(0), Gold(0) {}
 
 
 //Singleton Pattern
@@ -61,8 +61,7 @@ void Character::LevelUP(const Job& job) {
 		std::cout << "Can't LevelUp anymore...\n";
 		return;
 	}
-
-	if (EXP >= 100) {
+	else if (EXP >= 100) {
 		++Level;
 		EXP = EXP - 100;
 
@@ -82,6 +81,7 @@ void Character::LevelUP(const Job& job) {
 
 //Getter
 std::string Character::GetName() const { return Name; }
+std::string Character::GetJob() const { return CurrentJob; }
 int Character::GetLevel() const { return Level; }
 int Character::GetMaxHP() const { return stat.MaxHP; }
 //int Character::GetMaxMP() const { return MaxMP; }
