@@ -31,10 +31,8 @@ public:
 
 	//void SetName(std::string name);
 	//void SetLevel(int level);
-	//void SetMaxHP(int maxhp);
-	//void SetMaxMP(int maxmp);
+	void SetMaxHP(int maxhp);
 	void SetHP(int hp);
-	//void SetMP(int mp);
 	void SetAttack(int attack);
 	void SetDefense(int defense);
 	void SetEXP(int exp);

@@ -108,21 +108,14 @@ void Character::SetLevel(int level) {
 		Level = level;
 	}
 }
-
+*/
 void Character::SetMaxHP(int maxhp) {
 	if (maxhp < 0) {
 		maxhp = 0;
 	}
-	MaxHP = maxhp;
+	stat.MaxHP = maxhp;
 }
 
-void Character::SetMaxMP(int maxmp) {
-	if (maxmp < 0) {
-		maxmp = 0;
-	}
-	MaxMP = maxmp;
-}
-*/
 void Character::SetHP(int hp) {
 	//HP underflow/overflow prevention
 	if (hp < 0) {
