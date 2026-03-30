@@ -177,7 +177,7 @@ void GameFlowManager::storeNode() {
 	cout << "Enter Store\n";
 	
 	// Restore HP to maxHP;
-	int maxHp = gm.getPlayer()->GetHP();
+	int maxHp = gm.getPlayer()->GetMaxHP();
 	gm.getPlayer()->SetHP(maxHp);
 
 	// Initialize Store
@@ -230,6 +230,5 @@ void GameFlowManager::gameOver() {
 }
 
 void GameFlowManager::gameClear() {
-	isGameClear = true;
 	LogSystem::ShowStatistics();
 }
