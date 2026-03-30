@@ -8,26 +8,29 @@
 #include "LogSystem.h"
 #include <iostream>
 
+#include "Inventory.h"
+
 void BattleManager::StartBattle(){
     // Random monster spawn 
     std::vector<Monster*> m = BattleSupply::GetInstance().BattleSpawnMonster(); 
-
     // first Turn Roll Dice
     diceResult = diceRoll.Roll();
     ApplyDiceResult(diceResult);
-
     // std::cout << "[Spawn] Spawn monsters!" << std::endl;
     LogSystem::EnterBattle(m);
-    // Enter Battle
     bool isWin = AutoBattle(m);
-
     // End battle, stage random event.
     StageManager::GetInstance().RunRandomEvent(20);
+    
+    
     if (isWin && c.GetHP() > 0)
     {
         std::cout << "[System] Kill all monster! win character!!!\n";
         // Reward 
         BattleSupply::GetInstance().BattleReward(); 
+        // buff effect end
+        Inventory* inv = GameManager::GetInstance().getInventory();
+        inv->SetTempAtkBuff(0);
     }
     else
     {
@@ -130,8 +133,7 @@ void BattleManager::MonstersTurn(std::vector<Monster*>& m){
     {
         if (monsters->getHealth() > 0)
         {
-            // TODO: Add Defense
-            // c.SetHP(c.GetDefense - monsters->Attack());
+            c.SetHP(c.GetDefense() - monsters->Attack());
             LogSystem::AttackPlayer(monsters, monsters->getAttack());
         }
     }
@@ -162,3 +164,5 @@ void BattleManager::ApplyDiceResult(DiceResult result){
     }
     if (result.missChance != 0) { std::cout << "[System] Player miss Chance -" << result.missChance << std::endl; }
 }
+
+

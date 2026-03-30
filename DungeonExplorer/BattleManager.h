@@ -1,13 +1,10 @@
 ﻿// BattleManager.h
 #pragma once
 #include "BattleDice.h"
-#include "Character.h"
 #include "GameManager.h"
-
 
 class Character;
 class Monster;
-
 
 class BattleManager{
 private:
