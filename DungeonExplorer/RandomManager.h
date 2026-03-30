@@ -23,4 +23,9 @@ public:
         std::uniform_int_distribution<int> dis(min, max);
         return dis(gen);
     }
+    
+    void ShuffleVectorString(std::vector<std::string>& target){
+        if (target.empty()) return; 
+        std::shuffle(target.begin(), target.end(), gen);
+    }
 };

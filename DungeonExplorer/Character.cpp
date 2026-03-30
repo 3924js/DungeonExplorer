@@ -1,19 +1,20 @@
-//Character.cpp
+﻿//Character.cpp
 
 #include "Character.h"
-#include "Job.h"
-#include "Warrior.h"
 #include <iostream>
 
 //constructor
-Character::Character(const std::string& name, const Job& job) : Name(name), Level(1), stat(job.GetBaseStat()), EXP(0), Gold(0) {}
+Character::Character(const std::string& name) : Name(name), Level(1), MaxHP(200), MaxMP(100), Attack(30), EXP(0), Gold(0) {
+	HP = GetMaxHP();
+	MP = GetMaxMP();
+}
 
 //Singleton Pattern
 Character* Character::Instance = nullptr;
 
-Character* Character::GetInstance(const std::string& name, const Job& job) {
+Character* Character::GetInstance(std::string name) {
 	if (Instance == nullptr) {
-		Instance = new Character(name, job);
+		Instance = new Character(name);
 	}
 	return Instance;
 }
@@ -27,24 +28,23 @@ void Character::DestroyInstance() {
 
 //Status View
 void Character::displayStatus() const {
-	std::cout << "----[Status]----" << std::endl;
+	std::cout << std::endl;
+	std::cout << "[Status]" << std::endl;
 	std::cout << "Name: " << Name << std::endl;
 	std::cout << std::endl;
 	std::cout << "Level:" << Level << std::endl;
 	std::cout << "EXP: " << EXP << std::endl;
 	std::cout << std::endl;
-	std::cout << "HP: " << stat.HP << "/" << stat.MaxHP << std::endl;
-	//std::cout << "MP: " << MP << "/" << MaxMP << std::endl;
-	std::cout << "Attack: " << stat.Attack << std::endl;
+	std::cout << "HP: " << HP << "/" << MaxHP << std::endl;
+	std::cout << "MP: " << MP << "/" << MaxMP << std::endl;
+	std::cout << "Attack: " << Attack << std::endl;
 	std::cout << std::endl;
 	std::cout << "Gold: " << Gold << std::endl;
-	std::cout << "-----------------" << std::endl;
 	std::cout << std::endl;
 }
 
-
 //Level UP
-void Character::LevelUP(const Job& job) {
+void Character::LevelUP() {
 	// if already at max level
 	if (Level >= 10) {
 		std::cout << "Can't LevelUp anymore...\n";
@@ -53,14 +53,13 @@ void Character::LevelUP(const Job& job) {
 
 	if (EXP >= 100) {
 		++Level;
+		MaxHP += 20;
+		Attack += 5;
+		HP = MaxHP;
+		MP = MaxMP;
 		EXP = EXP - 100;
-
-		stat.MaxHP += job.GetLevelUpBonus().MaxHP;
-		stat.HP = stat.MaxHP;
-		stat.Attack += job.GetLevelUpBonus().Attack;
-
 		std::cout << "level Up!!\nCurrent Level: " << Level << "\n";
-		std::cout << "restored your HP to full\n\n";
+		std::cout << "restored your HP and MP to full\n\n";
 	}
 	else {
 		std::cout << "Not enough experience to level up.\n";
@@ -71,20 +70,19 @@ void Character::LevelUP(const Job& job) {
 //Getter
 std::string Character::GetName() const { return Name; }
 int Character::GetLevel() const { return Level; }
-int Character::GetMaxHP() const { return stat.MaxHP; }
-//int Character::GetMaxMP() const { return MaxMP; }
-int Character::GetHP() const { return stat.HP; }
-//int Character::GetMP() const { return MP; }
-int Character::GetAttack() const { return stat.Attack; }
+int Character::GetMaxHP() const { return MaxHP; }
+int Character::GetMaxMP() const { return MaxMP; }
+int Character::GetHP() const { return HP; }
+int Character::GetMP() const { return MP; }
+int Character::GetAttack() const { return Attack; }
 int Character::GetEXP() const { return EXP; }
+int Character::GetGold() const { return Gold; }
 
 
 //Setter
-/*
 void Character::SetName(std::string name) {
 	Name = name;
 }
-
 void Character::SetLevel(int level) {
 	//level underflow prevention
 	if (level < 1) {
@@ -94,28 +92,28 @@ void Character::SetLevel(int level) {
 		Level = level;
 	}
 }
-
 void Character::SetMaxHP(int maxhp) {
 	if (maxhp < 0) {
 		maxhp = 0;
 	}
+	MaxHP = maxhp;
 }
-
 void Character::SetMaxMP(int maxmp) {
-
+	if (maxmp < 0) {
+		maxmp = 0;
+	}
+	MaxMP = maxmp;
 }
-*/
 void Character::SetHP(int hp) {
 	//HP underflow/overflow prevention
 	if (hp < 0) {
 		hp = 0;
 	}
-	else if (stat.MaxHP < hp) {
-		hp = stat.MaxHP;
+	else if (MaxHP < hp) {
+		hp = MaxHP;
 	}
-	stat.HP = hp;
+	HP = hp;
 }
-/*
 void Character::SetMP(int mp) {
 	//MP underflow/overflow prevention
 	if (mp < 0) {
@@ -126,16 +124,14 @@ void Character::SetMP(int mp) {
 	}
 	HP = mp;
 }
-
 void Character::SetAttack(int attack) {
 	Attack = attack;
 }
-*/
 void Character::SetEXP(int exp) {
 	EXP = exp;
 }
-
 void Character::SetGold(int gold) {
+	
 	if (gold < 0) {
 		gold = 0;
 	}

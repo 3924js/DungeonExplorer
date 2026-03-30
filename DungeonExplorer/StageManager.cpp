@@ -33,8 +33,8 @@ void StageManager::SetStage(EStage stageType){
         break;
     }
 }
-Stage* StageManager::GetCurrentStage(){
+EStage StageManager::GetCurrentStage(){
     if (currentStage != nullptr)
-        return currentStage.get(); 
-    return nullptr;
+        return currentStage->GetType();
+    return EStage::NONE;
 }

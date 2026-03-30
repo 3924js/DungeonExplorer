@@ -4,6 +4,7 @@
 #include <map>
 
 enum EStage{
+    NONE = -1,
     DARK_CAVE,
     DIRTY_SWAMP,
     STAGE_COUNT  // 3
