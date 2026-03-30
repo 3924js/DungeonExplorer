@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Item.h"
+#include "Character.h"
 
 enum class EquipSlot 
 {
@@ -15,6 +16,7 @@ private:
     // Container for owned items
     std::vector<Item> ownedItems;
     int equippedSlots[(int)EquipSlot::Max];
+    int tempAtkBuff = 0;
 
 public:
     Inventory() 
@@ -47,5 +49,9 @@ public:
     std::vector<Item>& GetOwnedItems() { return ownedItems; }
 
     void RemoveItem(int index);
+
+    int GetTempAtkBuff() { return tempAtkBuff; }
+
+    void SetTempAtkBuff(int buff);
 
 };

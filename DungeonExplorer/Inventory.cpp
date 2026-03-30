@@ -46,44 +46,58 @@ void Inventory::ShowInventory() const
 
 int Inventory::GetItemCount() const { return static_cast<int>(ownedItems.size()); }
 
-void Inventory::UseItem()
-{
-    if (ownedItems.empty())
-    {
-        cout << "[System] Your inventory is empty. Nothing to use." << endl;
+void Inventory::UseItem() {
+    if (ownedItems.empty()) {
+        std::cout << "[System] Inventory is empty." << std::endl;
         return;
     }
 
-    cout << "Enter the item name you want to use: ";
-    string itemName;
-    // Use getline if the item name has spaces (e.g., "Iron Sword")
-    cin.ignore(); // Clear the buffer before getline
-    getline(cin, itemName);
+    std::cout << "Enter Item Name: ";
+    std::string itemName;
+    std::cin.ignore();
+    std::getline(std::cin, itemName);
 
-    // Flag to check if item was found
-    bool found = false;
-
-    // Search through the inventory
     for (auto it = ownedItems.begin(); it != ownedItems.end(); ++it) 
     {
         if (it->name == itemName) 
         {
-            cout << "[System] You used: " << it->name << "!" << endl;
+            // 1. Get the already created player instance
+            Character* player = Character::GetInstance();
 
-            // Logic for item effects could go here (e.g., heal, buff)
+            if (player == nullptr) 
+            {
+                std::cout << "[Error] Player not found. Create character first!" << std::endl;
+                return;
+            }
 
-            // Remove the item from the vector
-            ownedItems.erase(it);
-            found = true;
-            break;
+            if (it->type == ItemType::Potion) 
+            {
+                std::cout << "[System] Used " << it->name << "!" << std::endl;
+
+                // 2. HP Recovery logic
+                if (it->id == 301 || it->id == 302) 
+                {
+                    int finalHP = player->GetHP() + it->value;
+                    if (finalHP > player->GetMaxHP()) finalHP = player->GetMaxHP();
+                    player->SetHP(finalHP);
+                    std::cout << "[Effect] HP is now " << player->GetHP() << std::endl;
+                }
+                // 3. Temporary Attack Boost logic
+                else if (it->id == 303 || it->id == 304) 
+                {
+                    player->SetAttack(player->GetAttack() + it->value);
+                    this->tempAtkBuff = it->value; // add temp attack buff
+                    std::cout << "[Effect] Attack boosted by " << it->value << "!" << " temporarily for this stage!" << std::endl;
+                }
+
+                // 4. Consume item
+                if (it->count > 1) it->count--;
+                else ownedItems.erase(it);
+            }
+            return;
         }
     }
-
-    if (!found) 
-    {
-        cout << "[System] Item '" << itemName << "' not found in inventory." << endl;
-    }
-
+    std::cout << "[System] Item not found." << std::endl;
 }
 
 void Inventory::EquipItem(int index) 
@@ -100,14 +114,20 @@ void Inventory::EquipItem(int index)
     Item& selectedItem = ownedItems[actualIndex];
     int slotIndex = -1;
 
+    Character* player = Character::GetInstance();
+
     // Determine the slot based on ItemType
     if (selectedItem.type == ItemType::Weapon) 
     {
         slotIndex = (int)EquipSlot::Weapon;
+        player->SetAttack(player->GetAttack() + selectedItem.value);
+        std::cout << "[Effect] Attack boosted by " << selectedItem.value << "!" << std::endl;
     }
     else if (selectedItem.type == ItemType::Armor) 
     {
         slotIndex = (int)EquipSlot::Armor;
+        player->SetDefense(player->GetDefense() + selectedItem.value);
+        std::cout << "[Effect] Defense boosted by " << selectedItem.value << "!" << std::endl;
     }
     else 
     {
@@ -156,4 +176,9 @@ void Inventory::RemoveItem(int index)
     {
         ownedItems.erase(ownedItems.begin() + index);
     }
+}
+
+void Inventory::SetTempAtkBuff(int buff)
+{
+    tempAtkBuff += buff;
 }
