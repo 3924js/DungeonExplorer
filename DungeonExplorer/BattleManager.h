@@ -2,9 +2,12 @@
 #pragma once
 #include "BattleDice.h"
 #include "GameManager.h"
+#include "AttackStrategy.h"
 
 class Character;
 class Monster;
+static SpecialAttack specialAtk;
+static NormalAttack normalAtk;
 
 class BattleManager{
 private:
@@ -27,4 +30,6 @@ public:
     bool PlayerTurn(std::vector<Monster*>& m, Monster*& target);
     void MonstersTurn(std::vector<Monster*>& m);
     void ApplyDiceResult(DiceResult result);
+    void UsePotionToPer(float perHP);
+    void StartBossBattle(Monster* monster);
 };

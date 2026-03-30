@@ -6,9 +6,10 @@
 #include "RandomManager.h"
 #include "BattleSupply.h"
 #include "LogSystem.h"
+#include "GameFlowManager.h"
+#include "inventory.h"
 #include <iostream>
 
-#include "Inventory.h"
 
 void BattleManager::StartBattle(){
     // Random monster spawn 
@@ -34,8 +35,9 @@ void BattleManager::StartBattle(){
     }
     else
     {
-        LogSystem::PlayerDied();
         // Game End 
+        GameFlowManager GFM;
+        GFM.gameOver();
     }
     // Delete new monsters
     for (Monster* monsters : m)
@@ -66,6 +68,14 @@ bool BattleManager::AutoBattle(std::vector<Monster*>& m){
         if (target == nullptr)
             break;
         std::cout << "[System] Turn count : " << turnCount << std::endl;
+        // Check alive monster
+        int aliveCount = 0;
+        for (auto monsters : m) { if (monsters != nullptr && monsters->getHealth() > 0) { aliveCount++; } }
+        std::cout << "[System] " << "Alive Monsters count : " << aliveCount << std::endl;
+        std::cout << ">>> Player HP " << c.GetHP() << std::endl;
+        
+        UsePotionToPer(0.4f);
+        
         PlayerTurn(m, target);
         MonstersTurn(m);
         ++turnCount;
@@ -74,6 +84,7 @@ bool BattleManager::AutoBattle(std::vector<Monster*>& m){
 }
 
 bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target){
+ 
     std::vector<Monster*> killedMonster;
     // Check miss 
     int randomResult = RandomManager::GetInstance().GetRange(1, 100);
@@ -123,24 +134,17 @@ bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target){
 }
 
 void BattleManager::MonstersTurn(std::vector<Monster*>& m){
-    // Check alive monster count
-    int aliveCount = 0;
-    for (auto monsters : m) { if (monsters != nullptr && monsters->getHealth() > 0) { aliveCount++; } }
-    std::cout << "[System] " << "Alive Monsters count : " << aliveCount << std::endl;
-
-    // Monsters attack Player
     for (auto monsters : m)
     {
         if (monsters->getHealth() > 0)
         {
-            c.SetHP(c.GetDefense() - monsters->Attack());
+            c.SetHP(c.GetHP() + c.GetDefense() - monsters->Attack());
             LogSystem::AttackPlayer(monsters, monsters->getAttack());
         }
     }
 }
 
 void BattleManager::ApplyDiceResult(DiceResult result){
-    // TODO: Slow output 
     LogSystem::RollDice(result.diceNum);
     // std::cout << "[Dice] Your dice : " << result.diceNum << std::endl;
     std::cout << "[System] \"" << result.description << "\"" << std::endl;
@@ -150,7 +154,6 @@ void BattleManager::ApplyDiceResult(DiceResult result){
         if (result.hpDelta > 0)
         {
             c.SetHP(c.GetMaxHP() + result.hpDelta);
-            c.SetHP(c.GetMaxHP());
         }
         else { c.SetHP(c.GetMaxHP() + result.hpDelta); }
         std::cout << "[System] Player hp add : " << result.hpDelta << ", Player hp : " << c.GetHP() << std::endl;
@@ -158,11 +161,89 @@ void BattleManager::ApplyDiceResult(DiceResult result){
     if (result.atkDelta != 0)
     {
         // Set Character Attack
-        // TODO: c.SetAttack(c.GetAttack() + result.atkDelta);
-        std::cout << "[System] Player attack add : " << result.atkDelta << ", Player Atk : " << c.GetAttack() <<
-            std::endl;
+        c.SetAttack(c.GetAttack() + result.atkDelta);
+        std::cout << "[System] Player attack add : " << result.atkDelta << ", Player Atk : " << c.GetAttack() << std::endl;
     }
     if (result.missChance != 0) { std::cout << "[System] Player miss Chance -" << result.missChance << std::endl; }
+}
+
+void BattleManager::UsePotionToPer(float perHP){
+    // Check Player MAX HP 30 %
+    int playerHP = c.GetHP();
+    int playerMaxHP = c.GetMaxHP();
+    Inventory* inv = GameManager::GetInstance().getInventory();
+    std::vector<Item>& findItem = GameManager::GetInstance().getInventory()->GetOwnedItems();
+    
+    if (playerHP <= playerMaxHP * perHP)
+    {
+        for (auto it = findItem.begin(); it < findItem.end(); ++it)
+        {
+            if (it->id == 301 || it->id == 302)
+            {
+                std::cout << TextFormat::RED 
+                << "[System] " << c.GetName() << " HP is Only " << perHP * 100 << "% !!!!" 
+                << TextFormat::DEFAULT << std::endl;
+                std::cout << "[System] " << c.GetName() << " HP : " << playerHP << std::endl;
+                inv->UseItem();
+                std::cout << "[System] " << c.GetName() << " HP : " << c.GetHP() << std::endl;
+                return; 
+            }
+        }
+    }
+}
+
+void BattleManager::StartBossBattle(Monster* boss){
+    GameFlowManager GFM;
+    bool isWin = 0;
+    int bossTurn = 1;
+
+    int normalDamage = normalAtk.calculateDamage(boss->getAttack());
+    int specialDamage = specialAtk.calculateDamage(boss->getAttack());
+    
+    while(c.GetHP() >  0){
+        std::cout << "[System] Turn Count : " << bossTurn << std::endl;
+        
+        UsePotionToPer(0.4f);
+        
+        // player turn
+        if (bossTurn % 2 != 0)
+        {
+            boss->takeDamage(c.GetAttack());
+            LogSystem::AttackMonster(boss, c.GetAttack());
+        }
+        // TODO: Player Skill
+        else if (bossTurn % 3 == 0)
+        {
+            boss->takeDamage(c.GetAttack());
+            // TODO: Player Skill Damage
+            LogSystem::AttackMonster(boss, c.GetAttack());
+        }
+        
+        // boss turn
+        if (bossTurn % 2 != 0)
+        {
+            c.SetHP(c.GetHP() + c.GetDefense() - normalDamage);
+            LogSystem::AttackPlayer(boss, normalDamage);
+        }
+        // boss skill
+        else if (bossTurn % 2 == 0)
+        {
+            c.SetHP(c.GetHP() + c.GetDefense() - specialDamage);
+            LogSystem::AttackPlayer(boss, specialDamage);
+        }
+        
+        if (boss->getHealth() <= 0) { break; }
+    }
+    
+    // Check isWin
+    if (isWin)
+    {
+        GFM.gameClear();
+    }
+    else
+    {
+        GFM.gameOver();
+    }
 }
 
 
