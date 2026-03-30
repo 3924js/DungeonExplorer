@@ -1,31 +1,31 @@
-#include "Goblin.h"
+#include "Orc.h"
 #include <iostream>
 #include "AttackStrategy.h"
-std::string Goblin::getName() {
+std::string Orc::getName() {
 	return name;
 }
 
-int Goblin::getHealth() {
+int Orc::getHealth() {
 	return health;
 }
 
-int Goblin::getAttack() {
+int Orc::getAttack() {
 	return attack;
 }
 
-void Goblin::takeDamage(int damage) {
+void Orc::takeDamage(int damage) {
 	int getDamage = health - damage;
 	if (getDamage <= 0) health = 0;
 	else health = getDamage;
 }
 
-int Goblin::Attack() {
+int Orc::Attack() {
 	if (!attackStrategy) return 0;
 	int dmg = attackStrategy->calculateDamage(attack);
-	std::cout << dmg << std::endl;
+
 	return dmg;
 }
 
-void Goblin::SetStrategy(std::unique_ptr<AttackStrategy> attackStrategy) {
+void Orc::SetStrategy(std::unique_ptr<AttackStrategy> attackStrategy) {
 	this->attackStrategy = move(attackStrategy);
 }

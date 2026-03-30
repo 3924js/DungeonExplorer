@@ -1,31 +1,31 @@
-#include "Goblin.h"
+#include "Troll.h"
 #include <iostream>
 #include "AttackStrategy.h"
-std::string Goblin::getName() {
+std::string Troll::getName() {
 	return name;
 }
 
-int Goblin::getHealth() {
+int Troll::getHealth() {
 	return health;
 }
 
-int Goblin::getAttack() {
+int Troll::getAttack() {
 	return attack;
 }
 
-void Goblin::takeDamage(int damage) {
+void Troll::takeDamage(int damage) {
 	int getDamage = health - damage;
 	if (getDamage <= 0) health = 0;
 	else health = getDamage;
 }
 
-int Goblin::Attack() {
+int Troll::Attack() {
 	if (!attackStrategy) return 0;
 	int dmg = attackStrategy->calculateDamage(attack);
-	std::cout << dmg << std::endl;
+
 	return dmg;
 }
 
-void Goblin::SetStrategy(std::unique_ptr<AttackStrategy> attackStrategy) {
+void Troll::SetStrategy(std::unique_ptr<AttackStrategy> attackStrategy) {
 	this->attackStrategy = move(attackStrategy);
 }

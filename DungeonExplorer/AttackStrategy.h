@@ -3,20 +3,15 @@
 class AttackStrategy {
 public:
 	virtual ~AttackStrategy() = default;
-	virtual int calculateDamage(int level) = 0;
+	virtual int calculateDamage(int atk) = 0;
 };
 
-class DiceAttack :public AttackStrategy {
+class NormalAttack :public AttackStrategy {
 public:
-	int calculateDamage(int atk) override {
-		auto& gen = MakeRandom::getGenerator();
+	virtual int calculateDamage(int atk) override;
+};
 
-		int diceValue = RollDice::useDice(1,6);
-
-		int minDmg = atk * diceValue * 1;
-		int maxDmg = atk * diceValue * 3;
-
-		std::uniform_int_distribution<int> dmgDist(minDmg, maxDmg);
-		return dmgDist(gen);
-	}
+class SpecialAttack :public AttackStrategy {
+public:
+	virtual int calculateDamage(int atk) override;
 };

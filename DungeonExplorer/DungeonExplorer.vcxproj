@@ -123,6 +123,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AttackStrategy.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="GameFlowManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -132,15 +134,19 @@
     <ClCompile Include="BattleManager.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="ItemManager.cpp" />
+    <ClCompile Include="Orc.cpp" />
     <ClCompile Include="RollDice.cpp" />
     <ClCompile Include="MonsterFactory.cpp" />
+    <ClCompile Include="Slime.cpp" />
     <ClCompile Include="Store.cpp" />
     <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="StageDarkCave.cpp" />
     <ClCompile Include="StageDirtySwamp.cpp" />
+    <ClCompile Include="Troll.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackStrategy.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="GameFlowManager.h" />
     <ClInclude Include="GameManager.h" />
@@ -154,14 +160,17 @@
     <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="LogSystem.h" />
+    <ClInclude Include="Orc.h" />
     <ClInclude Include="RollDice.h" />
     <ClInclude Include="MonsterFactory.h" />
+    <ClInclude Include="Slime.h" />
     <ClInclude Include="Store.h" />
     <ClInclude Include="RandomManager.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageDarkCave.h" />
     <ClInclude Include="StageDirtySwamp.h" />
     <ClInclude Include="StageManager.h" />
+    <ClInclude Include="Troll.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
