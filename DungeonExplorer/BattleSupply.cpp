@@ -2,11 +2,11 @@
 #include <iostream>
 #include "BattleSupply.h"
 #include "BattleTable.h"
+#include "Character.h"
 #include "StageManager.h"
 #include "Monster.h"
 #include "RandomManager.h"
 #include "CreateMonster.h"
-#include "Character.h"
 #include "ItemFactory.h"
 #include "Inventory.h"
 
@@ -49,7 +49,7 @@ std::vector<Monster*> BattleSupply::BattleSpawnMonster(){
         
         // Create Random Monster
         std::string monsterName = findMonster + " " + suffixes[i % suffixes.size()]; // defense if i > suffixes.size()
-        Monster* newMonster = it->second(monsterName, Character::GetInstance()->GetLevel());
+        Monster* newMonster = it->second(monsterName, player->GetLevel());
         spawnedList.push_back(newMonster);
         // for reward
         rewardList.push_back(findMonster);
@@ -65,18 +65,18 @@ void BattleSupply::BattleReward(){
         MonsterReward rewardMob = BattleTable::GetRewardToMonster(m);
         float randomChance = RandomManager::GetInstance().GetRange(0.0f, 1.0f);
         int randomGold = RandomManager::GetInstance().GetRange(rewardMob.minGold, rewardMob.maxGold);
-        int playerGold = Character::GetInstance()->GetGold();
+        int playerGold = player->GetGold();
         Item getItem = ItemFactory::CreateItem(rewardMob.itemId);
 
         if (randomChance <= rewardMob.dropRate )
         {
             std::cout << "[Reward] " << m << " dropped an rewards!! (" << rewardMob.dropRate * 100 << "% drop) \n";
             std::cout << "[Reward] Player get gold : " << randomGold << " G\n";
-            Character::GetInstance()->SetGold(playerGold + randomGold);
+            player->SetGold(playerGold + randomGold);
             
             std::cout << "[Reward] Player get Item : " << getItem.name << std::endl;
             // TODO: Player inventory
-            Character::GetInstance()->GetInventory().AddItem(getItem);
+            // Character::GetInstance()->GetInventory().AddItem(getItem);
         }
         else
         {
@@ -84,7 +84,6 @@ void BattleSupply::BattleReward(){
         }
     }
     std::cout << "[Reward] Player get Total EXP : " << totalEXP << " EXP\n";
-    int getEXP = Character::GetInstance()->GetEXP();
-    Character::GetInstance()->SetEXP(getEXP + totalEXP);
-    // TODO:LEVEL UP LOGIC ?
+    int getEXP = player->GetEXP();
+    player->SetEXP(getEXP + totalEXP);
 }

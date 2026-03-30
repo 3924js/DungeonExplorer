@@ -2,6 +2,7 @@
 #pragma once
 #include "BattleDice.h"
 #include "Character.h"
+#include "GameManager.h"
 
 
 class Character;
@@ -13,7 +14,7 @@ private:
     int turnCount;
     BattleDice rollDice;
     DiceResult diceResult;
-    Character& c = *Character::GetInstance();
+    Character& c = *GameManager::GetInstance().getPlayer();
     BattleManager() = default; 
 public:
     static BattleManager& GetInstance(){

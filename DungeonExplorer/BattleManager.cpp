@@ -152,7 +152,7 @@ void BattleManager::ApplyDiceResult(DiceResult result){
         // Set Character hp
         if (result.hpDelta > 0)
         {
-            c.SetMaxHP(c.GetMaxHP() + result.hpDelta);
+            c.SetHP(c.GetMaxHP() + result.hpDelta);
             c.SetHP(c.GetMaxHP());
         }
         else { c.SetHP(c.GetMaxHP() + result.hpDelta); }
@@ -161,7 +161,7 @@ void BattleManager::ApplyDiceResult(DiceResult result){
     if (result.atkDelta != 0)
     {
         // Set Character Attack
-        c.SetAttack(c.GetAttack() + result.atkDelta);
+        // TODO: c.SetAttack(c.GetAttack() + result.atkDelta);
         std::cout << "[Event] Player attack add : " << result.atkDelta << ", Player Atk : " << c.GetAttack() <<
             std::endl;
     }

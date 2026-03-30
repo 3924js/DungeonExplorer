@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <functional>
+#include "GameManager.h"
 
 class Monster;
 
@@ -12,6 +13,7 @@ private:
     std::vector<Monster*> spawnedList;
     std::vector<std::string> rewardList; 
     std::map<std::string, std::function<Monster*(std::string, int)>> monsterFactory; 
+    Character* player = GameManager::GetInstance().getPlayer();
     BattleSupply();
 public:
     static BattleSupply& GetInstance(){
