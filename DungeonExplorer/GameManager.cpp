@@ -24,7 +24,7 @@ GameManager::~GameManager() {
 
 // Create the player only if it does not exist
 void GameManager::createPlayer(string name, Job* pJob) {
-	Job* job = new Warrior();
+	Job* job = pJob;
 	player = Character::GetInstance(name, *job);
 	delete job;
 }

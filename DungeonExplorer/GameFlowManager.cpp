@@ -25,12 +25,11 @@ void GameFlowManager::run() {
 		if (gm.getPlayer()->GetHP() > 0) {
 			selectNextNode();
 		}
-		else {
-			gameOver();
-		}
+		else break;
 	}
 	
-	gameClear();
+	if (isGameClear) gameClear();
+	else gameOver();
 }
 
 // Input Player Name & create Player
@@ -64,7 +63,9 @@ void GameFlowManager::setupPlayer() {
 	cout << "Select Player Job\n";
 	cout << "1. Warrior\n2. Wizard\n3. Archer\n";
 	cout << "Enter Job Number: ";
-	while (!cin >> jNum) {
+	while (!(cin >> jNum)) {
+		cin.clear();
+		cin.ignore(1000, '\n');
 		cout << "InVaild Input\nEnter Job Number: ";
 	}
 	
@@ -205,8 +206,8 @@ void GameFlowManager::bossNode() {
 }
 
 void GameFlowManager::gameOver() {
-	cout << "Game Over\n";
 	LogSystem::PlayerDied();
+	LogSystem::ShowStatistics();
 }
 
 void GameFlowManager::gameClear() {
