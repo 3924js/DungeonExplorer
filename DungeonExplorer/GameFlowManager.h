@@ -29,4 +29,6 @@ public:
 	void gameOver();
 
 	void gameClear();
+
+	void setIsGameClear() { isGameClear = true; }
 };
