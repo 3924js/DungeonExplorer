@@ -31,14 +31,16 @@ void StageDarkCave::EnterStage(){
     
     Character* player = GameManager::GetInstance().getPlayer();
     std::cout << "[System] \"" << event.description << "\"\n";
+    // Player HP setting
     if (event.hpDelta != 0)
+    {
         player->SetHP(player->GetHP() + event.hpDelta);
         std::cout << "[System] Player hp add " << event.hpDelta << std::endl;
+    }
+    // Player atk setting
     if (event.atkDelta != 0)
     {
-                
-        // TODO:player->SetAttack()(player->() + event.hpDelta)
-            
+        player->SetAttack(player->GetAttack() + event.hpDelta);
         std::cout << "[System] Player atk add " << event.atkDelta << std::endl;
     }
     std::cout << TextFormat::GREEN << "========================================" << TextFormat::DEFAULT << std::endl;
