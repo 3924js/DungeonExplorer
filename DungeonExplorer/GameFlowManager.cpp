@@ -167,6 +167,7 @@ void GameFlowManager::battleNode() {
 // Enter Store
 void GameFlowManager::storeNode() {
 	cout << "Enter Store\n";
+	ItemManager::GetInstance().Initialize();
 	Store store;
 	store.InitializeStore();
 	int selection;
