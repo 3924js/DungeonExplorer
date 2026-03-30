@@ -8,6 +8,7 @@
 #include "LogSystem.h"
 #include "GameFlowManager.h"
 #include "inventory.h"
+#include "Job.h"
 #include <iostream>
 
 
