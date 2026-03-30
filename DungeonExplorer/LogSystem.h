@@ -4,10 +4,15 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <deque>
+#include <stack>
+#include <algorithm>
 #include "Character.h"
 #include "Monster.h"
 #include "Item.h"
 #include "LayoutManager.h"
+#include <sstream>
+
 #include "iomanip"
 
 
@@ -19,8 +24,8 @@ enum IntStatTypes {
 	TAKEN_DAMAGE,
 	KILLED_MONSTERS,
 	EARNED_MONEY,
-	BOUGHT_ITEM,
-	USED_ITEM,
+	COLLECTED_ITEMS,
+	USED_ITEMS,
 	ROLLED_DICE,
 	TOTAL_SPOTS,
 	COUNT
@@ -32,7 +37,7 @@ static const std::string IntStatNames[IntStatTypes::COUNT] = { "Total Battles",
 															"Taken Damage",
 															"Killed Monsters",
 															"Earned Money",
-															"Bought Items",
+															"COLLECTED Items",
 															"Used Items",
 															"Rolled Dice",
 															"Total Spots" };
@@ -47,6 +52,7 @@ namespace TextFormat {
 	const std::string MAGENTA = "\033[1;3;4;95m";
 	const std::string CYAN = "\033[1;3;4;96m";
 	const std::string WHITE = "\033[1;3;4;97m";
+	const std::string SPLIT_LINE = "\033[1;3;4;92m------------------------------\033[0m";
 }
 static std::string GetHighlightColor(const Item& i) {
 	switch (i.rarity) {
@@ -69,10 +75,19 @@ private:
 		static LogSystem Instance;
 		return Instance;
 	}
+	LogSystem(const LogSystem&) = delete;
+	LogSystem& operator=(const LogSystem&) = delete;
+
 	//Constructor
 	LogSystem() {
 		//Initialize all integer statistics values
 		for (int i = 0; i < IntStatTypes::COUNT; i++) Stats[i] = 0;
+
+		//Reset LayoutManager
+		LayoutManager::ResetMain();
+		LayoutManager::ResetSide();
+		LayoutManager::ResetLog();
+
 	}
 	//Destructor
 	~LogSystem() = default;
@@ -82,176 +97,374 @@ private:
 	std::map<std::string, int> MonstersEncountered;
 	std::map<std::string, int> MonstersKilled;
 
+	std::deque<std::string> LogDeque;
+	std::deque<std::string> MainDeque;
+	std::deque<std::string> SideDeque;
+	
+	//Push string to LogDeque
+	//stringstream version
+	static void PushLog(const std::stringstream& ss) {
+		//push to the LogDeque
+		LogSystem& LS = GetInstance();
+		LS.LogDeque.push_front(ss.str());
+
+		//erase the old one if the size is big
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
+			LS.LogDeque.pop_back();
+		}
+	}
+	//string version
+	static void PushLog(const std::string& log) {
+		//push to the LogDeque
+		LogSystem& LS = GetInstance();
+		LS.LogDeque.push_front(log);
+
+		//erase the old one if the size is big
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
+			LS.LogDeque.pop_back();
+		}
+	}
+
+	//Push string to MainDeque
+	//stringstream version
+	static void PushMain(const std::stringstream& ss) {
+		//push to the LogQueue
+		LogSystem& LS = GetInstance();
+		LS.MainDeque.push_front(ss.str());
+
+		//erase the old one if the size is big
+		if (LS.MainDeque.size() > LayoutManager::GetLogHeight() - 2) {
+			LS.MainDeque.pop_back();
+		}
+	}
+	//string version
+	static void PushMain(const std::string& log) {
+		//push to the LogQueue
+		LogSystem& LS = GetInstance();
+		LS.MainDeque.push_front(log);
+
+		//erase the old one if the size is big
+		if (LS.MainDeque.size() > LayoutManager::GetLogHeight() - 2) {
+			LS.MainDeque.pop_back();
+		}
+	}
+	//Push string to sideDeque
+	//stringstream version
+	static void ChangeSide(const std::stringstream& ss) {
+		LogSystem& LS = GetInstance();
+		LS.SideDeque.push_front(ss.str());
+
+		//erase the old one if the size is big
+		if (LS.SideDeque.size() > LayoutManager::GetLogHeight() - 2) {
+			LS.SideDeque.pop_back();
+		}
+	}
+	//string version
+	static void ChangeSide(const std::string& log) {
+		LogSystem& LS = GetInstance();
+		LS.SideDeque.push_front(log);
+
+		//erase the old one if the size is big
+		if (LS.SideDeque.size() > LayoutManager::GetLogHeight() - 2) {
+			LS.SideDeque.pop_back();
+		}
+	}
+
+	//update to LayoutManager
+	static void PushToLogBuffer(const std::deque<std::string>& Deque) {
+		LayoutManager::ResetLog();
+		std::vector<std::string> Content;
+		for (auto line = Deque.rbegin(); line != Deque.rend(); line++) {
+			Content.push_back(*line);
+		}
+		LayoutManager::UpdateLog(Content, 0, 0);
+	}
+
+	//update to LayoutManager
+	static void PushToMainBuffer(const std::deque<std::string>& Deque) {
+		LayoutManager::ResetMain();
+		std::vector<std::string> Content;
+		for (auto line = Deque.rbegin(); line != Deque.rend(); line++) {
+			Content.push_back(*line);
+		}
+		LayoutManager::UpdateMain(Content, 0, 0);
+	}
+
+	//update to LayoutManager
+	static void PushToSideBuffer(const std::deque<std::string>& Deque) {
+		LayoutManager::ResetSide();
+		std::vector<std::string> Content;
+		for (auto line = Deque.rbegin(); line != Deque.rend(); line++) {
+			Content.push_back(*line);
+		}
+		LayoutManager::UpdateSide(Content, 0, 0);
+	}
 	//print message separation line in the console
-	static void PrintLine() {
-		std::cout << TextFormat::GREEN << "------------------------------" << TextFormat::DEFAULT << std::endl;
+	static std::string PrintLine() {
+		std::stringstream SS;
+		//std::cout << TextFormat::GREEN << "------------------------------" << TextFormat::DEFAULT << std::endl;
+		SS << TextFormat::GREEN << "------------------------------" << TextFormat::DEFAULT;
+		return SS.str();
+	}
+
+	static void UpdateFrame() {
+		LayoutManager::ClearWindow();
+		LayoutManager::PrintFrame();
 	}
 public:
 	static void CreateCharacter(std::string PlayerName, std::string JobName) {
-
-		std::cout << ">>> The explorer, " << TextFormat::YELLOW << PlayerName << " " << JobName << TextFormat::DEFAULT << " enters the dungeon..." << std::endl;
-		PrintLine();
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+		SS << ">>> " << TextFormat::GREEN << PlayerName << ", The " << JobName << TextFormat::DEFAULT << " enters the dungeon...";
+		LS.PushLog(SS);
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
 	}
-
-	/* Previous String Version
-	static void EnterBattle(std::vector<std::string> monsters) {
-		std::cout << ">>> The player encounters enemies!" << std::endl;
-		GetInstance().Stats[IntStatTypes::TOTAL_BATTLES]++;
-		for (std::string name : monsters) {
-			std::cout << "-> " << name << " is preparing for a battle!" << std::endl;
-			GetInstance().MonstersEncountered[name]++;
-		}
-		PrintLine();
-	}*/
 
 	static void EnterBattle(const std::vector<Monster*>& monsters) {
-		std::cout << ">>> The player encounters enemies!" << std::endl;
-		GetInstance().Stats[IntStatTypes::TOTAL_BATTLES]++;
-		for (Monster* monster : monsters) {
-			std::cout << "-> " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << " is preparing for a battle!" << std::endl;
-			GetInstance().MonstersEncountered[monster->getName()]++;
-		}
-		PrintLine();
-	}
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+		LS.PushLog(">>> The player is entering for a battle!");
 
-	/* Previous String Version
-	static void AttackMonster(std::string monsterName, int Damage) {
-		std::cout << ">>> The player attacks the monster " << monsterName << "!" << std::endl;
-		std::cout << "-> The Monster has taken "<< Damage << " damage!" << std::endl;
-		GetInstance().Stats[IntStatTypes::ATTACKS]++;
-		GetInstance().Stats[IntStatTypes::DEALT_DAMAGE] += Damage;
-		PrintLine();
-	}*/
+		SS.str("");
+		SS << "-> " << TextFormat::RED;
+		for (int i = 0; i < monsters.size(); i++) {
+			LS.MonstersEncountered[monsters[i]->getName()]++;
+			if (i == 0) {
+				SS << monsters[i]->getName();
+				continue;
+			}
+			if (i == monsters.size() - 1) {
+				SS << ", and " << monsters[i]->getName();
+				break;
+			}
+			SS << ", " << monsters[i]->getName();
+		}
+		SS <<TextFormat::DEFAULT << (monsters.size() > 1 ? " are" : " is") << " preparing for a battle!";
+		LS.PushLog(SS);
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+
+		LS.Stats[IntStatTypes::TOTAL_BATTLES]++;
+	}
 
 	static void AttackMonster(Monster* monster, int Damage) {
-		std::cout << ">>> The player attacks the monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << "!" << std::endl;
-		std::cout << "-> The Monster has taken " << Damage << " damage!" << std::endl;
-		GetInstance().Stats[IntStatTypes::ATTACKS]++;
-		GetInstance().Stats[IntStatTypes::DEALT_DAMAGE] += Damage;
-		PrintLine();
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+
+		SS.str("");
+		SS << ">>> The player attacks the monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << "!";
+		LS.PushLog(SS);
+
+		SS.str("");
+		SS << "-> The Monster has taken " << Damage << " damage!";
+		LS.PushLog(SS);
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+
+		LS.Stats[IntStatTypes::ATTACKS]++;
+		LS.Stats[IntStatTypes::DEALT_DAMAGE] += Damage;
 	}
 
-	/* Previous String Version
-	static void AttackPlayer(std::string monsterName, int Damage) {
-		std::cout << ">>> The monster " << monsterName << " attacks the player!" << std::endl;
-		std::cout << "-> The player has taken " << Damage << " damage!" << std::endl;
-		GetInstance().Stats[IntStatTypes::TAKEN_DAMAGE] += Damage;
-		PrintLine();
-	}*/
-
 	static void AttackPlayer(Monster* monster, int Damage) {
-		std::cout << ">>> The monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << " attacks the player!" << std::endl;
-		std::cout << "-> The player has taken " << Damage << " damage!" << std::endl;
-		GetInstance().Stats[IntStatTypes::TAKEN_DAMAGE] += Damage;
-		PrintLine();
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+		SS.str("");
+		SS << ">>> The monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << " attacks the player!";
+		LS.PushLog(SS);
+
+		SS.str("");
+		SS << "-> The player has taken " << TextFormat::RED << Damage << TextFormat::DEFAULT << " damage!";
+		LS.PushLog(SS);
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+		
+		LS.Stats[IntStatTypes::TAKEN_DAMAGE] += Damage;
 	}
 
 	static void UseSkill(Monster* monster, std::string SkillText, int Damage) {
-		std::cout << ">>> The player casts a skill!" << std::endl;
-		std::cout << "-> " << TextFormat::MAGENTA << SkillText << TextFormat::DEFAULT << "!" << std::endl;
-		std::cout << "-> The Monster has taken " << Damage << " damage!" << std::endl;
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+		LS.PushLog(">>> The player casts a skill!");
+
+		SS.str("");
+		SS << "-> " << TextFormat::MAGENTA << SkillText << TextFormat::DEFAULT << "!";
+		LS.PushLog(SS);
+
+		SS.str("");
+		SS << "-> The Monster has taken " << TextFormat::RED << Damage << TextFormat::DEFAULT << " damage!";
+		LS.PushLog(SS);
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+
 		GetInstance().Stats[IntStatTypes::ATTACKS]++;
 		GetInstance().Stats[IntStatTypes::DEALT_DAMAGE] += Damage;
-		PrintLine();
 	}
-	/* Previous String Version
-	static void KillMonster(std::string monsterName) {
-		std::cout << ">>> The player has defeated the monster " << monsterName << "!" << std::endl;
-		GetInstance().MonstersKilled[monsterName]++;
-		PrintLine();
-	}*/
 
 	static void KillMonster(Monster* monster) {
-		std::cout << ">>> The player has defeated the monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << "!" << std::endl;
-		GetInstance().MonstersKilled[monster->getName()]++;
-		PrintLine();
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+		SS.str("");
+		SS << ">>> The player has defeated the monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << "!";
+		LS.PushLog(SS);
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+
+		LS.MonstersKilled[monster->getName()]++;
 	}
 
-	/* Previous String Version
-	static void BuyItem(std::string name) {	//Change needed if statistics counts each item separately.
-		std::cout << ">>> The player Bought the item " << name << "!" << std::endl;
-		GetInstance().Stats[IntStatTypes::BOUGHT_ITEM]++;
-		PrintLine();
-	}*/
-
 	static void GetReward(int Exp, int Gold, const std::vector<Item>& Items) {
-		std::cout << ">>> The player gets the rewards!" << std::endl;
-		std::cout << "-> Earend experience point: " << Exp << std::endl;
-		std::cout << "-> Earned gold: " << Gold << std::endl;
-		for (Item i : Items) {
-			std::cout << "-> Collected an item: " << GetHighlightColor(i) << i.name << TextFormat::DEFAULT << std::endl;
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+		LS.PushLog(">>> The player gets the rewards!");
+
+		SS.str("");
+		SS << "-> Earend experience point: " << TextFormat::CYAN << Exp << TextFormat::DEFAULT << std::string(5, ' ') << "-> Earned gold: " << TextFormat::YELLOW << Gold << TextFormat::DEFAULT;
+		LS.PushLog(SS);
+		if (!Items.empty()) {
+			for (const Item& i : Items) {
+				SS.str("");
+				SS << "-> Collected an item: " << GetHighlightColor(i) << i.name << TextFormat::DEFAULT;
+				LS.PushLog(SS);
+			}
 		}
-		PrintLine();
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+
+		LS.Stats[IntStatTypes::COLLECTED_ITEMS] += Items.size();
+		LS.Stats[IntStatTypes::EARNED_MONEY] += Gold;
 	}
 
 	static void BuyItem(const Item& item) {	//Change needed if statistics counts each item separately.
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
 
-		std::cout << ">>> The player Bought the item " << GetHighlightColor(item) << item.name << TextFormat::DEFAULT << "!" << std::endl;
-		GetInstance().Stats[IntStatTypes::BOUGHT_ITEM]++;
-		PrintLine();
+		SS << ">>> The player Bought the item " << GetHighlightColor(item) << item.name << TextFormat::DEFAULT << "!";
+		LS.PushLog(SS);
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+
+		LS.Stats[IntStatTypes::COLLECTED_ITEMS]++;
 	}
 
-	/* Previous String Version
-	static void UseItem(std::string name) {	//Change needed if statistics counts each item separately.
-		std::cout << ">>> The player used the item " << name << "!" << std::endl;
-		GetInstance().Stats[IntStatTypes::USED_ITEM]++;
-		PrintLine();
-	}*/
-
 	static void UseItem(const Item& item) {
-		std::cout << ">>> The player used the item " << GetHighlightColor(item) << item.name << TextFormat::DEFAULT << "!" << std::endl;
-		GetInstance().Stats[IntStatTypes::USED_ITEM]++;
-		PrintLine();
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+		SS << ">>> The player used the item " << GetHighlightColor(item) << item.name << TextFormat::DEFAULT << "!";
+		LS.PushLog(SS);
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+
+		LS.Stats[IntStatTypes::USED_ITEMS]++;
 	}
 
 	static void ShowItems(const std::vector<Item>& Items) {
-		std::cout << ">>> There are some items... " << std::endl;
-		for (Item i : Items) {
-			std::cout << "-> " << GetHighlightColor(i) << i.name << TextFormat::DEFAULT
-				//<< std::setw(15 - i.name.size()) << i.rarity
-				//<< std::setw(15 - i.name.size()) << i.type
-				<< std::setw(15 - i.name.size()) << i.value << " Gold(s): "
-				<< i.desc
-				<< std::endl;
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+
+		LS.PushLog(">>> There are some items... ");
+		for (const Item& i : Items) {
+			SS.str("");
+			SS << "-> " << GetHighlightColor(i) << i.name << TextFormat::DEFAULT
+				<< std::string(15 - i.name.size(), ' ') << i.value << " Gold(s): "
+				<< i.desc;
+			LS.PushLog(SS);
 		}
-		PrintLine();
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
 	}
 
 	static void PlayerDied() {	//Change needed if statistics counts each item separately.
-		std::cout << ">>> The player has defeated!" << std::endl;
-		PrintLine();
+		LogSystem& LS = LogSystem::GetInstance();
+		LS.PushLog(">>> The player has defeated!");
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
 	}
 
 	static void RollDice(int spots) {
-		std::cout << ">>> Dice has rolled: " << spots << std::endl;
-		GetInstance().Stats[IntStatTypes::ROLLED_DICE]++;
-		GetInstance().Stats[IntStatTypes::TOTAL_SPOTS] += spots;
-		PrintLine();
+		LogSystem& LS = LogSystem::GetInstance();
+		std::stringstream SS;
+
+		SS.str("");
+		SS << ">>> Dice has rolled: " << spots;
+		//LS.PushLog(SS);
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+
+		LS.Stats[IntStatTypes::ROLLED_DICE]++;
+		LS.Stats[IntStatTypes::TOTAL_SPOTS] += spots;
 	}
 
-	static void ShowStatistics() {
-		LogSystem& Instance = LogSystem::GetInstance();
-		std::cout << ">>> Gameplay Statistics" << std::endl;
-
+	static void ShowStatistics() {	//Using Main Section for now
+		//Clear Buffer before pushing
+		LogSystem& LS = LogSystem::GetInstance();
+		LS.MainDeque.clear();
+		
+		std::stringstream SS;
+		LS.PushMain(">>> Gameplay Statistics");
 		//show int stats
 		for (int i = 0; i < IntStatTypes::COUNT; i++) {
-			std::cout << "-> " << IntStatNames[i] << ": " << Instance.Stats[i] << std::endl;
+			SS.str("");
+			if (i + 2 < IntStatTypes::COUNT) {	//3 column if possible
+				int len1 = IntStatNames[i].size() + std::to_string(LS.Stats[i]).size();
+				int len2 = IntStatNames[i+1].size() + std::to_string(LS.Stats[i+1]).size();
+				SS << "-> " << IntStatNames[i] << ": " << LS.Stats[i] << "," 
+					<< std::string(std::max(20 - len1, 1), ' ') << "-> " << IntStatNames[i + 1] << ": " << LS.Stats[i + 1]
+					<< std::string(std::max(20 - len2, 1), ' ') << "-> " << IntStatNames[i + 2] << ": " << LS.Stats[i + 2];
+				i += 2;
+			}
+			else {
+				SS << "-> " << IntStatNames[i] << ": " << LS.Stats[i];
+				if (i + 1 != IntStatTypes::COUNT) {
+					int len1 = IntStatNames[i].size() + std::to_string(LS.Stats[i]).size();
+					SS << std::string(std::max(20 - len1, 1), ' ') << "-> " << IntStatNames[i + 1] << ": " << LS.Stats[i + 1];
+					i++;
+				}
+			}
+			
+			LS.PushMain(SS);
 		}
-		std::cout << std::endl;
-
 		//show monster encountered
-		std::cout << "--> Monsters Encountered" << std::endl;
-		for (auto i = Instance.MonstersEncountered.begin(); i != Instance.MonstersEncountered.end(); i++) {
-			std::cout << "-> " << i->first << ": " << i->second << " times" << std::endl;
+		LS.PushLog("--> Monsters Encountered");
+		for (auto i = LS.MonstersEncountered.begin(); i != LS.MonstersEncountered.end(); i++) {
+			SS.str("");
+			if (std::next(i) != LS.MonstersEncountered.end()) {
+				int len = (*i).first.size() + std::to_string((*i).second).size();
+				SS << "-> " << (*i).first << ": " << (*i).second << "," << std::string(std::max(20 - len, 1), ' ') << "-> " << (*++i).first << ": " << (*i).second;
+			}
+			else {
+				SS << "-> " << (*i).first << ": " << (*i).second;
+			}
+			LS.PushMain(SS);
 		}
-		std::cout << std::endl;
-
 		//show monster killed
-		std::cout << "--> Monsters Killed" << std::endl;
-		for (auto i = Instance.MonstersKilled.begin(); i != Instance.MonstersKilled.end(); i++) {
-			std::cout << "-> " << i->first << ": " << i->second << " times" << std::endl;
+		LS.PushLog("--> Monsters Killed");
+		for (auto i = LS.MonstersKilled.begin(); i != LS.MonstersKilled.end(); i++) {
+			SS.str("");
+			if (std::next(i) != LS.MonstersKilled.end()) {
+				int len = (*i).first.size() + std::to_string((*i).second).size();
+				SS << "-> " << (*i).first << ": " << (*i).second << "," << std::string(std::max(20 - len, 1), ' ') << "-> " << (*++i).first << ": " << (*i).second;
+			}
+			else {
+				SS << "-> " << (*i).first << ": " << (*i).second;
+			}
+			LS.PushMain(SS);
 		}
-		std::cout << std::endl;
-		PrintLine();
+		LS.PushMain(TextFormat::SPLIT_LINE); 
+		PushToMainBuffer(LS.MainDeque);
+		UpdateFrame();
 	}
+	
 };

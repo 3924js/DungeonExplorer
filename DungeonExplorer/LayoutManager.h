@@ -21,13 +21,13 @@ private:
 
 	//Each display section size
 	const int MainLength = 90;
-	const int MainHeight = 17;
+	const int MainHeight = 15;
 
 	const int SideLength = 20;
 	const int SideHeight = MainHeight;
 
 	const int LogLength = MainLength + SideLength + 2;
-	const int LogHeight = 10;
+	const int LogHeight = 14;
 
 	//Buffers to store display contents
 	std::vector<std::string> MainBuffer;
@@ -52,8 +52,6 @@ public:
 	static void PrintFrame() {
 		LayoutManager& LM = GetInstance();
 
-		std::cout << std::endl;	//first line
-
 		//Main & Side
 		for (int i = 0; i < LM.MainBuffer.size(); i++) {
 			std::stringstream FrameLine;
@@ -61,15 +59,13 @@ public:
 			std::cout << FrameLine.str() << std::endl;
 		}
 
-		std::cout << std::endl;	//space before the log section
-
 		for (int i = 0; i < LM.LogBuffer.size(); i++) {
 			std::stringstream FrameLine;
 			FrameLine << "  " << LM.LogBuffer[i];
 			std::cout << FrameLine.str() << std::endl;
 		}
 	}
-	static void ResetMainBorder() {
+	static void ResetMain() {
 		//Top and bottom border
 		LayoutManager& LM = GetInstance();
 		LM.MainBuffer[0] = std::string(LM.MainLength, '=');
@@ -88,12 +84,12 @@ public:
 		LayoutManager& LM = GetInstance();
 		//place the content to the coordinate
 		for (int i = 0; i < content.size() && y + i < LM.MainHeight - 2; i++) {
-			int MaxLength = std::min(LM.MainLength - 2 - x, static_cast<int>(content[i].size()));
-			LM.MainBuffer[y + i + 1].replace(x + 1, MaxLength, content[i].substr(0, MaxLength));
+			int MaxLength = std::min(LM.MainLength - 2 - x, GetPrintLength(content[i]));
+			LM.MainBuffer[y + i + 1].replace(x + 1, MaxLength, content[i]);
 		}
 	}
 
-	static void ResetSideBorder() {
+	static void ResetSide() {
 		//Top and bottom border
 		LayoutManager& LM = GetInstance();
 		LM.SideBuffer[0] = std::string(LM.SideLength, '=');
@@ -112,12 +108,14 @@ public:
 		LayoutManager& LM = GetInstance();
 		//place the content to the coordinate
 		for (int i = 0; i < content.size() && y + i < LM.SideHeight - 2; i++) {
-			int MaxLength = std::min(LM.SideLength - 2 - x, static_cast<int>(content[i].size()));
-			LM.SideBuffer[y + i + 1].replace(x + 1, MaxLength, content[i].substr(0, MaxLength));
+			int MaxLength = std::min(LM.SideLength - 2 - x, GetPrintLength(content[i]));
+			LM.SideBuffer[y + i + 1].replace(x + 1, MaxLength, content[i]);
 		}
 	}
 
-	static void ResetLogBorder() {
+
+	//Reset log section
+	static void ResetLog() {
 		//Top border
 		LayoutManager& LM = GetInstance();
 		LM.LogBuffer[0] = std::string(LM.LogLength, '=');
@@ -135,15 +133,25 @@ public:
 		LayoutManager& LM = GetInstance();
 		//place the content to the coordinate
 		for (int i = 0; i < content.size() && y + i < LM.LogHeight - 2; i++) {
-			int MaxLength = std::min(LM.LogLength - 2 - x, static_cast<int>(content[i].size()));
-			LM.LogBuffer[y + i + 1].replace(x + 1, MaxLength, content[i].substr(0, MaxLength));
+			int MaxLength = std::min(LM.LogLength - 2 - x, GetPrintLength(content[i]));
+			LM.LogBuffer[y + i + 1].replace(x + 1, MaxLength, content[i]);
 		}
 	}
 
 	//Get Actual length of printable string without ANSI code
 	static int GetPrintLength(std::string value) {
-		std::regex ansi_escape("\033\\[[0-9;]*m");
-		std::string stripped = std::regex_replace(value, ansi_escape, "");
+		std::regex ansi_escape("\033\\[[0-9;]*m");	//regex to remove ansi_escape codes
+		std::string stripped = std::regex_replace(value, ansi_escape, "");	//remove the ansi code
 		return stripped.size();
+	}
+
+	static int GetLogHeight() {
+		return GetInstance().LogHeight;
+	}
+	static int GetMainHeight() {
+		return GetInstance().MainHeight;
+	}
+	static int GetSideHeight() {
+		return GetInstance().SideHeight;
 	}
 };
