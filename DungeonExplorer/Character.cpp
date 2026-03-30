@@ -81,7 +81,7 @@ void Character::LevelUP(const Job& job) {
 
 //Getter
 std::string Character::GetName() const { return Name; }
-std::string Character::GetJob() const { return CurrentJob; }
+std::string Character::GetCurrentJob() const { return CurrentJob; }
 int Character::GetLevel() const { return Level; }
 int Character::GetMaxHP() const { return stat.MaxHP; }
 //int Character::GetMaxMP() const { return MaxMP; }

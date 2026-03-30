@@ -1,4 +1,4 @@
-//Character.h
+﻿//Character.h
 #pragma once 
 
 #include "Stat.h"
@@ -18,7 +18,7 @@ public:
 	void LevelUP(const Job& job);
 
 	std::string GetName() const;
-	std::string GetJob() const;
+	std::string GetCurrentJob() const;
 	int GetLevel() const;
 	int GetMaxHP() const;
 	//int GetMaxMP() const;
