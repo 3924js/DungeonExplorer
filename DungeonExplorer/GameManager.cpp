@@ -22,7 +22,7 @@ GameManager::~GameManager() {
 
 // Create the player only if it does not exist
 void GameManager::createPlayer(string name) {
-	player = new Character(name);
+	//player = Character::GetInstance(name, Job);
 }
 
 // SingleTon - Created only once
