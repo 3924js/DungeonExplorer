@@ -127,6 +127,7 @@
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="GameFlowManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Archer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CreateMonster.cpp" />
@@ -150,6 +151,10 @@
     <ClInclude Include="GameFlowManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="MakeRandom.h" />
+    <ClCompile Include="Warrior.cpp" />
+    <ClCompile Include="Wizard.cpp" />
+    <ClInclude Include="Archer.h" />
+    <ClInclude Include="Job.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="CreateMonster.h" />
     <ClInclude Include="Goblin.h" />
@@ -169,6 +174,9 @@
     <ClInclude Include="StageDirtySwamp.h" />
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="Troll.h" />
+    <ClInclude Include="Stat.h" />
+    <ClInclude Include="Warrior.h" />
+    <ClInclude Include="Wizard.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
