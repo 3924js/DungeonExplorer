@@ -40,7 +40,28 @@ void GameManager::generateMonster(int level) {
 	if (level == 0) level = player->GetLevel();
 
 	// Create a monster only if there is no current monster
-	if (enemy == nullptr && player != nullptr) enemy = cMonster->create(MonsterType::Goblin, "Goblin", level);
+	if (enemy == nullptr && player != nullptr) {
+		MonsterType newMonster;
+		string MonsterName;
+		if (level <= 3) {
+			newMonster = MonsterType::Slime;
+			MonsterName = "Slime";
+		}
+		else if (level <= 6) {
+			newMonster = MonsterType::Goblin;
+			MonsterName = "Goblin";
+		}
+		else if (level <= 9){
+			newMonster = MonsterType::Orc;
+			MonsterName = "Orc";
+		}
+		else {
+			newMonster = MonsterType::Troll;
+			MonsterName = "Troll";
+		}
+		cMonster->create(newMonster, MonsterName, level);
+	}
+
 }
 
 // Display all items in the inventory

@@ -98,14 +98,15 @@ void GameFlowManager::selectNextNode() {
 	int nextNode = 0;
 
 	while (true) {
-		cout << "Choose the next path\n";
-		cout << "1. Monster\n2. Store\n";
+		cout << "Choose the next Action\n";
+		cout << "1. Fight Monster\n2. Enter Store\n3. Show Status\n";
 		cout << "Select next path : ";
 
+		// Guard Invalid Input
 		if (!(cin >> nextNode)) {
 			cin.clear();
 			cin.ignore(1000, '\n');
-			cout << "Invaild Input\n";
+			cout << "Invalid Input\n";
 			continue;
 		}
 
@@ -117,6 +118,10 @@ void GameFlowManager::selectNextNode() {
 			storeNode();
 			break;
 		}
+		else if (nextNode == 3) {
+			gm.getPlayer()->displayStatus();
+			break;
+		}
 
 		cin.clear();
 		cin.ignore(1000, '\n');
@@ -126,6 +131,7 @@ void GameFlowManager::selectNextNode() {
 
 // Generate Monster & Battle
 void GameFlowManager::battleNode() {
+	// Initialize Stage
 	EStage currentStage = sManager.GetCurrentStage();
 	if (currentStage == EStage::NONE) {
 		sManager.SetStage(EStage::DARK_CAVE);
@@ -134,6 +140,7 @@ void GameFlowManager::battleNode() {
 
 	int level = gm.getPlayer()->GetLevel();
 
+	// Select Stage
 	if (level <= 3) {
 		if (currentStage != EStage::DARK_CAVE) {
 			cout << gm.getPlayer()->GetName() << " move to the DARK_CAVE\n\n";
@@ -156,6 +163,7 @@ void GameFlowManager::battleNode() {
 		return;
 	}
 
+	// Generate Monster & Start Battle
 	cout << "Encounter Monster\n";
 	gm.generateMonster();
 	if (bManager == nullptr) {
@@ -167,15 +175,23 @@ void GameFlowManager::battleNode() {
 // Enter Store
 void GameFlowManager::storeNode() {
 	cout << "Enter Store\n";
+	
+	// Restore HP to maxHP;
+	int maxHp = gm.getPlayer()->GetHP();
+	gm.getPlayer()->SetHP(maxHp);
+
+	// Initialize Store
 	ItemManager::GetInstance().Initialize();
 	Store store;
 	store.InitializeStore();
+
 	int selection;
 	while (1) {
 		cout << "Select Action\n";
 		cout << "1. buy Item\n2. Sell Item\n3. Leave Store\n Enter Choice: ";
 		cin >> selection;
 		int gold = gm.getPlayer()->GetGold();
+		// Show Store Item & Buy Item
 		if (selection == 1) {
 			store.ShowShopMenu(gold);
 			int ItemSelect;
@@ -183,6 +199,7 @@ void GameFlowManager::storeNode() {
 			cin >> ItemSelect;
 			store.BuyItem(ItemSelect, gold, *gm.getInventory());
 		}
+		// Show Inventory & Sell Item
 		else if (selection == 2) {
 			gm.getInventory()->ShowInventory();
 			int ItemSelect;
@@ -190,6 +207,7 @@ void GameFlowManager::storeNode() {
 			cin >> ItemSelect;
 			store.SellItem(ItemSelect, gold, *gm.getInventory());
 		}
+		// Leave Store
 		else if (selection == 3) {
 			cout << "Leave the Store\n";
 			break;
