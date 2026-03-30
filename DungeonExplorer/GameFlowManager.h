@@ -3,12 +3,14 @@
 class GameManager;
 class BattleManager;
 class StageManager;
+class Job;
 
 class GameFlowManager {
 private:
 	GameManager& gm;
 	StageManager& sManager;
 	BattleManager* bManager;
+	Job* playerJob;
 
 	bool isGameClear;
 public:
@@ -31,4 +33,6 @@ public:
 	void gameClear();
 
 	void setIsGameClear() { isGameClear = true; }
+
+	Job* getPlayerJob() { return playerJob; }
 };
