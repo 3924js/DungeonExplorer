@@ -18,6 +18,7 @@ private:
 	Character* player;
 	CreateMonster* cMonster;
 	Inventory* inven;
+	Job* playerJob;
 
 public:
 	static GameManager& GetInstance();
@@ -35,4 +36,5 @@ public:
 	Monster* getEnemy() { return enemy; }
 	Character* getPlayer() { return player; }
 	Inventory* getInventory() { return inven; }
+	Job* getPlayerJob() { return playerJob; }
 };

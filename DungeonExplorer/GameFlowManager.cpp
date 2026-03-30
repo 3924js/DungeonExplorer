@@ -19,7 +19,6 @@ GameFlowManager::GameFlowManager() :
 	gm(GameManager::GetInstance()), 
 	bManager(nullptr), 
 	sManager(StageManager::GetInstance()),
-	playerJob(nullptr),
 	isGameClear(false) {}
 
 // Overall game flow
@@ -72,6 +71,7 @@ void GameFlowManager::setupPlayer() {
 		cout << "InVaild Input\nEnter Job Number: ";
 	}
 	
+	Job* playerJob = nullptr;
 	switch (jNum)
 	{
 	case 1:
@@ -176,10 +176,7 @@ void GameFlowManager::battleNode() {
 	// Player Level Up
 	if (gm.getPlayer()->GetEXP() >= 100) {
 		string job = gm.getPlayer()->GetCurrentJob();
-		Job* playerJob = nullptr;
-		if (job == "Warrior") playerJob = new Warrior();
-		else if (job == "Wizard") playerJob = new Wizard();
-		else if (job == "Archer") playerJob = new Archer();
+		Job* playerJob = gm.getPlayerJob();
 		
 		if (playerJob != nullptr) {
 			gm.getPlayer()->LevelUP(*playerJob);
