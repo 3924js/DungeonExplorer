@@ -1,4 +1,4 @@
-//Character.cpp
+﻿//Character.cpp
 
 #include "Character.h"
 #include "Job.h"
@@ -77,6 +77,7 @@ int Character::GetHP() const { return stat.HP; }
 //int Character::GetMP() const { return MP; }
 int Character::GetAttack() const { return stat.Attack; }
 int Character::GetEXP() const { return EXP; }
+int Character::GetGold() const { return Gold; }
 
 
 //Setter
@@ -99,10 +100,14 @@ void Character::SetMaxHP(int maxhp) {
 	if (maxhp < 0) {
 		maxhp = 0;
 	}
+	MaxHP = maxhp;
 }
 
 void Character::SetMaxMP(int maxmp) {
-
+	if (maxmp < 0) {
+		maxmp = 0;
+	}
+	MaxMP = maxmp;
 }
 */
 void Character::SetHP(int hp) {

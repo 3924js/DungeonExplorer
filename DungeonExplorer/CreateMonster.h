@@ -2,6 +2,10 @@
 #include <random>
 #include <string>
 #include "Goblin.h"
+#include "Orc.h"
+#include "Slime.h"
+#include "Troll.h"
+#include "Boss.h"
 #include "MakeRandom.h"
 enum class MonsterType { Goblin, Orc, Slime, Troll, Boss };
 

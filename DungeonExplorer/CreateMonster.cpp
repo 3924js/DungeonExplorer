@@ -23,7 +23,7 @@ Monster* CreateMonster::createOrc(std::string name, int level) {
 
 	auto normalAttack = std::make_unique<NormalAttack>();
 
-	return new Goblin(name, hp, atk, std::move(normalAttack));
+	return new Orc(name, hp, atk, std::move(normalAttack));
 }
 
 Monster* CreateMonster::createSlime(std::string name, int level) {
@@ -36,7 +36,7 @@ Monster* CreateMonster::createSlime(std::string name, int level) {
 
 	auto normalAttack = std::make_unique<NormalAttack>();
 
-	return new Goblin(name, hp, atk, std::move(normalAttack));
+	return new Slime(name, hp, atk, std::move(normalAttack));
 }
 
 Monster* CreateMonster::createTroll(std::string name, int level) {
@@ -49,7 +49,7 @@ Monster* CreateMonster::createTroll(std::string name, int level) {
 
 	auto normalAttack = std::make_unique<NormalAttack>();
 
-	return new Goblin(name, hp, atk, std::move(normalAttack));
+	return new Troll(name, hp, atk, std::move(normalAttack));
 }
 
 Monster* CreateMonster::createBoss(std::string name, int level) {
@@ -62,7 +62,7 @@ Monster* CreateMonster::createBoss(std::string name, int level) {
 
 	auto normalAttack = std::make_unique<NormalAttack>();
 
-	return new Goblin(name, hp, atk, std::move(normalAttack));
+	return new Boss(name, hp, atk, std::move(normalAttack));
 }
 
 Monster* CreateMonster::create(MonsterType type, std::string name, int level) {
