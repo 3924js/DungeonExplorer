@@ -15,7 +15,12 @@
 using namespace std;
 
 // Constructor
-GameFlowManager::GameFlowManager() :gm(GameManager::GetInstance()), bManager(nullptr), sManager(StageManager::GetInstance()), isGameClear(false) {}
+GameFlowManager::GameFlowManager() :
+	gm(GameManager::GetInstance()), 
+	bManager(nullptr), 
+	sManager(StageManager::GetInstance()),
+	playerJob(nullptr),
+	isGameClear(false) {}
 
 // Overall game flow
 void GameFlowManager::run() {
@@ -56,7 +61,6 @@ void GameFlowManager::setupPlayer() {
 	}
 
 	// Select Player Jobs
-	Job* playerJob = nullptr;
 	string jobName;
 	int jNum = 0;
 	cout << "\nSelect Player Job\n";
