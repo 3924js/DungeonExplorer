@@ -56,8 +56,8 @@ void GameManager::generateMonster(int level) {
 			MonsterName = "Orc";
 		}
 		else {
-			newMonster = MonsterType::Troll;
-			MonsterName = "Troll";
+			cMonster->createBoss("Boss", level);
+			return;
 		}
 		cMonster->create(newMonster, MonsterName, level);
 	}

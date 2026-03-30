@@ -51,7 +51,6 @@ void GameFlowManager::setupPlayer() {
 		else {
 			// Store the input after removing leading whitespace
 			name = name.substr(startBlank);
-			cout << "Your Name is " << name << "\n";
 			break;
 		}
 	}
@@ -60,7 +59,7 @@ void GameFlowManager::setupPlayer() {
 	Job* playerJob = nullptr;
 	string jobName;
 	int jNum = 0;
-	cout << "Select Player Job\n";
+	cout << "\nSelect Player Job\n";
 	cout << "1. Warrior\n2. Wizard\n3. Archer\n";
 	cout << "Enter Job Number: ";
 	while (!(cin >> jNum)) {
@@ -98,7 +97,7 @@ void GameFlowManager::selectNextNode() {
 	int nextNode = 0;
 
 	while (true) {
-		cout << "Choose the next Action\n";
+		cout << "\nChoose the next Action\n";
 		cout << "1. Fight Monster\n2. Enter Store\n3. Show Status\n";
 		cout << "Select next path : ";
 
@@ -164,20 +163,34 @@ void GameFlowManager::battleNode() {
 	}
 
 	// Generate Monster & Start Battle
-	cout << "Encounter Monster\n";
 	gm.generateMonster();
 	if (bManager == nullptr) {
 		bManager = &BattleManager::GetInstance();
 	}
 	bManager->StartBattle();
+	
+	// Player Level Up
+	if (gm.getPlayer()->GetEXP() >= 100) {
+		string job = gm.getPlayer()->GetCurrentJob();
+		Job* playerJob = nullptr;
+		if (job == "Warrior") playerJob = new Warrior();
+		else if (job == "Wizard") playerJob = new Wizard();
+		else if (job == "Archer") playerJob = new Archer();
+		
+		if (playerJob != nullptr) {
+			gm.getPlayer()->LevelUP(*playerJob);
+			delete playerJob;
+		}
+	}
 }
 
 // Enter Store
 void GameFlowManager::storeNode() {
-	cout << "Enter Store\n";
-	
+	cout << "\nEnter Store\n";
+	// Change to LogSystem Lobby
+
 	// Restore HP to maxHP;
-	int maxHp = gm.getPlayer()->GetHP();
+	int maxHp = gm.getPlayer()->GetMaxHP();
 	gm.getPlayer()->SetHP(maxHp);
 
 	// Initialize Store
@@ -187,8 +200,8 @@ void GameFlowManager::storeNode() {
 
 	int selection;
 	while (1) {
-		cout << "Select Action\n";
-		cout << "1. buy Item\n2. Sell Item\n3. Leave Store\n Enter Choice: ";
+		cout << "\nSelect Action\n";
+		cout << "1. buy Item\n2. Sell Item\n3. Leave Store\nEnter Choice: ";
 		cin >> selection;
 		int gold = gm.getPlayer()->GetGold();
 		// Show Store Item & Buy Item
@@ -209,7 +222,7 @@ void GameFlowManager::storeNode() {
 		}
 		// Leave Store
 		else if (selection == 3) {
-			cout << "Leave the Store\n";
+			cout << "\nLeave the Store\n";
 			break;
 
 		}
@@ -218,7 +231,7 @@ void GameFlowManager::storeNode() {
 
 // Generate Boss & Battle
 void GameFlowManager::bossNode() {
-	cout << "Encounter Boss\n";
+	cout << "\nEncounter Boss\n";
 	gm.generateMonster();
 	if (bManager == nullptr) bManager = &BattleManager::GetInstance();
 	bManager->StartBattle();
@@ -230,6 +243,5 @@ void GameFlowManager::gameOver() {
 }
 
 void GameFlowManager::gameClear() {
-	isGameClear = true;
 	LogSystem::ShowStatistics();
 }

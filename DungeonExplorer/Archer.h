@@ -14,4 +14,5 @@ public:
 	virtual FStat GetLevelUpBonus() const;
 	virtual int SkillDamage(const Character& character) const;
 	virtual std::string SkillName() const;
+	virtual std::string JobName() const;
 };
