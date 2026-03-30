@@ -7,6 +7,7 @@
 #include "Character.h"
 #include "Monster.h"
 #include "Item.h"
+#include "LayoutManager.h"
 #include "iomanip"
 
 
@@ -86,6 +87,12 @@ private:
 		std::cout << TextFormat::GREEN << "------------------------------" << TextFormat::DEFAULT << std::endl;
 	}
 public:
+	static void CreateCharacter(std::string PlayerName, std::string JobName) {
+
+		std::cout << ">>> The explorer, " << TextFormat::YELLOW << PlayerName << " " << JobName << TextFormat::DEFAULT << " enters the dungeon..." << std::endl;
+		PrintLine();
+	}
+
 	/* Previous String Version
 	static void EnterBattle(std::vector<std::string> monsters) {
 		std::cout << ">>> The player encounters enemies!" << std::endl;
@@ -136,6 +143,15 @@ public:
 		std::cout << ">>> The monster " << TextFormat::RED << monster->getName() << TextFormat::DEFAULT << " attacks the player!" << std::endl;
 		std::cout << "-> The player has taken " << Damage << " damage!" << std::endl;
 		GetInstance().Stats[IntStatTypes::TAKEN_DAMAGE] += Damage;
+		PrintLine();
+	}
+
+	static void UseSkill(Monster* monster, std::string SkillText, int Damage) {
+		std::cout << ">>> The player casts a skill!" << std::endl;
+		std::cout << "-> " << TextFormat::MAGENTA << SkillText << TextFormat::DEFAULT << "!" << std::endl;
+		std::cout << "-> The Monster has taken " << Damage << " damage!" << std::endl;
+		GetInstance().Stats[IntStatTypes::ATTACKS]++;
+		GetInstance().Stats[IntStatTypes::DEALT_DAMAGE] += Damage;
 		PrintLine();
 	}
 	/* Previous String Version
