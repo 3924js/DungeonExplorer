@@ -11,6 +11,7 @@ class Character
 {
 public:
 	static Character* GetInstance(const std::string& name, const Job& job);
+	static Character* GetInstance();
 	static void DestroyInstance(); //singleton instance delete
 
 	void displayStatus() const;
@@ -23,6 +24,7 @@ public:
 	int GetHP() const;
 	//int GetMP() const;
 	int GetAttack() const;
+	int GetDefense() const;
 	int GetEXP() const;
 	int GetGold() const;
 
@@ -32,7 +34,8 @@ public:
 	//void SetMaxMP(int maxmp);
 	void SetHP(int hp);
 	//void SetMP(int mp);
-	//void SetAttack(int attack);
+	void SetAttack(int attack);
+	void SetDefense(int defense);
 	void SetEXP(int exp);
 	void SetGold(int gold);
 
@@ -46,7 +49,7 @@ private:
 
 	std::string Name;
 	int Level;
-	FStat stat; //MaxHP, HP, Attack
+	FStat stat; //MaxHP, HP, Attack, Defense
 	int EXP;
 	int Gold;
 };

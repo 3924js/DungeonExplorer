@@ -12,5 +12,6 @@ class Archer : public Job
 public:
 	virtual FStat GetBaseStat() const;
 	virtual FStat GetLevelUpBonus() const;
-	virtual int Skill(const Character& character) const;
+	virtual int SkillDamage(const Character& character) const;
+	virtual std::string SkillName() const;
 };

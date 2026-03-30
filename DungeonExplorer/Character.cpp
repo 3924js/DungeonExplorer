@@ -8,15 +8,26 @@
 //constructor
 Character::Character(const std::string& name, const Job& job) : Name(name), Level(1), stat(job.GetBaseStat()), EXP(0), Gold(0) {}
 
+
 //Singleton Pattern
 Character* Character::Instance = nullptr;
 
-Character* Character::GetInstance(const std::string& name, const Job& job) {
-	if (Instance == nullptr) {
+//instance pointer return
+Character* Character::GetInstance()
+{
+	return Instance;
+}
+
+//Used only on first creation
+Character* Character::GetInstance(const std::string& name, const Job& job)
+{
+	if (Instance == nullptr)
+	{
 		Instance = new Character(name, job);
 	}
 	return Instance;
 }
+
 
 //singleton instance delete
 void Character::DestroyInstance() {
@@ -58,6 +69,7 @@ void Character::LevelUP(const Job& job) {
 		stat.MaxHP += job.GetLevelUpBonus().MaxHP;
 		stat.HP = stat.MaxHP;
 		stat.Attack += job.GetLevelUpBonus().Attack;
+		stat.Defense += job.GetLevelUpBonus().Defense;
 
 		std::cout << "level Up!!\nCurrent Level: " << Level << "\n";
 		std::cout << "restored your HP to full\n\n";
@@ -76,6 +88,7 @@ int Character::GetMaxHP() const { return stat.MaxHP; }
 int Character::GetHP() const { return stat.HP; }
 //int Character::GetMP() const { return MP; }
 int Character::GetAttack() const { return stat.Attack; }
+int Character::GetDefense() const { return stat.Defense; }
 int Character::GetEXP() const { return EXP; }
 int Character::GetGold() const { return Gold; }
 
@@ -131,11 +144,15 @@ void Character::SetMP(int mp) {
 	}
 	HP = mp;
 }
-
-void Character::SetAttack(int attack) {
-	Attack = attack;
-}
 */
+void Character::SetAttack(int attack) {
+	stat.Attack = attack;
+}
+
+void Character::SetDefense(int defense) {
+	stat.Defense = defense;
+}
+
 void Character::SetEXP(int exp) {
 	EXP = exp;
 }
