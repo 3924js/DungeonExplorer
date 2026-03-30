@@ -1,9 +1,9 @@
 #pragma once
 #include "Monster.h"
 #include <string>
-class Goblin :public Monster {
+class Troll :public Monster {
 public:
-	Goblin(std::string name, int health, int attack, std::unique_ptr<AttackStrategy> AttackStrategy) :Monster(name, health, attack, std::move(AttackStrategy)) {};
+	Troll(std::string name, int health, int attack, std::unique_ptr<AttackStrategy> AttackStrategy) :Monster(name, health, attack, std::move(AttackStrategy)) {};
 
 	virtual std::string getName() override;
 

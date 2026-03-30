@@ -1,31 +1,31 @@
-#include "Goblin.h"
+#include "Slime.h"
 #include <iostream>
 #include "AttackStrategy.h"
-std::string Goblin::getName() {
+std::string Slime::getName() {
 	return name;
 }
 
-int Goblin::getHealth() {
+int Slime::getHealth() {
 	return health;
 }
 
-int Goblin::getAttack() {
+int Slime::getAttack() {
 	return attack;
 }
 
-void Goblin::takeDamage(int damage) {
+void Slime::takeDamage(int damage) {
 	int getDamage = health - damage;
 	if (getDamage <= 0) health = 0;
 	else health = getDamage;
 }
 
-int Goblin::Attack() {
+int Slime::Attack() {
 	if (!attackStrategy) return 0;
 	int dmg = attackStrategy->calculateDamage(attack);
-	std::cout << dmg << std::endl;
+
 	return dmg;
 }
 
-void Goblin::SetStrategy(std::unique_ptr<AttackStrategy> attackStrategy) {
+void Slime::SetStrategy(std::unique_ptr<AttackStrategy> attackStrategy) {
 	this->attackStrategy = move(attackStrategy);
 }
