@@ -1,4 +1,4 @@
-//Warrior.h
+﻿//Warrior.h
 #pragma once
 
 #include "Stat.h"
