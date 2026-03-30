@@ -121,24 +121,40 @@ void GameFlowManager::selectNextNode() {
 // Generate Monster & Battle
 void GameFlowManager::battleNode() {
 	Stage* currentStage = sManager.GetCurrentStage();
-	int level = gm.getPlayer()->GetLevel();
-	if (level <= 3 && currentStage->GetType() != EStage::DARK_CAVE) {
-		cout << gm.getPlayer()->GetName() << " move to " << currentStage->GetType() << "\n";
+	if (currentStage == nullptr) {
+		sManager.SetStage(EStage::DARK_CAVE);
+		currentStage = sManager.GetCurrentStage();
 	}
-	else if (level <= 6 && currentStage->GetType() != EStage::DIRTY_SWAMP) {
-		cout << gm.getPlayer()->GetName() << " move to " << currentStage->GetType() << "\n";
+
+	int level = gm.getPlayer()->GetLevel();
+
+	if (level <= 3) {
+		if (currentStage->GetType() != EStage::DARK_CAVE) {
+			cout << gm.getPlayer()->GetName() << " move to DARK_CAVE\n\n";
+			sManager.SetStage(EStage::DARK_CAVE);
+			currentStage = sManager.GetCurrentStage();
+		}
+	}
+	else if (level <= 6) {
+		if (currentStage->GetType() != EStage::DIRTY_SWAMP) {
+			cout << gm.getPlayer()->GetName() << " move to DIRTY_SWAMP\n\n";
+			sManager.SetStage(EStage::DIRTY_SWAMP);
+			currentStage = sManager.GetCurrentStage();
+		}
 	}
 	else if (level <= 9) {
 		cout << "Stage 3\n";
 	}
-	else if(level == 10) {
+	else if (level == 10) {
 		bossNode();
 		return;
 	}
 
 	cout << "Encounter Monster\n";
 	gm.generateMonster();
-	if (bManager == nullptr) bManager = new BattleManager();
+	if (bManager == nullptr) {
+		bManager = new BattleManager();
+	}
 	bManager->StartBattle(*gm.getPlayer(), *gm.getEnemy());
 }
 
