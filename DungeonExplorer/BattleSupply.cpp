@@ -9,13 +9,13 @@
 #include "CreateMonster.h"
 #include "ItemFactory.h"
 #include "Inventory.h"
+#include "LogSystem.h"
 
 BattleSupply::BattleSupply(){
     monsterFactory["Goblin"] = CreateMonster::createGoblin;
-    // TODO: add create Orc, Troll, Slime
-    monsterFactory["Orc"] = CreateMonster::createGoblin;
-    monsterFactory["Troll"] = CreateMonster::createGoblin;
-    monsterFactory["Slime"] = CreateMonster::createGoblin; 
+    monsterFactory["Orc"] = CreateMonster::createOrc;
+    monsterFactory["Troll"] = CreateMonster::createTroll;
+    monsterFactory["Slime"] = CreateMonster::createSlime; 
 }
 std::vector<Monster*> BattleSupply::BattleSpawnMonster(){
     spawnedList.clear();
@@ -58,32 +58,41 @@ std::vector<Monster*> BattleSupply::BattleSpawnMonster(){
 }
 
 void BattleSupply::BattleReward(){
+    std::vector<Item> getItemList;
     int totalGold = 0;
-    int totalEXP = rewardList.size();
+    int totalEXP = 0;
+    
+    int playerGold = player->GetGold();
+    int getEXP = player->GetEXP();
+    
     for (auto m : rewardList)
     {
         MonsterReward rewardMob = BattleTable::GetRewardToMonster(m);
         float randomChance = RandomManager::GetInstance().GetRange(0.0f, 1.0f);
+        int randomEXP = RandomManager::GetInstance().GetRange(10, 30);
         int randomGold = RandomManager::GetInstance().GetRange(rewardMob.minGold, rewardMob.maxGold);
-        int playerGold = player->GetGold();
+
+        
+        // Create item
         Item getItem = ItemFactory::CreateItem(rewardMob.itemId);
+
 
         if (randomChance <= rewardMob.dropRate )
         {
-            std::cout << "[Reward] " << m << " dropped an rewards!! (" << rewardMob.dropRate * 100 << "% drop) \n";
-            std::cout << "[Reward] Player get gold : " << randomGold << " G\n";
+            player->SetEXP(getEXP + randomEXP);
             player->SetGold(playerGold + randomGold);
-            
-            std::cout << "[Reward] Player get Item : " << getItem.name << std::endl;
-            // TODO: Player inventory
-            // Character::GetInstance()->GetInventory().AddItem(getItem);
+            totalEXP += randomEXP;
+            totalGold += randomGold;
+            GameManager::GetInstance().getInventory()->AddItem(getItem);
+            getItemList.push_back(getItem);
         }
         else
         {
-            std::cout << "[Reward] " << m << " dropped nothing. (" << rewardMob.dropRate * 100 << "% drop) \n";
+            std::cout << "[System] " << m << " dropped nothing. (" << rewardMob.dropRate * 100 << "% drop) \n";
         }
     }
-    std::cout << "[Reward] Player get Total EXP : " << totalEXP << " EXP\n";
-    int getEXP = player->GetEXP();
-    player->SetEXP(getEXP + totalEXP);
+    LogSystem::GetReward(totalEXP, totalGold, getItemList);
+
+
+    rewardList.clear();
 }

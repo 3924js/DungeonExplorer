@@ -1,8 +1,10 @@
 ﻿// StageDarkCave.cpp
 #include "StageDarkCave.h"
-#include "Character.h"
+#include "GameManager.h"
 #include "RandomManager.h"
 #include <iostream>
+
+#include "LogSystem.h"
 
 StageDarkCave::StageDarkCave() : Stage(EStage::DARK_CAVE){
     // Roll dice event
@@ -15,23 +17,31 @@ StageDarkCave::StageDarkCave() : Stage(EStage::DARK_CAVE){
 }
 
 void StageDarkCave::EnterStage(){
-    std::cout << "========================================" << std::endl;
+    std::cout << TextFormat::GREEN << "========================================" << TextFormat::DEFAULT << std::endl;
     std::cout << " [ Stage : Dark Cave ] " << std::endl;
     std::cout << " - Monster : Goblin , Orc" << std::endl;
     // Enter Log
     std::cout << " - \"Your footsteps break the heavy silence deep inside the cave. Something is moving.\"" << std::endl; 
+    
     // Enter event
     // Roll dice 1 ~ 6
     int rollResult = RandomManager::GetInstance().GetRange(1,6);
     StageEvent& event = eventTable[rollResult];
-    std::cout << "[RollDice] your Dice " << rollResult << std::endl;
-    std::cout << "[Event] " << event.description << std::endl;
-    // TODO:Update Character hp, atk
+    LogSystem::RollDice(rollResult);
+    
+    Character* player = GameManager::GetInstance().getPlayer();
+    std::cout << "[System] \"" << event.description << "\"\n";
     if (event.hpDelta != 0)
-        std::cout << "[Event] Player hp add " << event.hpDelta << std::endl;
+        player->SetHP(player->GetHP() + event.hpDelta);
+        std::cout << "[System] Player hp add " << event.hpDelta << std::endl;
     if (event.atkDelta != 0)
-        std::cout << "[Event] Player atk add " << event.atkDelta << std::endl;
-    std::cout << "========================================" << std::endl;
+    {
+                
+        // TODO:player->SetAttack()(player->() + event.hpDelta)
+            
+        std::cout << "[System] Player atk add " << event.atkDelta << std::endl;
+    }
+    std::cout << TextFormat::GREEN << "========================================" << TextFormat::DEFAULT << std::endl;
 }
 
 void StageDarkCave::RandomEvent(int chance){

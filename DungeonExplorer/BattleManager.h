@@ -12,7 +12,7 @@ class Monster;
 class BattleManager{
 private:
     int turnCount;
-    BattleDice rollDice;
+    BattleDice diceRoll;
     DiceResult diceResult;
     Character& c = *GameManager::GetInstance().getPlayer();
     BattleManager() = default; 
