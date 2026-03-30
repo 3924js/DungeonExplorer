@@ -4,6 +4,8 @@
 #include "Character.h"
 #include "CreateMonster.h"
 #include "Inventory.h"
+#include "Job.h"
+#include "Warrior.h"
 
 using namespace std;
 
@@ -21,8 +23,10 @@ GameManager::~GameManager() {
 }
 
 // Create the player only if it does not exist
-void GameManager::createPlayer(string name) {
-	//player = Character::GetInstance(name, Job);
+void GameManager::createPlayer(string name, Job* pJob) {
+	Job* job = new Warrior();
+	player = Character::GetInstance(name, *job);
+	delete job;
 }
 
 // SingleTon - Created only once

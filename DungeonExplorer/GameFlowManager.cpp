@@ -4,6 +4,10 @@
 #include "LogSystem.h"
 #include "BattleManager.h"
 #include "StageManager.h"
+#include "Job.h"
+#include "Warrior.h"
+#include "Wizard.h"
+#include "Archer.h"
 #include <string>
 #include <iostream>
 
@@ -53,8 +57,32 @@ void GameFlowManager::setupPlayer() {
 	}
 
 	// Select Player Jobs
+	Job* playerJob = nullptr;
+	string jobName;
+	int jNum = 0;
+	cout << "Select Player Job\n";
+	cout << "1. Warrior\n2. Wizard\n3. Archer\n";
+	cout << "Input Job Number: ";
+	
+	switch (jNum)
+	{
+	case 1:
+		playerJob = new Warrior();
+		jobName = "Warrior";
+		break;
+	case 2:
+		playerJob = new Wizard();
+		jobName = "Wizard";
+		break;
+	case 3:
+		playerJob = new Archer();
+		jobName = "Archer";
+		break;
+	default:
+		break;
+	}
 
-	gm.createPlayer(name);
+	gm.createPlayer(name, playerJob);
 }
 
 // Select next path
