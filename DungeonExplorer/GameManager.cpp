@@ -10,7 +10,7 @@
 using namespace std;
 
 // Constructor
-GameManager::GameManager(): enemy(nullptr), player(nullptr) {
+GameManager::GameManager(): enemy(nullptr), player(nullptr), playerJob(nullptr) {
 	cMonster = new CreateMonster();
 	inven = new Inventory;
 }
@@ -20,13 +20,13 @@ GameManager::~GameManager() {
 	if (enemy != nullptr) delete enemy;
 	if (player != nullptr) delete player;
 	if (cMonster != nullptr) delete cMonster;
+	if (playerJob != nullptr) delete playerJob;
 }
 
 // Create the player only if it does not exist
 void GameManager::createPlayer(string name, Job* pJob) {
-	Job* job = pJob;
-	player = Character::GetInstance(name, *job);
-	delete job;
+	playerJob = pJob;
+	player = Character::GetInstance(name, *playerJob);
 }
 
 // SingleTon - Created only once
