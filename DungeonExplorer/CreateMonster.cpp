@@ -64,10 +64,10 @@ Monster* CreateMonster::createTroll(std::string name, int level) {
 Monster* CreateMonster::createBoss(std::string name, int level) {
 	auto& gen = MakeRandom::getGenerator();
 
-	int hp = 30;
-	int atk = 5;
-	std::uniform_int_distribution<int> hpDist(level * 35, level * 45);
-	std::uniform_int_distribution<int> atkDist(level * 2, level * 5);
+	int hp = 40;
+	int atk = 10;
+	std::uniform_int_distribution<int> hpDist(level * 75, level * 85);
+	std::uniform_int_distribution<int> atkDist(level * 8, level * 10);
 
 	hp += hpDist(gen);
 	atk += atkDist(gen);
