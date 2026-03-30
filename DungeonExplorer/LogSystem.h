@@ -150,7 +150,7 @@ private:
 	}
 	//Push string to sideDeque
 	//stringstream version
-	static void ChangeSide(const std::stringstream& ss) {
+	static void PushSide(const std::stringstream& ss) {
 		LogSystem& LS = GetInstance();
 		LS.SideDeque.push_front(ss.str());
 
@@ -170,7 +170,7 @@ private:
 		}
 	}
 
-	//update to LayoutManager
+	//update to LayoutManager LogBuffer
 	static void PushToLogBuffer(const std::deque<std::string>& Deque) {
 		LayoutManager::ResetLog();
 		std::vector<std::string> Content;
@@ -180,7 +180,7 @@ private:
 		LayoutManager::UpdateLog(Content, 0, 0);
 	}
 
-	//update to LayoutManager
+	//update to LayoutManager MainBuffer
 	static void PushToMainBuffer(const std::deque<std::string>& Deque) {
 		LayoutManager::ResetMain();
 		std::vector<std::string> Content;
@@ -190,11 +190,11 @@ private:
 		LayoutManager::UpdateMain(Content, 0, 0);
 	}
 
-	//update to LayoutManager
+	//update to LayoutManager SideBuffer, from top to bottom unlikely to the others
 	static void PushToSideBuffer(const std::deque<std::string>& Deque) {
 		LayoutManager::ResetSide();
 		std::vector<std::string> Content;
-		for (auto line = Deque.rbegin(); line != Deque.rend(); line++) {
+		for (auto line = Deque.begin(); line != Deque.end(); line++) {
 			Content.push_back(*line);
 		}
 		LayoutManager::UpdateSide(Content, 0, 0);
@@ -466,5 +466,41 @@ public:
 		PushToMainBuffer(LS.MainDeque);
 		UpdateFrame();
 	}
+
+	static void UpdateStatus() {
+		LogSystem& LS = GetInstance();
+		Character* player = Character::GetInstance();
+		LS.SideDeque.clear();
+
+		std::stringstream SS;
+		SS.str("");
+		SS << "Name: " << player->GetName();
+		LS.PushSide(SS);
+
+		SS.str("");
+		SS << "Level: " << player->GetLevel();
+		LS.PushSide(SS);
+
+		SS.str("");
+		SS << "Exp: " << player->GetEXP();
+		LS.PushSide(SS);
+
+		SS.str("");
+		SS << "Health: " << player->GetHP();
+		LS.PushSide(SS);
+
+		SS.str("");
+		SS << "Attack: " << player->GetAttack();
+		LS.PushSide(SS);
+
+		SS.str("");
+		SS << "Defence: " << player->GetDefense();
+		LS.PushSide(SS);
+
+		PushToMainBuffer(LS.SideDeque);
+		UpdateFrame();
+	}
+
+	void 
 	
 };
