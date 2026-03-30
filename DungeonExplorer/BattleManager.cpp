@@ -108,16 +108,20 @@ bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target){
     // 3 Turn use skill
     else if (turnCount % 3 == 0)
     {
-        std::cout << "[Attack] " << c.GetName() << " use skill !!" << std::endl; // TODO: c.skillName() 
+        Job* playerJob = GameManager::GetInstance().getPlayerJob();
+        
+        std::cout << "[System] " << c.GetName() << " use skill !! "  
+         << playerJob->SkillName() << std::endl;
         // Skill All monster attack
         for (auto& monsters : m)
         {
             if (monsters->getHealth() > 0)
             {
-                // TODO: monsters->takeDamage(c.skillAttack); and monsterHP dead HP == 0
-                monsters->takeDamage(300);
-                std::cout << "[Attack] " << c.GetName() << " attack " << monsters->getName() << ". "
-                    << monsters->getName() << " Health  : " << monsters->getHealth() << ". " << std::endl;
+                // Job Damage
+                int skillDamage = playerJob->SkillDamage(c);
+                monsters->takeDamage(skillDamage);
+                
+                LogSystem::AttackMonster(monsters, skillDamage);
                 // if Kill monster
                 if (monsters->getHealth() <= 0){ killedMonster.push_back(monsters); }
             }
@@ -207,17 +211,18 @@ void BattleManager::StartBossBattle(Monster* boss){
         UsePotionToPer(0.4f);
         
         // player turn
-        if (bossTurn % 2 != 0)
+        if (bossTurn % 3 != 0)
         {
             boss->takeDamage(c.GetAttack());
             LogSystem::AttackMonster(boss, c.GetAttack());
         }
-        // TODO: Player Skill
+        // Player use skill
         else if (bossTurn % 3 == 0)
         {
-            boss->takeDamage(c.GetAttack());
-            // TODO: Player Skill Damage
-            LogSystem::AttackMonster(boss, c.GetAttack());
+            Job* playerJob = GameManager::GetInstance().getPlayerJob();
+            int skillDamage = playerJob->SkillDamage(c);
+            boss->takeDamage(skillDamage);
+            LogSystem::AttackMonster(boss, skillDamage);
         }
         
         // boss turn
@@ -233,7 +238,12 @@ void BattleManager::StartBossBattle(Monster* boss){
             LogSystem::AttackPlayer(boss, specialDamage);
         }
         
-        if (boss->getHealth() <= 0) { break; }
+        if (boss->getHealth() <= 0)
+        {
+            isWin = 1;
+            break;
+        }
+        ++bossTurn;
     }
     
     // Check isWin
