@@ -1,10 +1,10 @@
-﻿// StageDirtySwamp.h 
+// StageMistyForest.h
 #pragma once
 #include "Stage.h"
 
-class StageDirtySwamp : public Stage{
+class StageMistyForest : public Stage{
 public:
-    StageDirtySwamp();
+    StageMistyForest();
     
     void EnterStage() override;
     void RandomEvent(int chance) override;

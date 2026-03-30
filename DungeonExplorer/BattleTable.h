@@ -19,7 +19,7 @@ public:
     inline static std::map<EStage, std::vector<std::string>> stageTable = {
         { DARK_CAVE,{"Goblin", "Orc"}},
         { DIRTY_SWAMP, {"Troll", "Slime"}},
-        //{ DARK_FOREST, {"Dark Wolf", "Spider"}}
+        { MISTY_FOREST, {"Goblin", "Orc", "Troll", "Slime"}}
     };
     
     inline static std::map<std::string, MonsterReward> rewardTable ={

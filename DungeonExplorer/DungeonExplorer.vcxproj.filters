@@ -51,6 +51,9 @@
     <ClCompile Include="StageManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StageMistyForest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="StageDarkCave.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -147,6 +150,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StageManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StageMistyForest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Boss.h">

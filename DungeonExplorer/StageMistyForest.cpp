@@ -1,25 +1,23 @@
-﻿// StageDarkCave.cpp
-#include "StageDarkCave.h"
-#include "GameManager.h"
+// StageMistyForest.cpp
+#include "StageMistyForest.h"
+#include "Character.h"
 #include "RandomManager.h"
-#include <iostream>
-
 #include "LogSystem.h"
+#include "GameManager.h"
 
-StageDarkCave::StageDarkCave() : Stage(EStage::DARK_CAVE){
-    // Roll dice event
-    eventTable[1] = {"Dark Dark Dark", -10, 0};
-    eventTable[2] = { "It's too dark to see the enemy.", 0, -3};
+StageMistyForest::StageMistyForest() : Stage(EStage::MISTY_FOREST){
+    eventTable[1] = {"The mist is too thick. You are lost and scared.", -10, -5};
+    eventTable[2] = {"The cold mist freezes your body. You feel slow.", -5, -2};
     eventTable[3] = {};
-    eventTable[4] = {"Soon, my eyes got used to the dark.", 0, 1};
-    eventTable[5] = {"I just swung my sword, and the monster got hit.", 0, 5};
-    eventTable[6] = {"You loved the night time.", 10, 10};
+    eventTable[4] = {"The wind blows the mist away. You see the path!", 0, 2};
+    eventTable[5] = {"You attacked the enemy through the white mist!", 0, 5};
+    eventTable[6] = {"The mist heals your wounds. You feel pure power!", 10, 10};
 }
 
-void StageDarkCave::EnterStage(){
+void StageMistyForest::EnterStage(){
     std::cout << TextFormat::GREEN << "========================================" << TextFormat::DEFAULT << std::endl;
-    std::cout << " [ Stage : " << StageNames[EStage::DARK_CAVE] << " ] " << std::endl;
-    std::cout << " - Monster : Goblin , Orc" << std::endl;
+    std::cout << " [ Stage : " << StageNames[EStage::MISTY_FOREST] << " ] " << std::endl;
+    std::cout << " - Monster : Goblin , Orc, Troll , Slime" << std::endl;
     // Enter Log
     std::cout << " - \"Your footsteps break the heavy silence deep inside the cave. Something is moving.\"" << std::endl; 
     
@@ -31,6 +29,7 @@ void StageDarkCave::EnterStage(){
     
     Character* player = GameManager::GetInstance().getPlayer();
     std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " \"" << event.description << "\"\n";
+    // Player HP setting
     if (event.hpDelta != 0)
     {
         int plusHP = player->GetMaxHP() + event.hpDelta;
@@ -57,7 +56,7 @@ void StageDarkCave::EnterStage(){
     std::cout << TextFormat::GREEN << "========================================" << TextFormat::DEFAULT << std::endl;
 }
 
-void StageDarkCave::RandomEvent(int chance){
+void StageMistyForest::RandomEvent(int chance){
     Character* player = GameManager::GetInstance().getPlayer();
     
     // chance % random event
@@ -65,9 +64,9 @@ void StageDarkCave::RandomEvent(int chance){
     if (eventChance <= chance)
     {
         StageEvent randomEvent[3] = {
-            {"The sound of the bat's wings makes me scared.",0,-5},
-            {"The goblin's laugh makes you scared.", -5,-3},
-            {"You found the goblin's treasure.", 10, 10}
+            {"You slipped on a wet rock and fell down a hill!", -10, -5},
+            {"A heavy branch fell from the mist and hit your head.", -5, -3},
+            {"You found a glowing herb through the thick mist.", 5, 10}
         };
         StageEvent event = randomEvent[ RandomManager::GetInstance().GetRange(0,2)];
         std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " \"" << event.description << "\"\n";

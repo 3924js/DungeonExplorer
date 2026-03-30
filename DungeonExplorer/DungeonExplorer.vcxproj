@@ -130,6 +130,7 @@
     <ClCompile Include="Goblin.cpp" />
     <ClCompile Include="Orc.cpp" />
     <ClCompile Include="Slime.cpp" />
+    <ClCompile Include="StageMistyForest.cpp" />
     <ClCompile Include="Troll.cpp" />
     <ClCompile Include="Archer.cpp" />
     <ClCompile Include="Warrior.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Goblin.h" />
     <ClInclude Include="Orc.h" />
     <ClInclude Include="Slime.h" />
+    <ClInclude Include="StageMistyForest.h" />
     <ClInclude Include="Troll.h" />
     <ClInclude Include="Archer.h" />
     <ClInclude Include="Warrior.h" />
