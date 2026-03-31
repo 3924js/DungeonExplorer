@@ -15,10 +15,12 @@
 using namespace std;
 
 vector<string> chooseAction = {
+	"",
 	"Choose the next Action" ,
 	"1. Fight Monster",
 	"2. Enter Store",
-	"3. Show Inventory"
+	"3. Show Inventory",
+	""
 };
 
 vector<string> InvalidInput = { "is InValid Input" };
@@ -60,8 +62,8 @@ void GameFlowManager::run() {
 void GameFlowManager::setupPlayer() {
 	string name;
 	vector<string> setPlayer;
-	setPlayer.push_back("Welcom to Dungeon Explorer!");
-	setPlayer.push_back("Let's sey your Player name. ");
+	setPlayer.push_back("Welcome to Dungeon Explorer!");
+	setPlayer.push_back("Let's set your Player name. ");
 	LogSystem::PrintStringsOnLog(setPlayer);
 	setPlayer.clear();
 	cout << TextFormat::CYAN << "Input Player Name:" << TextFormat::DEFAULT;
@@ -119,6 +121,7 @@ void GameFlowManager::setupPlayer() {
 		break;
 	}
 
+	LogSystem::ClearLogBuffer();
 	LogSystem::CreateCharacter(name, jobName);
 	gm.createPlayer(name, playerJob);
 	LogSystem::UpdateStatus();
@@ -164,6 +167,7 @@ void GameFlowManager::selectNextNode() {
 
 // Generate Monster & Battle
 void GameFlowManager::battleNode() {
+	LogSystem::ClearLogBuffer();
 	// Initialize Stage
 	EStage currentStage = sManager.GetCurrentStage();
 	if (currentStage == EStage::NONE) {
