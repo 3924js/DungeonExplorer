@@ -37,7 +37,7 @@ static const std::string IntStatNames[IntStatTypes::COUNT] = { "Total Battles",
 															"Taken Damage",
 															"Killed Monsters",
 															"Earned Money",
-															"COLLECTED Items",
+															"Collected Items",
 															"Used Items",
 															"Rolled Dice",
 															"Total Spots" };
@@ -160,7 +160,7 @@ private:
 		}
 	}
 	//string version
-	static void ChangeSide(const std::string& log) {
+	static void PushSide(const std::string& log) {
 		LogSystem& LS = GetInstance();
 		LS.SideDeque.push_front(log);
 
@@ -411,56 +411,90 @@ public:
 		LS.MainDeque.clear();
 		
 		std::stringstream SS;
-		LS.PushMain(">>> Gameplay Statistics");
+		const int Spacing = 16;
 		//show int stats
+		int InfoCount = 0;
+		int PrevLen = 0;
+		SS.str("");
 		for (int i = 0; i < IntStatTypes::COUNT; i++) {
-			SS.str("");
-			if (i + 2 < IntStatTypes::COUNT) {	//3 column if possible
-				int len1 = IntStatNames[i].size() + std::to_string(LS.Stats[i]).size();
-				int len2 = IntStatNames[i+1].size() + std::to_string(LS.Stats[i+1]).size();
-				SS << "-> " << IntStatNames[i] << ": " << LS.Stats[i] << "," 
-					<< std::string((std::max)(20 - len1, 1), ' ') << "-> " << IntStatNames[i + 1] << ": " << LS.Stats[i + 1]
-					<< std::string((std::max)(20 - len2, 1), ' ') << "-> " << IntStatNames[i + 2] << ": " << LS.Stats[i + 2];
-				i += 2;
+			if (InfoCount == 0) {
+				SS << "-> " << IntStatNames[i] << ": " << LS.Stats[i] << ",";
+				PrevLen = IntStatNames[i].size();
 			}
 			else {
-				SS << "-> " << IntStatNames[i] << ": " << LS.Stats[i];
-				if (i + 1 != IntStatTypes::COUNT) {
-					int len1 = IntStatNames[i].size() + std::to_string(LS.Stats[i]).size();
-					SS << std::string((std::max)(20 - len1, 1), ' ') << "-> " << IntStatNames[i + 1] << ": " << LS.Stats[i + 1];
-					i++;
-				}
+				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << "-> " << IntStatNames[i] << ": " << LS.Stats[i];
+				PrevLen = IntStatNames[i].size();
 			}
-			
+			InfoCount++;
+			//If more than 4 info in the line, push to the buffer
+			if (InfoCount > 3) {	
+				LS.PushMain(SS);
+				SS.str("");
+				InfoCount = 0;
+			}
+		}
+		//push remaining info
+		if (InfoCount != 0) {
 			LS.PushMain(SS);
 		}
+
 		//show monster encountered
+		SS.str("");
+		InfoCount = 0;
+		PrevLen = 0;
 		LS.PushLog("--> Monsters Encountered");
 		for (auto i = LS.MonstersEncountered.begin(); i != LS.MonstersEncountered.end(); i++) {
-			SS.str("");
-			if (std::next(i) != LS.MonstersEncountered.end()) {
-				int len = (*i).first.size() + std::to_string((*i).second).size();
-				SS << "-> " << (*i).first << ": " << (*i).second << "," << std::string((std::max)(20 - len, 1), ' ') << "-> " << (*++i).first << ": " << (*i).second;
+			if (InfoCount == 0) {
+				SS << "-> " << (*i).first << ": " << (*i).second;
+				PrevLen = (*i).first.size();
 			}
 			else {
-				SS << "-> " << (*i).first << ": " << (*i).second;
+				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << "-> " << (*i).first << ": " << (*i).second;
+				PrevLen = (*i).first.size();
 			}
+			InfoCount++;
+
+			//If more than 4 info in the line, push to the buffer
+			if (InfoCount > 3) {
+				LS.PushMain(SS);
+				SS.str("");
+				InfoCount = 0;
+			}
+		}
+		//push remaining info
+		if (InfoCount != 0) {
 			LS.PushMain(SS);
 		}
+
+
 		//show monster killed
+		SS.str("");
+		InfoCount = 0;
+		PrevLen = 0;
 		LS.PushLog("--> Monsters Killed");
 		for (auto i = LS.MonstersKilled.begin(); i != LS.MonstersKilled.end(); i++) {
-			SS.str("");
-			if (std::next(i) != LS.MonstersKilled.end()) {
-				int len = (*i).first.size() + std::to_string((*i).second).size();
-				SS << "-> " << (*i).first << ": " << (*i).second << "," << std::string((std::max)(20 - len, 1), ' ') << "-> " << (*++i).first << ": " << (*i).second;
+			if (InfoCount == 0) {
+				SS << "-> " << (*i).first << ": " << (*i).second;
+				PrevLen = (*i).first.size();
 			}
 			else {
-				SS << "-> " << (*i).first << ": " << (*i).second;
+				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << "-> " << (*i).first << ": " << (*i).second;
+				PrevLen = (*i).first.size();
 			}
+			InfoCount++;
+
+			//If more than 4 info in the line, push to the buffer
+			if (InfoCount > 3) {
+				LS.PushMain(SS);
+				SS.str("");
+				InfoCount = 0;
+			}
+		}
+
+		//push remaining info
+		if (InfoCount != 0) {
 			LS.PushMain(SS);
 		}
-		LS.PushMain(TextFormat::SPLIT_LINE); 
 		PushToMainBuffer(LS.MainDeque);
 		UpdateFrame();
 	}
@@ -469,30 +503,48 @@ public:
 		LogSystem& LS = GetInstance();
 		Character* player = Character::GetInstance();
 		LS.SideDeque.clear();
-		//직업이름 추가
 		std::stringstream SS;
+
+		LS.PushSide(std::string("==+==[Status]==+=="));
+		//Player Name
 		SS.str("");
-		SS << "Name: " << player->GetName();
+		SS << "  Name  |  " << player->GetName();
 		LS.PushSide(SS);
 
+		//Job Name
 		SS.str("");
-		SS << "Level: " << player->GetLevel();
+		SS << "  Job   |  " << player->GetCurrentJob();
+		LS.PushSide(SS);
+		
+		LS.PushSide(std::string("------------------"));
+		//Level
+		SS.str("");
+		SS << "  LV    | " << player->GetLevel();
 		LS.PushSide(SS);
 
+		//Experience Point
 		SS.str("");
-		SS << "Exp: " << player->GetEXP();
+		SS << "  EXP   |" << player->GetEXP();
+		LS.PushSide(SS);
+		LS.PushSide(std::string("------------------"));
+		//Health Point
+		SS.str("");
+		SS << "  HP    | " << player->GetHP();
 		LS.PushSide(SS);
 
+		//Attack
 		SS.str("");
-		SS << "Health: " << player->GetHP();
+		SS << "  ATK   | " << player->GetAttack();
 		LS.PushSide(SS);
 
+		//Defense
 		SS.str("");
-		SS << "Attack: " << player->GetAttack();
+		SS << "  DFS   | " << player->GetDefense();
 		LS.PushSide(SS);
-
+		LS.PushSide(std::string("------------------"));
+		//Gold
 		SS.str("");
-		SS << "Defence: " << player->GetDefense();
+		SS << "  Gold  | " << player->GetGold();
 		LS.PushSide(SS);
 
 		PushToSideBuffer(LS.SideDeque);
@@ -521,18 +573,21 @@ public:
 	static void ClearMainBuffer() {
 		LogSystem& LS = GetInstance();
 		LS.MainDeque.clear();
+		LayoutManager::ResetMain();
 		UpdateFrame();
 	}
 
 	static void ClearLogBuffer() {
 		LogSystem& LS = GetInstance();
 		LS.LogDeque.clear();
+		LayoutManager::ResetLog();
 		UpdateFrame();
 	}
 
 	static void ClearSideBuffer() {
 		LogSystem& LS = GetInstance();
 		LS.SideDeque.clear();
+		LayoutManager::ResetSide();
 		UpdateFrame();
 	}
 };
