@@ -3,7 +3,9 @@
 #include "Character.h"
 #include "Job.h"
 #include "Warrior.h"
+#include "LogSystem.h"
 #include <iostream>
+#include <iomanip>
 
 //constructor
 Character::Character(const std::string& name, const Job& job) : Name(name), CurrentJob(job.JobName()), Level(1), stat(job.GetBaseStat()), EXP(0), Gold(0) {}
@@ -35,24 +37,29 @@ void Character::DestroyInstance() {
 	Instance = nullptr;
 }
 
-
+/*
 //Status View
 void Character::displayStatus() const {
-	std::cout << "----[Status]----" << std::endl;
-	std::cout << "Name: " << Name << std::endl;
-	std::cout << std::endl;
-	std::cout << "Level:" << Level << std::endl;
-	std::cout << "EXP: " << EXP << std::endl;
-	std::cout << std::endl;
-	std::cout << "HP: " << stat.HP << "/" << stat.MaxHP << std::endl;
-	//std::cout << "MP: " << MP << "/" << MaxMP << std::endl;
-	std::cout << "Attack: " << stat.Attack << std::endl;
-	std::cout << std::endl;
-	std::cout << "Gold: " << Gold << std::endl;
-	std::cout << "-----------------" << std::endl;
-	std::cout << std::endl;
-}
+	std::cout << std::left;
 
+	std::cout << std::endl;
+	std::cout << "====================" << std::endl;
+	std::cout << "------[Status]------" << std::endl;
+	std::cout << "====================" << std::endl;
+	std::cout << std::setw(8) << "Name" << "| " << Name << std::endl;
+	std::cout << std::setw(8) << "Job" << "| " << CurrentJob << std::endl;
+	std::cout << "--------------------" << std::endl;
+	std::cout << std::setw(8) << "LV" << "| " << Level << std::endl;
+	std::cout << std::setw(8) << "EXP" << "| " << EXP << std::endl;
+	std::cout << "--------------------" << std::endl;
+	std::cout << std::setw(8) << "HP" << "| " << stat.HP << " / " << stat.MaxHP << std::endl;
+	std::cout << std::setw(8) << "ATK" << "| " << stat.Attack << std::endl;
+	std::cout << std::setw(8) << "DFS" << "| " << stat.Defense << std::endl;
+	std::cout << "---------------------" << std::endl;
+	std::cout << std::setw(8) << "Gold" << "| " << Gold << std::endl;
+	std::cout << "=====================" << std::endl;
+}
+*/
 
 //Level UP
 void Character::LevelUP(const Job& job) {
@@ -114,6 +121,10 @@ void Character::SetMaxHP(int maxhp) {
 		maxhp = 0;
 	}
 	stat.MaxHP = maxhp;
+	if (stat.MaxHP < stat.HP) {
+		stat.HP = stat.MaxHP;
+	}
+	//LogSystem::GetInstance().UpdateStatus();
 }
 
 void Character::SetHP(int hp) {
@@ -126,18 +137,7 @@ void Character::SetHP(int hp) {
 	}
 	stat.HP = hp;
 }
-/*
-void Character::SetMP(int mp) {
-	//MP underflow/overflow prevention
-	if (mp < 0) {
-		mp = 0;
-	}
-	else if (MaxMP < mp) {
-		mp = MaxMP;
-	}
-	HP = mp;
-}
-*/
+
 void Character::SetAttack(int attack) {
 	stat.Attack = attack;
 }
