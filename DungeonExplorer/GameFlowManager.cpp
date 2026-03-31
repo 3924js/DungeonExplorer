@@ -199,7 +199,7 @@ void GameFlowManager::battleNode() {
 	else if (level <= 9) {
 		cout << "Stage 3\n";
 		if (currentStage != EStage::MISTY_FOREST) {
-			string move = gm.getPlayer()->GetName() + " move to the Misty Fores";
+			string move = gm.getPlayer()->GetName() + " move to the Misty Forest";
 			moveStage.push_back(move);
 			LogSystem::PrintStringsOnLog(moveStage);
 
@@ -284,6 +284,7 @@ void GameFlowManager::storeNode() {
 			break;
 		}
 
+		LogSystem::UpdateStatus();
 		LogSystem::ClearMainBuffer();
 		LogSystem::PrintStringsOnMain(blank);
 	}
