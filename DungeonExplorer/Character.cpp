@@ -97,7 +97,7 @@ int Character::GetHP() const { return stat.HP; }
 int Character::GetAttack() const { return stat.Attack; }
 int Character::GetDefense() const { return stat.Defense; }
 int Character::GetEXP() const { return EXP; }
-int Character::GetGold() const { return Gold; }
+int& Character::GetGold() { return Gold; }
 
 
 //Setter
@@ -124,7 +124,7 @@ void Character::SetMaxHP(int maxhp) {
 	if (stat.MaxHP < stat.HP) {
 		stat.HP = stat.MaxHP;
 	}
-	//LogSystem::GetInstance().UpdateStatus();
+	LogSystem::UpdateStatus();
 }
 
 void Character::SetHP(int hp) {
@@ -136,18 +136,22 @@ void Character::SetHP(int hp) {
 		hp = stat.MaxHP;
 	}
 	stat.HP = hp;
+	LogSystem::UpdateStatus();
 }
 
 void Character::SetAttack(int attack) {
 	stat.Attack = attack;
+	LogSystem::UpdateStatus();
 }
 
 void Character::SetDefense(int defense) {
 	stat.Defense = defense;
+	LogSystem::UpdateStatus();
 }
 
 void Character::SetEXP(int exp) {
 	EXP = exp;
+	LogSystem::UpdateStatus();
 }
 
 void Character::SetGold(int gold) {
@@ -155,4 +159,5 @@ void Character::SetGold(int gold) {
 		gold = 0;
 	}
 	Gold = gold;
+	LogSystem::UpdateStatus();
 }

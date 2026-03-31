@@ -27,7 +27,7 @@ public:
 	int GetAttack() const;
 	int GetDefense() const;
 	int GetEXP() const;
-	int GetGold() const;
+	int& GetGold();
 
 	//void SetName(std::string name);
 	//void SetLevel(int level);

@@ -121,10 +121,6 @@ void GameFlowManager::selectNextNode() {
 			storeNode();
 			break;
 		}
-		else if (nextNode == 3) {
-			gm.getPlayer()->displayStatus();
-			break;
-		}
 
 		cin.clear();
 		cin.ignore(1000, '\n');
@@ -205,7 +201,7 @@ void GameFlowManager::storeNode() {
 		cout << "\nSelect Action\n";
 		cout << "1. buy Item\n2. Sell Item\n3. Leave Store\nEnter Choice: ";
 		cin >> selection;
-		int gold = gm.getPlayer()->GetGold();
+		int& gold = gm.getPlayer()->GetGold();
 		// Show Store Item & Buy Item
 		if (selection == 1) {
 			store.ShowShopMenu(gold);
