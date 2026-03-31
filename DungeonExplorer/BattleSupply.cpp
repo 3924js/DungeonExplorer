@@ -60,12 +60,6 @@ std::vector<Monster*> BattleSupply::BattleSpawnMonster(){
         rewardList.push_back(findMonster);
     }
     SpriteManager::SetMonsterGroup(SpriteList); //Create Monster on the screen.
-    stringstream SS;
-    SS << "Number of Enemies: " << SpriteList.size() << ": ";
-    for (string i : SpriteList) {
-        SS << i << ", ";
-    }
-    LogSystem::PrintStringsOnLog({SS.str()});
 
     return spawnedList; 
 }

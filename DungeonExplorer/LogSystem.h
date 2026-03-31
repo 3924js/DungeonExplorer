@@ -109,7 +109,7 @@ private:
 		LS.LogDeque.push_front(ss.str());
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 1) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
 			LS.LogDeque.pop_back();
 		}
 	}
@@ -120,7 +120,7 @@ private:
 		LS.LogDeque.push_front(log);
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 1) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
 			LS.LogDeque.pop_back();
 		}
 	}
@@ -133,7 +133,7 @@ private:
 		LS.MainDeque.push_front(ss.str());
 
 		//erase the old one if the size is big
-		if (LS.MainDeque.size() > LayoutManager::GetLogHeight() - 2) {
+		if (LS.MainDeque.size() > LayoutManager::GetMainHeight() - 2) {
 			LS.MainDeque.pop_back();
 		}
 	}
@@ -144,7 +144,7 @@ private:
 		LS.MainDeque.push_front(log);
 
 		//erase the old one if the size is big
-		if (LS.MainDeque.size() > LayoutManager::GetLogHeight() - 2) {
+		if (LS.MainDeque.size() > LayoutManager::GetMainHeight() - 2) {
 			LS.MainDeque.pop_back();
 		}
 	}
@@ -155,7 +155,7 @@ private:
 		LS.SideDeque.push_front(ss.str());
 
 		//erase the old one if the size is big
-		if (LS.SideDeque.size() > LayoutManager::GetLogHeight() - 2) {
+		if (LS.SideDeque.size() > LayoutManager::GetSideHeight() - 2) {
 			LS.SideDeque.pop_back();
 		}
 	}
@@ -165,7 +165,7 @@ private:
 		LS.SideDeque.push_front(log);
 
 		//erase the old one if the size is big
-		if (LS.SideDeque.size() > LayoutManager::GetLogHeight() - 2) {
+		if (LS.SideDeque.size() > LayoutManager::GetSideHeight() - 2) {
 			LS.SideDeque.pop_back();
 		}
 	}
@@ -231,7 +231,7 @@ public:
 		SS << "-> " << TextFormat::RED;
 		for (int i = 0; i < monsters.size(); i++) {
 			std::string MonsterName = monsters[i]->getName();
-			LS.MonstersEncountered[MonsterName.substr(0, MonsterName.find(MonsterName.find(' ')))]++;
+			LS.MonstersEncountered[MonsterName.substr(0, MonsterName.find(' '))]++;
 			if (i == 0) {
 				SS << monsters[i]->getName();
 				continue;
@@ -316,7 +316,7 @@ public:
 		UpdateFrame();
 
 		std::string MonsterName = monster->getName();
-		LS.MonstersKilled[MonsterName.substr(0, MonsterName.find(MonsterName.find(' ')))]++;
+		LS.MonstersKilled[MonsterName.substr(0, MonsterName.find(' '))]++;
 	}
 
 	static void GetReward(int Exp, int Gold, const std::vector<Item>& Items) {
@@ -413,19 +413,22 @@ public:
 		LS.MainDeque.clear();
 		
 		std::stringstream SS;
-		const int Spacing = 16;
+		const int Spacing = 23;
 		//show int stats
 		int InfoCount = 0;
 		int PrevLen = 0;
 		SS.str("");
+		LS.PushMain(">>> Gameplay Statistics");
 		for (int i = 0; i < IntStatTypes::COUNT; i++) {
 			if (InfoCount == 0) {
-				SS << "-> " << IntStatNames[i] << ": " << LS.Stats[i] << ",";
-				PrevLen = IntStatNames[i].size();
+				std::string temp = "-> " + IntStatNames[i] + ": " + std::to_string(LS.Stats[i]) + ",";
+				SS << temp;
+				PrevLen = temp.size();
 			}
 			else {
-				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << "-> " << IntStatNames[i] << ": " << LS.Stats[i];
-				PrevLen = IntStatNames[i].size();
+				std::string temp = "-> " + IntStatNames[i] + ": " + std::to_string(LS.Stats[i]) + ",";
+				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << temp;
+				PrevLen = temp.size();
 			}
 			InfoCount++;
 			//If more than 4 info in the line, push to the buffer
@@ -447,12 +450,14 @@ public:
 		LS.PushMain("--> Monsters Encountered");
 		for (auto i = LS.MonstersEncountered.begin(); i != LS.MonstersEncountered.end(); i++) {
 			if (InfoCount == 0) {
-				SS << "-> " << (*i).first << ": " << (*i).second;
-				PrevLen = (*i).first.size();
+				std::string temp = "-> " + (*i).first + ": " + std::to_string((*i).second);
+				SS << temp;
+				PrevLen = temp.size();
 			}
 			else {
-				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << "-> " << (*i).first << ": " << (*i).second;
-				PrevLen = (*i).first.size();
+				std::string temp = "-> " + (*i).first + ": " + std::to_string((*i).second);
+				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << temp;
+				PrevLen = temp.size();
 			}
 			InfoCount++;
 
@@ -476,12 +481,14 @@ public:
 		LS.PushMain("--> Monsters Killed");
 		for (auto i = LS.MonstersKilled.begin(); i != LS.MonstersKilled.end(); i++) {
 			if (InfoCount == 0) {
-				SS << "-> " << (*i).first << ": " << (*i).second;
-				PrevLen = (*i).first.size();
+				std::string temp = "-> " + (*i).first + ": " + std::to_string((*i).second);
+				SS << temp;
+				PrevLen = temp.size();
 			}
 			else {
-				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << "-> " << (*i).first << ": " << (*i).second;
-				PrevLen = (*i).first.size();
+				std::string temp = "-> " + (*i).first + ": " + std::to_string((*i).second);
+				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << temp;
+				PrevLen = temp.size();
 			}
 			InfoCount++;
 
@@ -510,12 +517,12 @@ public:
 		LS.PushSide(std::string("==+==[Status]==+=="));
 		//Player Name
 		SS.str("");
-		SS << "  Name  |  " << player->GetName();
+		SS << "  Name  | " << player->GetName();
 		LS.PushSide(SS);
 
 		//Job Name
 		SS.str("");
-		SS << "  Job   |  " << player->GetCurrentJob();
+		SS << "  Job   | " << player->GetCurrentJob();
 		LS.PushSide(SS);
 		
 		LS.PushSide(std::string("------------------"));
