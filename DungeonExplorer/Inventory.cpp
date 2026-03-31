@@ -117,6 +117,51 @@ void Inventory::UseItem() {
     LogSystem::PrintStringsOnLog({"[System] Item not found."});
 }
 
+void Inventory::UseItem(int num) 
+{
+    if (ownedItems.empty()) 
+    {
+        LogSystem::PrintStringsOnLog({ "[System] Inventory is empty." });
+        return;
+    }
+
+    for (auto it = ownedItems.begin(); it != ownedItems.end(); )
+    {
+            Character* player = Character::GetInstance();
+            if (player == nullptr) return;
+
+            if (it->type == ItemType::Potion && (it->id == 301 || it->id == 302))
+            {
+
+                while (player->GetHP() < player->GetMaxHP() && it->count > 0)
+                {
+                    int healAmount = it->value;
+                    int currentHP = player->GetHP();
+                    int maxHP = player->GetMaxHP();
+
+                    int finalHP = (currentHP + healAmount > maxHP) ? maxHP : currentHP + healAmount;
+                    player->SetHP(finalHP);
+
+                    it->count--; 
+                }
+
+                stringstream SS;
+                SS << "[Effect] HP is now fully restored or optimized: " << player->GetHP();
+                LogSystem::PrintStringsOnLog({ SS.str() });
+
+                if (it->count <= 0) 
+                {
+                    it = ownedItems.erase(it);
+                }
+                else 
+                {
+                    ++it;
+                }
+                return; 
+            }
+    }
+}
+
 void Inventory::UnequipSlot(int slotIndex)
 {
     if (equippedSlots[slotIndex] == -1) return;

@@ -39,6 +39,7 @@ public:
 
     //Use one item
     void UseItem();
+    void UseItem(int itemId);
 
     void EquipItem(int index);
 
