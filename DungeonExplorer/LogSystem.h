@@ -37,7 +37,7 @@ static const std::string IntStatNames[IntStatTypes::COUNT] = { "Total Battles",
 															"Taken Damage",
 															"Killed Monsters",
 															"Earned Money",
-															"COLLECTED Items",
+															"Collected Items",
 															"Used Items",
 															"Rolled Dice",
 															"Total Spots" };
@@ -411,7 +411,7 @@ public:
 		LS.MainDeque.clear();
 		
 		std::stringstream SS;
-		LS.PushMain(">>> Gameplay Statistics");
+		const int Spacing = 16;
 		//show int stats
 		int InfoCount = 0;
 		int PrevLen = 0;
@@ -422,7 +422,7 @@ public:
 				PrevLen = IntStatNames[i].size();
 			}
 			else {
-				SS << std::string((std::max)(15 - PrevLen, 1), ' ') << "-> " << IntStatNames[i] << ": " << LS.Stats[i];
+				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << "-> " << IntStatNames[i] << ": " << LS.Stats[i];
 				PrevLen = IntStatNames[i].size();
 			}
 			InfoCount++;
@@ -449,7 +449,7 @@ public:
 				PrevLen = (*i).first.size();
 			}
 			else {
-				SS << std::string((std::max)(20 - PrevLen, 1), ' ') << "-> " << (*i).first << ": " << (*i).second;
+				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << "-> " << (*i).first << ": " << (*i).second;
 				PrevLen = (*i).first.size();
 			}
 			InfoCount++;
@@ -478,7 +478,7 @@ public:
 				PrevLen = (*i).first.size();
 			}
 			else {
-				SS << std::string((std::max)(20 - PrevLen, 1), ' ') << "-> " << (*i).first << ": " << (*i).second;
+				SS << std::string((std::max)(Spacing - PrevLen, 1), ' ') << "-> " << (*i).first << ": " << (*i).second;
 				PrevLen = (*i).first.size();
 			}
 			InfoCount++;
