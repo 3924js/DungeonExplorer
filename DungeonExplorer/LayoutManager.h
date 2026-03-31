@@ -84,7 +84,7 @@ public:
 		LayoutManager& LM = GetInstance();
 		//place the content to the coordinate
 		for (int i = 0; i < content.size() && y + i < LM.MainHeight - 2; i++) {
-			int MaxLength = std::min(LM.MainLength - 2 - x, GetPrintLength(content[i]));
+			int MaxLength = (std::min)(LM.MainLength - 2 - x, GetPrintLength(content[i]));
 			LM.MainBuffer[y + i + 1].replace(x + 1, MaxLength, content[i]);
 		}
 	}
@@ -119,7 +119,7 @@ public:
 		LayoutManager& LM = GetInstance();
 		//place the content to the coordinate
 		for (int i = 0; i < content.size() && y + i < LM.SideHeight - 2; i++) {
-			int MaxLength = std::min(LM.SideLength - 2 - x, GetPrintLength(content[i]));
+			int MaxLength = (std::min)(LM.SideLength - 2 - x, GetPrintLength(content[i]));
 			LM.SideBuffer[y + i + 1].replace(x + 1, MaxLength, content[i]);
 		}
 	}
@@ -144,7 +144,7 @@ public:
 		LayoutManager& LM = GetInstance();
 		//place the content to the coordinate
 		for (int i = 0; i < content.size() && y + i < LM.LogHeight - 2; i++) {
-			int MaxLength = std::min(LM.LogLength - 2 - x, GetPrintLength(content[i]));
+			int MaxLength = (std::min)(LM.LogLength - 2 - x, GetPrintLength(content[i]));
 			LM.LogBuffer[y + i + 1].replace(x + 1, MaxLength, content[i]);
 		}
 	}
