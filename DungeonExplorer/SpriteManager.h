@@ -135,7 +135,8 @@ private:
 					}
 				}
 			}
-			std::cout << "\033[H";
+			//std::cout << "\033[H";
+			LayoutManager::ClearWindow();
 			LayoutManager::PrintFrame();
 			Sleep(75);
 		}
