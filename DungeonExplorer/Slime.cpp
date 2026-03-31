@@ -19,9 +19,9 @@ void Slime::takeDamage(int damage) {
 	else health = getDamage;
 }
 
-int Slime::Attack() {
+int Slime::Attack(int armor) {
 	if (!attackStrategy) return 0;
-	int dmg = attackStrategy->calculateDamage(attack);
+	int dmg = attackStrategy->calculateDamage(attack,armor);
 
 	return dmg;
 }

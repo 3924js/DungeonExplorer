@@ -8,12 +8,12 @@ using namespace std;
 
 FStat Archer::GetBaseStat() const {
 	//MaxHP, HP, Attack
-	return { 100, 100, 40, 10 };
+	return { 150, 150, 40, 4 };
 }
 
 FStat Archer::GetLevelUpBonus() const {
 	//MaxHP, HP, Attack
-	return { 20, 20, 20, 5 };
+	return { 20, 20, 20, 4 };
 }
 
 int Archer::SkillDamage(const Character& character) const {

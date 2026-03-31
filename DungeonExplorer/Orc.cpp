@@ -19,9 +19,9 @@ void Orc::takeDamage(int damage) {
 	else health = getDamage;
 }
 
-int Orc::Attack() {
+int Orc::Attack(int armor) {
 	if (!attackStrategy) return 0;
-	int dmg = attackStrategy->calculateDamage(attack);
+	int dmg = attackStrategy->calculateDamage(attack,armor);
 
 	return dmg;
 }

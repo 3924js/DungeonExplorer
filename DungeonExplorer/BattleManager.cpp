@@ -167,8 +167,24 @@ void BattleManager::MonstersTurn(std::vector<Monster*>& m){
     {
         if (monsters->getHealth() > 0)
         {
-            int monsterDamage = monsters->Attack();
-            if (c.GetDefense() > monsterDamage)
+            int monsterDamage = monsters->Attack(c.GetDefense());
+            //if (c.GetDefense() > monsterDamage)
+            //{
+            //    LogSystem::AttackPlayer(monsters, 0);
+
+            //    //handle sprites
+            //    vector<int> MonsterStatus(m.size(), 1);
+            //    MonsterStatus[index] = 2;
+            //    SpriteManager::SetMonsterStatus(MonsterStatus);
+            //    
+            //    // Miss message
+            //    stringstream SS;
+            //    SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
+            //    << " Your high defense blocked the attack!! ";
+            //    LogSystem::PrintStringsOnLog({SS.str()});
+            //    
+            //} 
+            if (monsterDamage==0)
             {
                 LogSystem::AttackPlayer(monsters, 0);
 
@@ -176,17 +192,17 @@ void BattleManager::MonstersTurn(std::vector<Monster*>& m){
                 vector<int> MonsterStatus(m.size(), 1);
                 MonsterStatus[index] = 2;
                 SpriteManager::SetMonsterStatus(MonsterStatus);
-                
+
                 // Miss message
                 stringstream SS;
-                SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
-                << " Your high defense blocked the attack!! ";
-                LogSystem::PrintStringsOnLog({SS.str()});
-                
-            }   
+                SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT
+                    << " Your high defense blocked the attack!! ";
+                LogSystem::PrintStringsOnLog({ SS.str() });
+
+            }
             else
             {
-                int resultDamage = monsterDamage - c.GetDefense();
+                int resultDamage = monsterDamage;
                 c.SetHP(c.GetHP() - resultDamage);
                 LogSystem::AttackPlayer(monsters, resultDamage);
 

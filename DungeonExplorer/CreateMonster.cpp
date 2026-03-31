@@ -7,7 +7,7 @@ Monster* CreateMonster::createGoblin(std::string name, int level) {
 	int atk = 5;
 
 	std::uniform_int_distribution<int> hpDist(level * 30, level * 40);
-	std::uniform_int_distribution<int> atkDist(level * 8, level * 10);
+	std::uniform_int_distribution<int> atkDist(level * 7, level * 8);
 
 	hp += hpDist(gen);
 	atk += atkDist(gen);
@@ -22,7 +22,7 @@ Monster* CreateMonster::createOrc(std::string name, int level) {
 	int hp = 80;
 	int atk = 5;
 	std::uniform_int_distribution<int> hpDist(level * 80, level * 100);
-	std::uniform_int_distribution<int> atkDist(level * 3, level * 5);
+	std::uniform_int_distribution<int> atkDist(level * 5, level * 6);
 
 	hp += hpDist(gen);
 	atk += atkDist(gen);
@@ -36,8 +36,8 @@ Monster* CreateMonster::createSlime(std::string name, int level) {
 
 	int hp = 20;
 	int atk = 6;
-	std::uniform_int_distribution<int> hpDist(level * 30, level * 40);
-	std::uniform_int_distribution<int> atkDist(level * 7, level * 14);
+	std::uniform_int_distribution<int> hpDist(level * 25, level * 35);
+	std::uniform_int_distribution<int> atkDist(level * 9, level * 10);
 
 	hp += hpDist(gen);
 	atk += atkDist(gen);
@@ -52,7 +52,7 @@ Monster* CreateMonster::createTroll(std::string name, int level) {
 	int hp = 60;
 	int atk = 5;
 	std::uniform_int_distribution<int> hpDist(level * 70, level * 80);
-	std::uniform_int_distribution<int> atkDist(level * 4, level * 6);
+	std::uniform_int_distribution<int> atkDist(level * 4, level * 5);
 
 	hp += hpDist(gen);
 	atk += atkDist(gen);
@@ -67,7 +67,7 @@ Monster* CreateMonster::createBoss(std::string name, int level) {
 	int hp = 40;
 	int atk = 10;
 	std::uniform_int_distribution<int> hpDist(level * 75, level * 85);
-	std::uniform_int_distribution<int> atkDist(level * 8, level * 10);
+	std::uniform_int_distribution<int> atkDist(level * 10, level * 12);
 
 	hp += hpDist(gen);
 	atk += atkDist(gen);

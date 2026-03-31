@@ -19,9 +19,9 @@ void Troll::takeDamage(int damage) {
 	else health = getDamage;
 }
 
-int Troll::Attack() {
+int Troll::Attack(int armor) {
 	if (!attackStrategy) return 0;
-	int dmg = attackStrategy->calculateDamage(attack);
+	int dmg = attackStrategy->calculateDamage(attack,armor);
 
 	return dmg;
 }

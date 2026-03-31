@@ -8,12 +8,12 @@ using namespace std;
 
 FStat Warrior::GetBaseStat() const {
 	//MaxHP, HP, Attack, Defense
-	return { 150, 150, 30, 10 };
+	return { 200, 200, 30, 5 };
 }
 
 FStat Warrior::GetLevelUpBonus() const {
 	//MaxHP, HP, Attack, Defense
-	return { 50, 50, 10, 10 };
+	return { 30, 30, 10, 5 };
 }
 
 int Warrior::SkillDamage(const Character& character) const {

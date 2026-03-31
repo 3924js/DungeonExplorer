@@ -8,12 +8,12 @@ using namespace std;
 
 FStat Wizard::GetBaseStat() const {
 	//MaxHP, HP, Attack
-	return { 50, 50, 50, 5 };
+	return { 100, 100, 50, 3 };
 }
 
 FStat Wizard::GetLevelUpBonus() const {
 	//MaxHP, HP, Attack
-	return { 10, 10, 20, 5 };
+	return { 15, 15, 23, 3 };
 }
 
 int Wizard::SkillDamage(const Character& character) const {

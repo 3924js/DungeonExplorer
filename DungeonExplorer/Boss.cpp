@@ -19,9 +19,9 @@ void Boss::takeDamage(int damage) {
 	else health = getDamage;
 }
 
-int Boss::Attack() {
+int Boss::Attack(int armor) {
 	if (!attackStrategy) return 0;
-	int dmg = attackStrategy->calculateDamage(attack);
+	int dmg = attackStrategy->calculateDamage(attack,armor);
 	std::cout << dmg << std::endl;
 	return dmg;
 }

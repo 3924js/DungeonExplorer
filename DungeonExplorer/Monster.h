@@ -15,7 +15,7 @@ public:
 	virtual int getHealth() = 0;
 	virtual int getAttack() = 0;
 	virtual void takeDamage(int damage) = 0;
-	virtual int Attack() = 0;
+	virtual int Attack(int armor) = 0;
 	virtual void SetStrategy(std::unique_ptr<AttackStrategy> attackStrategy) = 0;
 	virtual ~Monster() = default;
 };

@@ -16,7 +16,7 @@ public:
 
 	virtual void takeDamage(int damage) override;
 
-	virtual int Attack() override;
+	virtual int Attack(int armor) override;
 
 	virtual void SetStrategy(std::unique_ptr<AttackStrategy> attackStrategy) override;
 };
