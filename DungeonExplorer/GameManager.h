@@ -14,12 +14,12 @@ private:
 	GameManager(const GameManager&) = delete;
 	GameManager& operator=(const GameManager&) = delete;
 
-	Monster* enemy;
 	Character* player;
 	CreateMonster* cMonster;
 	Inventory* inven;
 	Job* playerJob;
 
+	bool isGameClear = false;
 public:
 	static GameManager& GetInstance();
 
@@ -27,14 +27,16 @@ public:
 
 	void createPlayer(std::string name = "player", Job* playerJob = nullptr);
 
-	void generateMonster(int level = 0);
+	Monster* generateBoss();
 
 	void displayInventory();
 
 	void useItem();
 
-	Monster* getEnemy() { return enemy; }
 	Character* getPlayer() { return player; }
 	Inventory* getInventory() { return inven; }
 	Job* getPlayerJob() { return playerJob; }
+	bool getIsGameClear() { return isGameClear; }
+
+	void setGameClear() { isGameClear = true; }
 };

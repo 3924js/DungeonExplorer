@@ -18,21 +18,21 @@ using namespace std;
 GameFlowManager::GameFlowManager() :
 	gm(GameManager::GetInstance()), 
 	bManager(nullptr), 
-	sManager(StageManager::GetInstance()),
-	isGameClear(false) {}
+	sManager(StageManager::GetInstance())
+	{}
 
 // Overall game flow
 void GameFlowManager::run() {
 	setupPlayer();
 
-	while(!isGameClear) {
+	while(!gm.getIsGameClear()) {
 		if (gm.getPlayer()->GetHP() > 0) {
 			selectNextNode();
 		}
 		else break;
 	}
 	
-	if (isGameClear) gameClear();
+	if (gm.getIsGameClear()) gameClear();
 	else gameOver();
 }
 
@@ -168,8 +168,7 @@ void GameFlowManager::battleNode() {
 		return;
 	}
 
-	// Generate Monster & Start Battle
-	gm.generateMonster();
+	// Start Battle
 	if (bManager == nullptr) {
 		bManager = &BattleManager::GetInstance();
 	}
@@ -234,9 +233,9 @@ void GameFlowManager::storeNode() {
 // Generate Boss & Battle
 void GameFlowManager::bossNode() {
 	cout << "\nEncounter Boss\n";
-	gm.generateMonster();
+	Monster* boss = gm.generateBoss();
 	if (bManager == nullptr) bManager = &BattleManager::GetInstance();
-	bManager->StartBattle();
+	bManager->StartBossBattle(boss);
 }
 
 void GameFlowManager::gameOver() {

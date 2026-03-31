@@ -6,7 +6,6 @@
 #include "RandomManager.h"
 #include "BattleSupply.h"
 #include "LogSystem.h"
-#include "GameFlowManager.h"
 #include "inventory.h"
 #include "Job.h"
 #include <iostream>
@@ -33,12 +32,6 @@ void BattleManager::StartBattle(){
         // buff effect end
         Inventory* inv = GameManager::GetInstance().getInventory();
         inv->SetTempAtkBuff(0);
-    }
-    else
-    {
-        // Game End 
-        GameFlowManager GFM;
-        GFM.gameOver();
     }
     // Delete new monsters
     for (Monster* monsters : m)
@@ -208,7 +201,6 @@ void BattleManager::UsePotionToPer(float perHP){
 }
 
 void BattleManager::StartBossBattle(Monster* boss){
-    GameFlowManager GFM;
     bool isWin = 0;
     int bossTurn = 1;
     
@@ -286,11 +278,7 @@ void BattleManager::StartBossBattle(Monster* boss){
     // Check isWin
     if (isWin)
     {
-        GFM.gameClear();
-    }
-    else
-    {
-        GFM.gameOver();
+        GameManager::GetInstance().setGameClear();
     }
 }
 

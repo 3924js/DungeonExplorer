@@ -11,7 +11,6 @@ private:
 	StageManager& sManager;
 	BattleManager* bManager;
 
-	bool isGameClear;
 public:
 	GameFlowManager();
 
@@ -30,6 +29,4 @@ public:
 	void gameOver();
 
 	void gameClear();
-
-	void setIsGameClear() { isGameClear = true; }
 };
