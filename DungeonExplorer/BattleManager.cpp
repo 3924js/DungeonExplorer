@@ -263,9 +263,11 @@ void BattleManager::UsePotionToPer(float perHP){
     }
 }
 
-void BattleManager::StartBossBattle(Monster* boss){
+void BattleManager::StartBossBattle(){
     bool isWin = 0;
     int bossTurn = 1;
+
+    Monster* boss = BattleSupply::GetInstance().SpawnBoss();
     stringstream SS;
     SpriteManager::SetMonsterGroup({ "Boss" });
 

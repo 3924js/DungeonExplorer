@@ -25,5 +25,6 @@ public:
     BattleSupply operator=(const BattleSupply&) = delete;
     
     std::vector<Monster*> BattleSpawnMonster();
+    Monster* SpawnBoss();
     void BattleReward();
 };

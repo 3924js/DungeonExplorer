@@ -30,6 +30,8 @@ vector<string> chooseStoreAction = {
 	"3. Leave Store"
 };
 
+vector<string> blank = { "" };
+
 // Constructor
 GameFlowManager::GameFlowManager() :
 	gm(GameManager::GetInstance()), 
@@ -149,6 +151,7 @@ void GameFlowManager::selectNextNode() {
 			break;
 		}
 		else if (nextNode == 3) {
+			LogSystem::ClearLogBuffer();
 			LogSystem::ShowItems(gm.getInventory()->GetOwnedItems());
 			break;
 		}
@@ -226,7 +229,11 @@ void GameFlowManager::battleNode() {
 
 // Enter Store
 void GameFlowManager::storeNode() {
-	vector<string> enterStore = { "Enter the Store", "Restore Player HP to full"};
+	LogSystem::ClearLogBuffer();
+	LogSystem::ClearMainBuffer();
+	LogSystem::PrintStringsOnMain(blank);
+
+	vector<string> enterStore = { "Enter the Store", "Restore Player HP to full", " "};
 	LogSystem::PrintStringsOnLog(enterStore);
 
 	// Restore HP to maxHP;
@@ -243,8 +250,12 @@ void GameFlowManager::storeNode() {
 		cout << TextFormat::CYAN <<"Enter Choice:" << TextFormat::DEFAULT;
 		cin >> selection;
 		int& gold = gm.getPlayer()->GetGold();
+		LogSystem::ClearLogBuffer();
 		// Show Store Item & Buy Item
 		if (selection == 1) {
+			vector<string> buy = { "Select Action: Buy Item" };
+			LogSystem::PrintStringsOnLog(buy);
+
 			store.ShowShopMenu(gold);
 			int ItemSelect;
 			cout << TextFormat::CYAN << "Enter the Item Number to Buy: " << TextFormat::DEFAULT;
@@ -253,6 +264,9 @@ void GameFlowManager::storeNode() {
 		}
 		// Show Inventory & Sell Item
 		else if (selection == 2) {
+			vector<string> sell = { "Select Action: Sell Item" };
+			LogSystem::PrintStringsOnLog(sell);
+
 			LogSystem::ShowItems(gm.getInventory()->GetOwnedItems());
 			int ItemSelect;
 			cout << TextFormat::CYAN << "Enter the Item Number to Sell: " << TextFormat::DEFAULT;
@@ -261,18 +275,20 @@ void GameFlowManager::storeNode() {
 		}
 		// Leave Store
 		else if (selection == 3) {
-			vector<string> leaveStore = { "Leave the Store" };
+			vector<string> leaveStore = { "Leave the Store", ""};
 			LogSystem::PrintStringsOnLog(leaveStore);
 			break;
 		}
+
+		LogSystem::ClearMainBuffer();
+		LogSystem::PrintStringsOnMain(blank);
 	}
 }
 
 // Generate Boss & Battle
 void GameFlowManager::bossNode() {
-	Monster* boss = gm.generateBoss();
 	if (bManager == nullptr) bManager = &BattleManager::GetInstance();
-	bManager->StartBossBattle(boss);
+	bManager->StartBossBattle();
 }
 
 void GameFlowManager::gameOver() {

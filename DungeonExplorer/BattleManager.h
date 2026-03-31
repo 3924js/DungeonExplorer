@@ -31,5 +31,5 @@ public:
     void MonstersTurn(std::vector<Monster*>& m);
     void ApplyDiceResult(DiceResult result);
     void UsePotionToPer(float perHP);
-    void StartBossBattle(Monster* monster);
+    void StartBossBattle();
 };

@@ -70,6 +70,10 @@ std::vector<Monster*> BattleSupply::BattleSpawnMonster(){
     return spawnedList; 
 }
 
+Monster* BattleSupply::SpawnBoss() {
+    return CreateMonster::createBoss("Death Knight", 10);
+}
+
 void BattleSupply::BattleReward(){
     std::vector<Item> getItemList;
     int totalGold = 0;

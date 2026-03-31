@@ -2,7 +2,6 @@
 #include <string>
 #include "GameManager.h"
 #include "Character.h"
-#include "CreateMonster.h"
 #include "Inventory.h"
 #include "Job.h"
 #include "Warrior.h"
@@ -11,14 +10,12 @@ using namespace std;
 
 // Constructor
 GameManager::GameManager(): player(nullptr), playerJob(nullptr) {
-	cMonster = new CreateMonster();
 	inven = new Inventory;
 }
 
 // Destructor
 GameManager::~GameManager() {
 	if (player != nullptr) delete player;
-	if (cMonster != nullptr) delete cMonster;
 	if (playerJob != nullptr) delete playerJob;
 }
 
@@ -32,11 +29,6 @@ void GameManager::createPlayer(string name, Job* pJob) {
 GameManager& GameManager::GetInstance() {
 	static GameManager instance;
 	return instance;
-}
-
-// Create Boss Level 10
-Monster* GameManager::generateBoss() {
-	return cMonster->createBoss("Death Knight", 10);
 }
 
 // Display all items in the inventory

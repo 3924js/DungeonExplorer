@@ -1,9 +1,7 @@
 ﻿#pragma once
 #include <string>
 
-class Monster;
 class Character;
-class CreateMonster;
 class Inventory;
 class Job;
 
@@ -15,7 +13,6 @@ private:
 	GameManager& operator=(const GameManager&) = delete;
 
 	Character* player;
-	CreateMonster* cMonster;
 	Inventory* inven;
 	Job* playerJob;
 
@@ -26,8 +23,6 @@ public:
 	~GameManager();
 
 	void createPlayer(std::string name = "player", Job* playerJob = nullptr);
-
-	Monster* generateBoss();
 
 	void displayInventory();
 
