@@ -109,7 +109,7 @@ private:
 		LS.LogDeque.push_front(ss.str());
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 3) {
 			LS.LogDeque.pop_back();
 		}
 	}
@@ -120,7 +120,7 @@ private:
 		LS.LogDeque.push_front(log);
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 3) {
 			LS.LogDeque.pop_back();
 		}
 	}
@@ -261,7 +261,6 @@ public:
 		SS.str("");
 		SS << "-> The Monster has taken " << Damage << " damage!";
 		LS.PushLog(SS);
-		LS.PushLog(TextFormat::SPLIT_LINE);
 		PushToLogBuffer(LS.LogDeque);
 		UpdateFrame();
 
@@ -279,7 +278,6 @@ public:
 		SS.str("");
 		SS << "-> The player has taken " << TextFormat::RED << Damage << TextFormat::DEFAULT << " damage!";
 		LS.PushLog(SS);
-		LS.PushLog(TextFormat::SPLIT_LINE);
 		PushToLogBuffer(LS.LogDeque);
 		UpdateFrame();
 		
@@ -506,18 +504,18 @@ public:
 		for (std::string input : inputs) {
 			LS.PushMain(input);
 		}
-		LS.PushMain(TextFormat::SPLIT_LINE);
 		PushToMainBuffer(LS.MainDeque);
 		UpdateFrame();
+		Sleep(50);
 	}
 	static void PrintStringsOnLog(std::vector<std::string> inputs) {	//for other class to push content on the main buffer
 		LogSystem& LS = GetInstance();
 		for (std::string input : inputs) {
 			LS.PushLog(input);
 		}
-		LS.PushLog(TextFormat::SPLIT_LINE);
 		PushToLogBuffer(LS.LogDeque);
 		UpdateFrame();
+		Sleep(100);
 	}
 
 	static void ClearMainBuffer() {

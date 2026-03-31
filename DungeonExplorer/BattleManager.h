@@ -27,7 +27,7 @@ public:
     
     void StartBattle();   
     bool AutoBattle(std::vector<Monster*>& m);
-    bool PlayerTurn(std::vector<Monster*>& m, Monster*& target);
+    bool PlayerTurn(std::vector<Monster*>& m, Monster*& target, int index);
     void MonstersTurn(std::vector<Monster*>& m);
     void ApplyDiceResult(DiceResult result);
     void UsePotionToPer(float perHP);
