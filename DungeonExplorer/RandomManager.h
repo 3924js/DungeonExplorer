@@ -24,6 +24,11 @@ public:
         return dis(gen);
     }
     
+    float GetRange(float min, float max){
+        std::uniform_real_distribution<float> dis(min, max);
+        return dis(gen);
+    }
+    
     void ShuffleVectorString(std::vector<std::string>& target){
         if (target.empty()) return; 
         std::shuffle(target.begin(), target.end(), gen);

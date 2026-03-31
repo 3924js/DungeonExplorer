@@ -65,21 +65,25 @@ void BattleSupply::BattleReward(){
     for (auto m : rewardList)
     {
         MonsterReward rewardMob = BattleTable::GetRewardToMonster(m);
-        float randomChance = RandomManager::GetInstance().GetRange(0.0f, 1.0f);
-        int randomEXP = RandomManager::GetInstance().GetRange(40, 70);
-        int randomGold = RandomManager::GetInstance().GetRange(rewardMob.minGold, rewardMob.maxGold);
+        
+        // Get EXP
+        int randomEXP = RandomManager::GetInstance().GetRange(10, 30);
+        int getEXP = player->GetEXP();
+        player->SetEXP(getEXP + randomEXP);
+        totalEXP += randomEXP;
         
         // Create item
         Item getItem = ItemFactory::CreateItem(rewardMob.itemId);
-
+        
+        // Get Gold
+        float randomChance = RandomManager::GetInstance().GetRange(0.0f, 1.0f);
+        int randomGold = RandomManager::GetInstance().GetRange(rewardMob.minGold, rewardMob.maxGold);
         if (randomChance <= rewardMob.dropRate )
         {
-            int getEXP = player->GetEXP();
             int playerGold = player->GetGold();
             
-            player->SetEXP(getEXP + randomEXP);
             player->SetGold(playerGold + randomGold);
-            totalEXP += randomEXP;
+
             totalGold += randomGold;
             GameManager::GetInstance().getInventory()->AddItem(getItem);
             getItemList.push_back(getItem);
