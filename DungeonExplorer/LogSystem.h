@@ -160,7 +160,7 @@ private:
 		}
 	}
 	//string version
-	static void ChangeSide(const std::string& log) {
+	static void PushSide(const std::string& log) {
 		LogSystem& LS = GetInstance();
 		LS.SideDeque.push_front(log);
 
@@ -469,30 +469,48 @@ public:
 		LogSystem& LS = GetInstance();
 		Character* player = Character::GetInstance();
 		LS.SideDeque.clear();
-		//직업이름 추가
 		std::stringstream SS;
+
+		LS.PushSide(std::string("==+==[Status]==+=="));
+		//Player Name
 		SS.str("");
-		SS << "Name: " << player->GetName();
+		SS << "  Name  |  " << player->GetName();
 		LS.PushSide(SS);
 
+		//Job Name
 		SS.str("");
-		SS << "Level: " << player->GetLevel();
+		SS << "  Job   |  " << player->GetCurrentJob();
+		LS.PushSide(SS);
+		
+		LS.PushSide(std::string("------------------"));
+		//Level
+		SS.str("");
+		SS << "  LV    | " << player->GetLevel();
 		LS.PushSide(SS);
 
+		//Experience Point
 		SS.str("");
-		SS << "Exp: " << player->GetEXP();
+		SS << "  EXP   |" << player->GetEXP();
+		LS.PushSide(SS);
+		LS.PushSide(std::string("------------------"));
+		//Health Point
+		SS.str("");
+		SS << "  HP    | " << player->GetHP();
 		LS.PushSide(SS);
 
+		//Attack
 		SS.str("");
-		SS << "Health: " << player->GetHP();
+		SS << "  ATK   | " << player->GetAttack();
 		LS.PushSide(SS);
 
+		//Defense
 		SS.str("");
-		SS << "Attack: " << player->GetAttack();
+		SS << "  DFS   | " << player->GetDefense();
 		LS.PushSide(SS);
-
+		LS.PushSide(std::string("------------------"));
+		//Gold
 		SS.str("");
-		SS << "Defence: " << player->GetDefense();
+		SS << "  Gold  | " << player->GetGold();
 		LS.PushSide(SS);
 
 		PushToSideBuffer(LS.SideDeque);
