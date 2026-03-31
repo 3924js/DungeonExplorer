@@ -305,8 +305,9 @@ void GameFlowManager::bossNode() {
 
 void GameFlowManager::CheckInventory() {
 	LogSystem::ClearLogBuffer();
-	LogSystem::ShowItems(gm.getInventory()->GetOwnedItems());
 	while (1) {
+		LogSystem::ClearMainBuffer();
+		LogSystem::ShowItems(gm.getInventory()->GetOwnedItems());
 
 		LogSystem::PrintStringsOnLog(checkItemEquip);
 		cout << TextFormat::CYAN << "Enter Choice:" << TextFormat::DEFAULT;
