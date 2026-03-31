@@ -27,7 +27,6 @@ void Store::ShowShopMenu(int playerGold) const
     vector<string> Inputs;
     stringstream SS;
     SS.str("");
-    Inputs.push_back(SS.str());
     for (size_t i = 0; i < shopItemIDs.size(); ++i)
     {
         Item* item = ItemManager::GetInstance().GetItemById(shopItemIDs[i]);
