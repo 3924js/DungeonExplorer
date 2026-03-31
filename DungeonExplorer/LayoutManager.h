@@ -27,7 +27,7 @@ private:
 	const int SideHeight = MainHeight;
 
 	const int LogLength = MainLength + SideLength + 2;
-	const int LogHeight = 14;
+	const int LogHeight = 12;
 
 	//Buffers to store display contents
 	std::vector<std::string> MainBuffer;

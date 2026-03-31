@@ -109,7 +109,7 @@ private:
 		LS.LogDeque.push_front(ss.str());
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 3) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 1) {
 			LS.LogDeque.pop_back();
 		}
 	}
@@ -120,7 +120,7 @@ private:
 		LS.LogDeque.push_front(log);
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 3) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 1) {
 			LS.LogDeque.pop_back();
 		}
 	}
@@ -230,7 +230,8 @@ public:
 		SS.str("");
 		SS << "-> " << TextFormat::RED;
 		for (int i = 0; i < monsters.size(); i++) {
-			LS.MonstersEncountered[monsters[i]->getName()]++;
+			std::string MonsterName = monsters[i]->getName();
+			LS.MonstersEncountered[MonsterName.substr(0, MonsterName.find(MonsterName.find(' ')))]++;
 			if (i == 0) {
 				SS << monsters[i]->getName();
 				continue;
@@ -314,7 +315,8 @@ public:
 		PushToLogBuffer(LS.LogDeque);
 		UpdateFrame();
 
-		LS.MonstersKilled[monster->getName()]++;
+		std::string MonsterName = monster->getName();
+		LS.MonstersKilled[MonsterName.substr(0, MonsterName.find(MonsterName.find(' ')))]++;
 	}
 
 	static void GetReward(int Exp, int Gold, const std::vector<Item>& Items) {
@@ -442,7 +444,7 @@ public:
 		SS.str("");
 		InfoCount = 0;
 		PrevLen = 0;
-		LS.PushLog("--> Monsters Encountered");
+		LS.PushMain("--> Monsters Encountered");
 		for (auto i = LS.MonstersEncountered.begin(); i != LS.MonstersEncountered.end(); i++) {
 			if (InfoCount == 0) {
 				SS << "-> " << (*i).first << ": " << (*i).second;
@@ -471,7 +473,7 @@ public:
 		SS.str("");
 		InfoCount = 0;
 		PrevLen = 0;
-		LS.PushLog("--> Monsters Killed");
+		LS.PushMain("--> Monsters Killed");
 		for (auto i = LS.MonstersKilled.begin(); i != LS.MonstersKilled.end(); i++) {
 			if (InfoCount == 0) {
 				SS << "-> " << (*i).first << ": " << (*i).second;
@@ -524,7 +526,7 @@ public:
 
 		//Experience Point
 		SS.str("");
-		SS << "  EXP   |" << player->GetEXP();
+		SS << "  EXP   | " << player->GetEXP();
 		LS.PushSide(SS);
 		LS.PushSide(std::string("------------------"));
 		//Health Point
