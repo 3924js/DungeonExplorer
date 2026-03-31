@@ -30,14 +30,3 @@ GameManager& GameManager::GetInstance() {
 	static GameManager instance;
 	return instance;
 }
-
-// Display all items in the inventory
-void GameManager::displayInventory() {
-	inven->ShowInventory();
-}
-
-// Show Inventory & Use Item
-void GameManager::useItem() {
-	inven->ShowInventory();
-	inven->UseItem();
-}

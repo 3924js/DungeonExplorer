@@ -26,6 +26,8 @@ public:
 
 	void bossNode();
 
+	void CheckInventory();
+
 	void gameOver();
 
 	void gameClear();

@@ -32,6 +32,14 @@ vector<string> chooseStoreAction = {
 	"3. Leave Store"
 };
 
+vector<string> checkItemEquip = {
+	"",
+	"Inventory Opened. Choose your next action.",
+	"1. Equip Item",
+	"2. Use Item",
+	"3. Close Inventory"
+};
+
 vector<string> blank = { "" };
 
 // Constructor
@@ -154,8 +162,7 @@ void GameFlowManager::selectNextNode() {
 			break;
 		}
 		else if (nextNode == 3) {
-			LogSystem::ClearLogBuffer();
-			LogSystem::ShowItems(gm.getInventory()->GetOwnedItems());
+			CheckInventory();
 			break;
 		}
 
@@ -294,6 +301,36 @@ void GameFlowManager::storeNode() {
 void GameFlowManager::bossNode() {
 	if (bManager == nullptr) bManager = &BattleManager::GetInstance();
 	bManager->StartBossBattle();
+}
+
+void GameFlowManager::CheckInventory() {
+	LogSystem::ClearLogBuffer();
+	LogSystem::ShowItems(gm.getInventory()->GetOwnedItems());
+	while (1) {
+
+		LogSystem::PrintStringsOnLog(checkItemEquip);
+		cout << TextFormat::CYAN << "Enter Choice:" << TextFormat::DEFAULT;
+
+		int selection;
+		cin >> selection;
+		LogSystem::ClearLogBuffer();
+		LogSystem::PrintStringsOnLog(blank);
+		if(selection == 1){
+			int ItemSelect;
+			cout << TextFormat::CYAN << "Enter the Item Number to Equip: " << TextFormat::DEFAULT;
+			cin >> ItemSelect;
+
+			gm.getInventory()->EquipItem(ItemSelect);
+		}
+		else if (selection == 2) {
+			gm.getInventory()->UseItem();
+		}
+		else if (selection == 3) {
+			vector<string> CloseInven = { "Close Inventory" };
+			LogSystem::PrintStringsOnLog(CloseInven);
+			break;
+		}
+	}
 }
 
 void GameFlowManager::gameOver() {
