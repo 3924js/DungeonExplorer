@@ -181,7 +181,7 @@ public:
 		SpriteManager& SM = GetInstance();
 		for (int i = 0; i < SM.Status.size(); i++) {
 			if (i == which) SM.Status[i] = status;
-			else SM.Status[i] = 1;
+			else if(SM.Status[i] != 0) SM.Status[i] = 1;
 		}
 
 		//Generate Buffer depending on the status

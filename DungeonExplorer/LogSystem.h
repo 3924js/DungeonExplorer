@@ -471,7 +471,7 @@ public:
 		LogSystem& LS = GetInstance();
 		Character* player = Character::GetInstance();
 		LS.SideDeque.clear();
-
+		//직업이름 추가
 		std::stringstream SS;
 		SS.str("");
 		SS << "Name: " << player->GetName();
@@ -501,13 +501,22 @@ public:
 		UpdateFrame();
 	}
 
-	void PrintStringsOnMain(std::vector <std::string> inputs) {	//for other class to push content on the main buffer
+	static void PrintStringsOnMain(std::vector<std::string> inputs) {	//for other class to push content on the main buffer
 		LogSystem& LS = GetInstance();
 		for (std::string input : inputs) {
 			LS.PushMain(input);
 		}
 		LS.PushMain(TextFormat::SPLIT_LINE);
-		PushToMainBuffer(LS.SideDeque);
+		PushToMainBuffer(LS.MainDeque);
+		UpdateFrame();
+	}
+	static void PrintStringsOnLog(std::vector<std::string> inputs) {	//for other class to push content on the main buffer
+		LogSystem& LS = GetInstance();
+		for (std::string input : inputs) {
+			LS.PushLog(input);
+		}
+		LS.PushLog(TextFormat::SPLIT_LINE);
+		PushToLogBuffer(LS.LogDeque);
 		UpdateFrame();
 	}
 	
