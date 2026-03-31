@@ -24,10 +24,6 @@ public:
 
 	void createPlayer(std::string name = "player", Job* playerJob = nullptr);
 
-	void displayInventory();
-
-	void useItem();
-
 	Character* getPlayer() { return player; }
 	Inventory* getInventory() { return inven; }
 	Job* getPlayerJob() { return playerJob; }
