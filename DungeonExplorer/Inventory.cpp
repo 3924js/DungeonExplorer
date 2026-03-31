@@ -62,7 +62,7 @@ void Inventory::UseItem() {
         return;
     }
 
-    LogSystem::PrintStringsOnLog({ "Enter Item Name: " });
+    cout << TextFormat::CYAN << "Enter Item Name: " << TextFormat::DEFAULT;
     std::string itemName;
     std::cin.ignore();
     std::getline(std::cin, itemName);
@@ -110,6 +110,10 @@ void Inventory::UseItem() {
                 // 4. Consume item
                 if (it->count > 1) it->count--;
                 else ownedItems.erase(it);
+            }
+            else {
+                vector<string> WarningLog = { itemName + " can't use" };
+                LogSystem::PrintStringsOnLog(WarningLog);
             }
             return;
         }
