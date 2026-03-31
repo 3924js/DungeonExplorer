@@ -45,7 +45,16 @@ private:
 public:
 	//clear console window
 	static void ClearWindow() {
-		system("cls");
+		//std::cout << "\033[H";
+		//system("cls");
+		COORD coord = { 0, 0 };
+		DWORD count;
+		HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		GetConsoleScreenBufferInfo(hStdOut, &csbi);
+
+		FillConsoleOutputCharacter(hStdOut, (TCHAR)' ', csbi.dwSize.X * csbi.dwSize.Y, coord, &count);
+		SetConsoleCursorPosition(hStdOut, coord);
 	}
 
 	//Print 3 bufferes together
