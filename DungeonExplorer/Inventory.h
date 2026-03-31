@@ -54,4 +54,5 @@ public:
 
     void SetTempAtkBuff(int buff);
 
+    void UnequipSlot(int slotIndex);
 };

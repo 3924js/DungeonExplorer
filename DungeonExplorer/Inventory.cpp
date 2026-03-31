@@ -117,45 +117,79 @@ void Inventory::UseItem() {
     LogSystem::PrintStringsOnLog({"[System] Item not found."});
 }
 
-void Inventory::EquipItem(int index) 
+void Inventory::UnequipSlot(int slotIndex)
+{
+    if (equippedSlots[slotIndex] == -1) return;
+
+    Character* player = Character::GetInstance();
+    int oldItemId = equippedSlots[slotIndex];
+    stringstream SS;
+
+    for (auto& item : ownedItems)
+    {
+        if (item.id == oldItemId)
+        {
+            item.equiped = false;
+
+            if (item.type == ItemType::Weapon)
+            {
+                player->SetAttack(player->GetAttack() - item.value);
+                SS << "[System] Unequipped " << item.name << " (Attack recovered)";
+            }
+            else if (item.type == ItemType::Armor)
+            {
+                player->SetDefense(player->GetDefense() - item.value);
+                SS << "[System] Unequipped " << item.name << " (Defense recovered)";
+            }
+            LogSystem::PrintStringsOnLog({ SS.str() });
+            break;
+        }
+    }
+
+    equippedSlots[slotIndex] = -1;
+}
+
+void Inventory::EquipItem(int index)
 {
     int actualIndex = index - 1;
 
-    // Boundary Check
-    if (actualIndex < 0 || actualIndex >= (int)ownedItems.size()) 
+    if (actualIndex < 0 || actualIndex >= (int)ownedItems.size())
     {
         LogSystem::PrintStringsOnLog({ "[System] Invalid item index!" });
         return;
     }
 
     Item& selectedItem = ownedItems[actualIndex];
-    int slotIndex = -1;
-
     Character* player = Character::GetInstance();
-
     stringstream SS;
-    // Determine the slot based on ItemType
-    if (selectedItem.type == ItemType::Weapon) 
+
+    if (selectedItem.type != ItemType::Weapon && selectedItem.type != ItemType::Armor)
     {
-        slotIndex = (int)EquipSlot::Weapon;
-        player->SetAttack(player->GetAttack() + selectedItem.value);
-        SS << "[Effect] Attack boosted by " << selectedItem.value << "!";
+        SS << "[System] " << selectedItem.name << " cannot be equipped.";
         LogSystem::PrintStringsOnLog({ SS.str() });
-    }
-    else if (selectedItem.type == ItemType::Armor) 
-    {
-        slotIndex = (int)EquipSlot::Armor;
-        player->SetDefense(player->GetDefense() + selectedItem.value);
-        SS << "[Effect] Defense boosted by " << selectedItem.value << "!";
-        LogSystem::PrintStringsOnLog({ SS.str() });
-    }
-    else 
-    {
-        LogSystem::PrintStringsOnLog({ "[System] This item cannot be equipped." });
         return;
     }
 
-    // Assign the item address to the corresponding slot
+    int slotIndex = (selectedItem.type == ItemType::Weapon) ? (int)EquipSlot::Weapon : (int)EquipSlot::Armor;
+
+    UnequipSlot(slotIndex);
+
+    selectedItem.equiped = true;
+
+    if (selectedItem.type == ItemType::Weapon)
+    {
+        player->SetAttack(player->GetAttack() + selectedItem.value);
+        SS.str("");
+        SS << "[Effect] Attack boosted by " << selectedItem.value << "!";
+    }
+    else
+    {
+        player->SetDefense(player->GetDefense() + selectedItem.value);
+        SS.str("");
+        SS << "[Effect] Defense boosted by " << selectedItem.value << "!";
+    }
+    LogSystem::PrintStringsOnLog({ SS.str() });
+
     equippedSlots[slotIndex] = selectedItem.id;
 
     SS.str("");
