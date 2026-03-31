@@ -328,6 +328,7 @@ void GameFlowManager::CheckInventory() {
 		else if (selection == 3) {
 			vector<string> CloseInven = { "Close Inventory" };
 			LogSystem::PrintStringsOnLog(CloseInven);
+			LogSystem::ClearMainBuffer();
 			break;
 		}
 	}
