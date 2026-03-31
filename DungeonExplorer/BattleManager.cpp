@@ -280,7 +280,7 @@ void BattleManager::UsePotionToPer(float perHP){
                 SS << "[System] " << c.GetName() << " HP : " << playerHP;
                 LogSystem::PrintStringsOnLog({ SS.str() });
 
-                inv->UseItem();
+                inv->UseItem(302);
                 SS.str("");
                 std::cout << "[System] " << c.GetName() << " HP : " << c.GetHP() << std::endl;
                 LogSystem::PrintStringsOnLog({ SS.str() });

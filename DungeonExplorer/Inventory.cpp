@@ -129,7 +129,7 @@ void Inventory::UseItem(int num)
         return;
     }
 
-    for (auto it = ownedItems.begin(); it != ownedItems.end(); )
+    for (auto it = ownedItems.begin(); it != ownedItems.end(); ++it)
     {
             Character* player = Character::GetInstance();
             if (player == nullptr) return;
