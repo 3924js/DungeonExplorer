@@ -1,4 +1,6 @@
 ﻿#include "Store.h"
+#include "LogSystem.h"
+#include <sstream>
 
 using namespace std;
 
@@ -22,19 +24,21 @@ void Store::InitializeStore()
 
 void Store::ShowShopMenu(int playerGold) const
 {
-    cout << "\n================ [ SHOP MENU ] ================" << endl;
-    cout << " [ Current Gold: " << playerGold << " G ]" << endl;
-    cout << "-----------------------------------------------" << endl;
-
+    vector<string> Inputs;
+    stringstream SS;
+    SS.str("");
+    Inputs.push_back(SS.str());
     for (size_t i = 0; i < shopItemIDs.size(); ++i)
     {
         Item* item = ItemManager::GetInstance().GetItemById(shopItemIDs[i]);
         if (item)
         {
-            cout << "[" << i + 1 << "] " << item->name  << " | Price: " << item->price << " G" << endl;
+            SS.str("");
+            SS << "[" << i + 1 << "] " << item->name << " | Price: " << item->price << " G";
+            Inputs.push_back(SS.str());
         }
     }
-    cout << "===============================================" << endl;
+    LogSystem::PrintStringsOnMain(Inputs);
 }
 
 void Store::BuyItem(int selection, int& playerGold, Inventory& playerInventory)
@@ -45,17 +49,21 @@ void Store::BuyItem(int selection, int& playerGold, Inventory& playerInventory)
     int itemId = shopItemIDs[index];
     Item* masterData = ItemManager::GetInstance().GetItemById(itemId);
 
+    //
     // Check if player has enough gold
     if (playerGold >= masterData->price)
     {
         playerGold -= masterData->price;
         // Create a new item instance and add to inventory
         playerInventory.AddItem(ItemFactory::CreateItem(itemId));
-        cout << "[System] Purchase success! Current Gold: " << playerGold << " G" << endl;
+        stringstream SS;
+        SS.str("");
+        SS << "[System] Purchase success! Current Gold: " << playerGold << " G" << endl;
+        LogSystem::PrintStringsOnLog({ SS.str() });
     }
     else
     {
-        cout << "[System] Not enough gold!" << endl;
+        LogSystem::PrintStringsOnLog({ "[System] Not enough gold!" });
     }
 }
 
@@ -68,7 +76,7 @@ void Store::SellItem(int selection, int& playerGold, Inventory& playerInventory)
 
     if (index < 0 || index >= (int)items.size())
     {
-        cout << "[System] Invalid inventory number!" << endl;
+        LogSystem::PrintStringsOnLog({ "[System] Invalid inventory number!" });
         return;
     }
 
@@ -76,7 +84,9 @@ void Store::SellItem(int selection, int& playerGold, Inventory& playerInventory)
     int refund = static_cast<int>(itemToSell.price * sellReturnRate);
 
     playerGold += refund;
-    cout << "[System] Sold " << itemToSell.name << " for " << refund << " G." << endl;
+    stringstream SS;
+    SS << "[System] Sold " << itemToSell.name << " for " << refund << " G." << endl;
+    LogSystem::PrintStringsOnLog({SS.str()});
 
     playerInventory.RemoveItem(index);
 }

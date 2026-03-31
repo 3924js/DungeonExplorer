@@ -519,5 +519,4 @@ public:
 		PushToLogBuffer(LS.LogDeque);
 		UpdateFrame();
 	}
-	
 };
