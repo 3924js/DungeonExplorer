@@ -371,16 +371,17 @@ public:
 		LogSystem& LS = LogSystem::GetInstance();
 		std::stringstream SS;
 
-		LS.PushLog(">>> There are some items... ");
+		LS.PushMain(">>> There are some items... ");
 		for (int i = 0; i < Items.size(); i++) {
 			SS.str("");
-			SS << "-> [" << i+1 << "] " << GetHighlightColor(Items[i]) << Items[i].name << TextFormat::DEFAULT
-				<< std::string(15 - Items[i].name.size(), ' ') << Items[i].value << " Gold(s): "
+			SS << "-> [" << i+1 << "] " 
+				<< GetHighlightColor(Items[i]) << Items[i].name << TextFormat::DEFAULT
+				<< std::string((std::max)(static_cast<int>(20 - Items[i].name.size()), 1), ' ') << (Items[i].equiped ? "(Equiped) " : "          ") << Items[i].value << " Gold(s): "
 				<< Items[i].desc;
-			LS.PushLog(SS);
+			LS.PushMain(SS);
 		}
-		LS.PushLog(TextFormat::SPLIT_LINE);
-		PushToLogBuffer(LS.LogDeque);
+		LS.PushMain(TextFormat::SPLIT_LINE);
+		PushToMainBuffer(LS.MainDeque);
 		UpdateFrame();
 	}
 
