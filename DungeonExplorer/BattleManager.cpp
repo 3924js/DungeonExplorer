@@ -61,12 +61,14 @@ bool BattleManager::AutoBattle(std::vector<Monster*>& m){
         // Check die all monsters -> Win 
         if (target == nullptr)
             break;
+        
         std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT  << " Turn count : " << turnCount << std::endl;
+        
         // Check alive monster
         int aliveCount = 0;
         for (auto monsters : m) { if (monsters != nullptr && monsters->getHealth() > 0) { aliveCount++; } }
+        
         std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " Alive Monsters count : " << aliveCount << std::endl;
-        std::cout << ">>> Player HP " << c.GetHP() << std::endl;
         
         UsePotionToPer(0.4f);
         
@@ -104,8 +106,6 @@ bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target){
         Job* playerJob = GameManager::GetInstance().getPlayerJob();
         int skillDamage = playerJob->SkillDamage(c);
         
-        std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
-        << " " << c.GetName() << " use skill !!" << std::endl;
         // Skill All monster attack
         LogSystem::UseSkill(target, playerJob->SkillName(), skillDamage);
         for (auto& monsters : m)
@@ -139,8 +139,11 @@ void BattleManager::MonstersTurn(std::vector<Monster*>& m){
             if (c.GetDefense() > monsterDamage)
             {
                 LogSystem::AttackPlayer(monsters, 0);
+                
+                // Miss message
                 std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
                 << " Your high defense blocked the attack!! " << std::endl;
+                
             }   
             else
             {
@@ -154,24 +157,34 @@ void BattleManager::MonstersTurn(std::vector<Monster*>& m){
 
 void BattleManager::ApplyDiceResult(DiceResult result){
     LogSystem::RollDice(result.diceNum);
-    // std::cout << "[Dice] Your dice : " << result.diceNum << std::endl;
+    
+    // Dice description 
     std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " \"" << result.description << "\"" << std::endl;
     if (result.hpDelta != 0)
     {
         c.SetMaxHP(c.GetMaxHP() + result.hpDelta);
+        
+        // + Max hp message
         std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
         << " Player hp add : " << result.hpDelta << ", Player Max hp : " << c.GetMaxHP() << std::endl;
+        
     }
     if (result.atkDelta != 0)
     {
-        // Set Character Attack
+
         c.SetAttack(c.GetAttack() + result.atkDelta);
+        
+        // + Character Attack Message
         std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
         << " Player attack add : " << result.atkDelta << ", Player Atk : " << c.GetAttack() << std::endl;
     }
-    if (result.missChance != 0) { 
+    if (result.missChance != 0) 
+    { 
+        
+        // + Miss Chance message
         std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
         << " Player miss Chance -" << result.missChance << std::endl; 
+        
     }
 }
 
@@ -188,6 +201,7 @@ void BattleManager::UsePotionToPer(float perHP){
         {
             if (it->id == 301 || it->id == 302)
             {
+                // HP 40% message
                 std::cout << TextFormat::RED 
                 << "[System] " << c.GetName() << " HP is Only " << perHP * 100 << "% !!!!" 
                 << TextFormat::DEFAULT << std::endl;
@@ -239,6 +253,7 @@ void BattleManager::StartBossBattle(Monster* boss){
             if (c.GetDefense() > bossDamage)
             {
                 LogSystem::AttackPlayer(boss, 0);
+                
                 std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
                 << " Your high defense blocked the attack!! " << std::endl;
             }   
@@ -257,6 +272,8 @@ void BattleManager::StartBossBattle(Monster* boss){
             if (c.GetDefense() > bossSkillDamage)
             {
                 LogSystem::AttackPlayer(boss, 0);
+                
+                
                 std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
                 << " Your high defense blocked the attack!! " << std::endl;
             }   
