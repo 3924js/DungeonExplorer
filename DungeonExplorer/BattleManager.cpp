@@ -21,7 +21,6 @@ void BattleManager::StartBattle(){
     ApplyDiceResult(diceResult);
     // std::cout << "[Spawn] Spawn monsters!" << std::endl;
     LogSystem::EnterBattle(m);
-    system("pause");
     bool isWin = AutoBattle(m);
     // End battle, stage random event.
     StageManager::GetInstance().RunRandomEvent(20);
@@ -114,7 +113,11 @@ bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target, int i
         if (target != nullptr && target->getHealth() <= 0)
         {
             LogSystem::KillMonster(target);
+            MonsterStatus = vector<int>(m.size(), 1);
+            MonsterStatus[index] = 0;
+            SpriteManager::SetMonsterStatus(MonsterStatus);
             killedMonster.push_back(target);
+
             target = nullptr;
         }
     }
@@ -128,6 +131,8 @@ bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target, int i
         LogSystem::UseSkill(target, playerJob->SkillName(), skillDamage);
         vector<int> MonsterStatus(m.size(), 3);
         SpriteManager::SetMonsterStatus(MonsterStatus);
+        MonsterStatus = vector<int>(m.size(), 1);
+        int i = 0; //monster sprite index
         for (auto& monsters : m)
         {
             if (monsters->getHealth() > 0)
@@ -135,9 +140,14 @@ bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target, int i
                 // Job Damage
                 monsters->takeDamage(skillDamage);
                 // if Kill monster
-                if (monsters->getHealth() <= 0){ killedMonster.push_back(monsters); }
+                if (monsters->getHealth() <= 0){
+                    killedMonster.push_back(monsters);
+                    MonsterStatus[i] = 0;
+                }
             }
+            i++;
         }
+        SpriteManager::SetMonsterStatus(MonsterStatus);
         
     }
     // if kill monsters message
@@ -186,6 +196,7 @@ void BattleManager::MonstersTurn(std::vector<Monster*>& m){
                 SpriteManager::SetMonsterStatus(MonsterStatus);
             }
         }
+        index++;
     }
 }
 
@@ -283,6 +294,7 @@ void BattleManager::StartBossBattle(){
         {
             boss->takeDamage(c.GetAttack());
             LogSystem::AttackMonster(boss, c.GetAttack());
+            SpriteManager::SetMonsterStatus({ 3 });
         }
         // Player use skill
         else if (bossTurn % 3 == 0)
@@ -291,6 +303,7 @@ void BattleManager::StartBossBattle(){
             int skillDamage = playerJob->SkillDamage(c);
             boss->takeDamage(skillDamage);
             LogSystem::AttackMonster(boss, skillDamage);
+            SpriteManager::SetMonsterStatus({ 3 });
         }
         
         // Check alive boss
@@ -308,7 +321,7 @@ void BattleManager::StartBossBattle(){
             if (c.GetDefense() > bossDamage)
             {
                 LogSystem::AttackPlayer(boss, 0);
-                
+                SpriteManager::SetMonsterStatus({ 2 });
                 SS.str("");
                 SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
                 << " Your high defense blocked the attack!! ";
@@ -319,6 +332,7 @@ void BattleManager::StartBossBattle(){
                 int resultDamage = bossDamage - c.GetDefense();
                 c.SetHP(c.GetHP() - resultDamage);
                 LogSystem::AttackPlayer(boss, resultDamage);
+                SpriteManager::SetMonsterStatus({ 2 });
             }
         }
         // boss skill
@@ -329,6 +343,7 @@ void BattleManager::StartBossBattle(){
             if (c.GetDefense() > bossSkillDamage)
             {
                 LogSystem::AttackPlayer(boss, 0);
+                SpriteManager::SetMonsterStatus({ 2 });
                 
                 SS.str("");
                 SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
@@ -349,6 +364,7 @@ void BattleManager::StartBossBattle(){
                 SS << "-> The Player has taken " << resultDamage << " damage!" << std::endl;
                 Input.push_back(SS.str());
                 LogSystem::PrintStringsOnLog(Input);
+                SpriteManager::SetMonsterStatus({ 2 });
                 
                 c.SetHP(c.GetHP() - resultDamage);
             }
@@ -359,6 +375,7 @@ void BattleManager::StartBossBattle(){
     // Check isWin
     if (isWin)
     {
+        SpriteManager::SetMonsterStatus({ 0 });
         GameManager::GetInstance().setGameClear();
     }
 }
