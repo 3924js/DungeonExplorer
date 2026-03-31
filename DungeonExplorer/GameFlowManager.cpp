@@ -18,8 +18,7 @@ vector<string> chooseAction = {
 	"Choose the next Action" ,
 	"1. Fight Monster",
 	"2. Enter Store",
-	"3. Show Inventory",
-	"Select next path : "
+	"3. Show Inventory"
 };
 
 vector<string> InvalidInput = { "is InValid Input" };
@@ -42,6 +41,8 @@ GameFlowManager::GameFlowManager() :
 void GameFlowManager::run() {
 	setupPlayer();
 
+	ItemManager::GetInstance().Initialize();
+
 	while(!gm.getIsGameClear()) {
 		if (gm.getPlayer()->GetHP() > 0) {
 			selectNextNode();
@@ -61,7 +62,7 @@ void GameFlowManager::setupPlayer() {
 	setPlayer.push_back("Let's sey your Player name. ");
 	LogSystem::PrintStringsOnLog(setPlayer);
 	setPlayer.clear();
-	cout << TextFormat::YELLOW << "Input Player Name: " << TextFormat::DEFAULT;
+	cout << TextFormat::CYAN << "Input Player Name:" << TextFormat::DEFAULT;
 	// Enter name allowing spces
 	while (true) {
 		getline(cin, name);
@@ -89,7 +90,7 @@ void GameFlowManager::setupPlayer() {
 	setPlayer.push_back("2. Wizard");
 	setPlayer.push_back("3. Archer");
 	LogSystem::PrintStringsOnLog(setPlayer);
-	cout << TextFormat::YELLOW << "Enter Job Number: ";
+	cout << TextFormat::CYAN << "Enter Job Number:" << TextFormat::DEFAULT;
 	while (!(cin >> jNum)) {
 		cin.clear();
 		cin.ignore(1000, '\n');
@@ -129,6 +130,7 @@ void GameFlowManager::selectNextNode() {
 
 	while (true) {
 		LogSystem::PrintStringsOnLog(chooseAction);
+		cout << TextFormat::CYAN << "Select next path :" << TextFormat::DEFAULT;
 
 		// Guard Invalid Input
 		if (!(cin >> nextNode)) {
@@ -171,7 +173,7 @@ void GameFlowManager::battleNode() {
 	// Select Stage
 	if (level <= 3) {
 		if (currentStage != EStage::DARK_CAVE) {
-			string move = gm.getPlayer()->GetName() + " move to the Dark_Cave";
+			string move = gm.getPlayer()->GetName() + " move to the Dark Cave";
 			moveStage.push_back(move);
 			LogSystem::PrintStringsOnLog(moveStage);
 
@@ -180,7 +182,7 @@ void GameFlowManager::battleNode() {
 	}
 	else if (level <= 6) {
 		if (currentStage != EStage::DIRTY_SWAMP) {
-			string move = gm.getPlayer()->GetName() + " move to the Dirty_Swamp";
+			string move = gm.getPlayer()->GetName() + " move to the Dirty Swamp";
 			moveStage.push_back(move);
 			LogSystem::PrintStringsOnLog(moveStage);
 
@@ -190,7 +192,7 @@ void GameFlowManager::battleNode() {
 	else if (level <= 9) {
 		cout << "Stage 3\n";
 		if (currentStage != EStage::MISTY_FOREST) {
-			string move = gm.getPlayer()->GetName() + " move to the Misty  Fores";
+			string move = gm.getPlayer()->GetName() + " move to the Misty Fores";
 			moveStage.push_back(move);
 			LogSystem::PrintStringsOnLog(moveStage);
 
@@ -232,21 +234,20 @@ void GameFlowManager::storeNode() {
 	gm.getPlayer()->SetHP(maxHp);
 
 	// Initialize Store
-	ItemManager::GetInstance().Initialize();
 	Store store;
 	store.InitializeStore();
 
 	int selection;
 	while (1) {
 		LogSystem::PrintStringsOnLog(chooseStoreAction);
-		cout << "Enter Choice: ";
+		cout << TextFormat::CYAN <<"Enter Choice:" << TextFormat::DEFAULT;
 		cin >> selection;
 		int& gold = gm.getPlayer()->GetGold();
 		// Show Store Item & Buy Item
 		if (selection == 1) {
 			store.ShowShopMenu(gold);
 			int ItemSelect;
-			cout << "Enter the Item Number to Buy: ";
+			cout << TextFormat::CYAN << "Enter the Item Number to Buy: " << TextFormat::DEFAULT;
 			cin >> ItemSelect;
 			store.BuyItem(ItemSelect, gold, *gm.getInventory());
 		}
@@ -254,7 +255,7 @@ void GameFlowManager::storeNode() {
 		else if (selection == 2) {
 			LogSystem::ShowItems(gm.getInventory()->GetOwnedItems());
 			int ItemSelect;
-			cout << "Enter the Item Number to Sell: ";
+			cout << TextFormat::CYAN << "Enter the Item Number to Sell: " << TextFormat::DEFAULT;
 			cin >> ItemSelect;
 			store.SellItem(ItemSelect, gold, *gm.getInventory());
 		}
