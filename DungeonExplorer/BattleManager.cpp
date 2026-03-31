@@ -34,8 +34,8 @@ void BattleManager::StartBattle(){
         // Reward 
         BattleSupply::GetInstance().BattleReward(); 
         // buff effect end
-        // Inventory* inv = GameManager::GetInstance().getInventory();
-        // inv->SetTempAtkBuff(0);
+        Inventory* inv = GameManager::GetInstance().getInventory();
+        inv->SetTempAtkBuff(0);
     }
     // Delete new monsters
     for (Monster* monsters : m)
@@ -270,7 +270,7 @@ void BattleManager::UsePotionToPer(float perHP){
             if (it->id == 301 || it->id == 302)
             {
                 stringstream SS;
-                // HP perHP message
+                // HP 40% message
                 SS << TextFormat::RED 
                 << "[System] " << c.GetName() << " HP is Only " << perHP * 100 << "% !!!!" 
                 << TextFormat::DEFAULT;
@@ -280,10 +280,7 @@ void BattleManager::UsePotionToPer(float perHP){
                 SS << "[System] " << c.GetName() << " HP : " << playerHP;
                 LogSystem::PrintStringsOnLog({ SS.str() });
 
-                // Use message
-                if (it->id == 301) inv->UseItem(301);
-                else inv->UseItem(302);
-                
+                inv->UseItem(302);
                 SS.str("");
                 std::cout << "[System] " << c.GetName() << " HP : " << c.GetHP() << std::endl;
                 LogSystem::PrintStringsOnLog({ SS.str() });
