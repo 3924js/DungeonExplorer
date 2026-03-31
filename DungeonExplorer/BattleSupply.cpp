@@ -62,9 +62,6 @@ void BattleSupply::BattleReward(){
     int totalGold = 0;
     int totalEXP = 0;
     
-    int playerGold = player->GetGold();
-    int getEXP = player->GetEXP();
-    
     for (auto m : rewardList)
     {
         MonsterReward rewardMob = BattleTable::GetRewardToMonster(m);
@@ -77,6 +74,9 @@ void BattleSupply::BattleReward(){
 
         if (randomChance <= rewardMob.dropRate )
         {
+            int getEXP = player->GetEXP();
+            int playerGold = player->GetGold();
+            
             player->SetEXP(getEXP + randomEXP);
             player->SetGold(playerGold + randomGold);
             totalEXP += randomEXP;
@@ -90,6 +90,7 @@ void BattleSupply::BattleReward(){
             << " " << m << " dropped nothing. (" << rewardMob.dropRate * 100 << "% drop) \n";
         }
     }
+    
     LogSystem::GetReward(totalEXP, totalGold, getItemList);
     rewardList.clear();
 }
