@@ -27,7 +27,7 @@ void BattleManager::StartBattle(){
     
     if (isWin && c.GetHP() > 0)
     {
-        std::cout << "[System] Kill all monster! win character!!!\n";
+        std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " Kill all monster! win character!!!\n";
         // Reward 
         BattleSupply::GetInstance().BattleReward(); 
         // buff effect end
@@ -68,11 +68,11 @@ bool BattleManager::AutoBattle(std::vector<Monster*>& m){
         // Check die all monsters -> Win 
         if (target == nullptr)
             break;
-        std::cout << "[System] Turn count : " << turnCount << std::endl;
+        std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT  << " Turn count : " << turnCount << std::endl;
         // Check alive monster
         int aliveCount = 0;
         for (auto monsters : m) { if (monsters != nullptr && monsters->getHealth() > 0) { aliveCount++; } }
-        std::cout << "[System] " << "Alive Monsters count : " << aliveCount << std::endl;
+        std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " Alive Monsters count : " << aliveCount << std::endl;
         std::cout << ">>> Player HP " << c.GetHP() << std::endl;
         
         UsePotionToPer(0.4f);
@@ -91,7 +91,7 @@ bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target){
     int randomResult = RandomManager::GetInstance().GetRange(1, 100);
     if (randomResult <= diceResult.missChance)
     {
-        std::cout << "[System] Miss!!  \"" << diceRoll.missMessage() << "\"\n";
+        std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " Miss!!  \"" << diceRoll.missMessage() << "\"\n";
     }
     // Player attack monster(target)
     else if (turnCount % 3 != 0)
@@ -109,19 +109,18 @@ bool BattleManager::PlayerTurn(std::vector<Monster*>& m, Monster*& target){
     else if (turnCount % 3 == 0)
     {
         Job* playerJob = GameManager::GetInstance().getPlayerJob();
+        int skillDamage = playerJob->SkillDamage(c);
         
-        std::cout << "[System] " << c.GetName() << " use skill !! "  
-         << playerJob->SkillName() << std::endl;
+        std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
+        << " " << c.GetName() << " use skill !!" << std::endl;
         // Skill All monster attack
+        LogSystem::UseSkill(target, playerJob->SkillName(), skillDamage);
         for (auto& monsters : m)
         {
             if (monsters->getHealth() > 0)
             {
                 // Job Damage
-                int skillDamage = playerJob->SkillDamage(c);
                 monsters->takeDamage(skillDamage);
-                
-                LogSystem::AttackMonster(monsters, skillDamage);
                 // if Kill monster
                 if (monsters->getHealth() <= 0){ killedMonster.push_back(monsters); }
             }
@@ -143,8 +142,19 @@ void BattleManager::MonstersTurn(std::vector<Monster*>& m){
     {
         if (monsters->getHealth() > 0)
         {
-            c.SetHP(c.GetHP() + c.GetDefense() - monsters->Attack());
-            LogSystem::AttackPlayer(monsters, monsters->getAttack());
+            int monsterDamage = monsters->Attack();
+            if (c.GetDefense() > monsterDamage)
+            {
+                LogSystem::AttackPlayer(monsters, 0);
+                std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
+                << " Your high defense blocked the attack!! " << std::endl;
+            }   
+            else
+            {
+                int resultDamage = monsterDamage - c.GetDefense();
+                c.SetHP(c.GetHP() - resultDamage);
+                LogSystem::AttackPlayer(monsters, resultDamage);
+            }
         }
     }
 }
@@ -152,24 +162,24 @@ void BattleManager::MonstersTurn(std::vector<Monster*>& m){
 void BattleManager::ApplyDiceResult(DiceResult result){
     LogSystem::RollDice(result.diceNum);
     // std::cout << "[Dice] Your dice : " << result.diceNum << std::endl;
-    std::cout << "[System] \"" << result.description << "\"" << std::endl;
+    std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " \"" << result.description << "\"" << std::endl;
     if (result.hpDelta != 0)
     {
-        // Set Character hp
-        if (result.hpDelta > 0)
-        {
-            c.SetHP(c.GetMaxHP() + result.hpDelta);
-        }
-        else { c.SetHP(c.GetMaxHP() + result.hpDelta); }
-        std::cout << "[System] Player hp add : " << result.hpDelta << ", Player hp : " << c.GetHP() << std::endl;
+        c.SetMaxHP(c.GetMaxHP() + result.hpDelta);
+        std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
+        << " Player hp add : " << result.hpDelta << ", Player Max hp : " << c.GetMaxHP() << std::endl;
     }
     if (result.atkDelta != 0)
     {
         // Set Character Attack
         c.SetAttack(c.GetAttack() + result.atkDelta);
-        std::cout << "[System] Player attack add : " << result.atkDelta << ", Player Atk : " << c.GetAttack() << std::endl;
+        std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
+        << " Player attack add : " << result.atkDelta << ", Player Atk : " << c.GetAttack() << std::endl;
     }
-    if (result.missChance != 0) { std::cout << "[System] Player miss Chance -" << result.missChance << std::endl; }
+    if (result.missChance != 0) { 
+        std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
+        << " Player miss Chance -" << result.missChance << std::endl; 
+    }
 }
 
 void BattleManager::UsePotionToPer(float perHP){
@@ -201,9 +211,6 @@ void BattleManager::StartBossBattle(Monster* boss){
     GameFlowManager GFM;
     bool isWin = 0;
     int bossTurn = 1;
-
-    int normalDamage = normalAtk.calculateDamage(boss->getAttack());
-    int specialDamage = specialAtk.calculateDamage(boss->getAttack());
     
     while(c.GetHP() >  0){
         std::cout << "[System] Turn Count : " << bossTurn << std::endl;
@@ -225,23 +232,53 @@ void BattleManager::StartBossBattle(Monster* boss){
             LogSystem::AttackMonster(boss, skillDamage);
         }
         
-        // boss turn
-        if (bossTurn % 2 != 0)
-        {
-            c.SetHP(c.GetHP() + c.GetDefense() - normalDamage);
-            LogSystem::AttackPlayer(boss, normalDamage);
-        }
-        // boss skill
-        else if (bossTurn % 2 == 0)
-        {
-            c.SetHP(c.GetHP() + c.GetDefense() - specialDamage);
-            LogSystem::AttackPlayer(boss, specialDamage);
-        }
-        
+        // Check alive boss
         if (boss->getHealth() <= 0)
         {
             isWin = 1;
             break;
+        }
+        
+        // boss turn
+        if (bossTurn % 3 != 0)
+        {
+            boss->SetStrategy(std::make_unique<NormalAttack>());
+            int bossDamage = boss->getAttack();
+            if (c.GetDefense() > bossDamage)
+            {
+                LogSystem::AttackPlayer(boss, 0);
+                std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
+                << " Your high defense blocked the attack!! " << std::endl;
+            }   
+            else
+            {
+                int resultDamage = bossDamage - c.GetDefense();
+                c.SetHP(c.GetHP() - resultDamage);
+                LogSystem::AttackPlayer(boss, resultDamage);
+            }
+        }
+        // boss skill
+        else if (bossTurn % 3 == 0)
+        {
+            boss->SetStrategy(std::make_unique<SpecialAttack>());
+            int bossSkillDamage = boss->getAttack();
+            if (c.GetDefense() > bossSkillDamage)
+            {
+                LogSystem::AttackPlayer(boss, 0);
+                std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
+                << " Your high defense blocked the attack!! " << std::endl;
+            }   
+            else
+            {
+                int resultDamage = bossSkillDamage - c.GetDefense();
+                
+                // useSKill Log
+                std::cout << ">>> The BOSS casts a skill!" << std::endl;
+                std::cout << "-> " << TextFormat::MAGENTA << "Feel my power!" << TextFormat::DEFAULT << "!" << std::endl;
+                std::cout << "-> The Player has taken " << resultDamage << " damage!" << std::endl;
+                
+                c.SetHP(c.GetHP() - resultDamage);
+            }
         }
         ++bossTurn;
     }

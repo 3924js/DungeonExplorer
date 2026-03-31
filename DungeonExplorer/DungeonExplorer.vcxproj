@@ -123,13 +123,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-<ItemGroup>
+  <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CreateMonster.cpp" />
     <ClCompile Include="Goblin.cpp" />
     <ClCompile Include="Orc.cpp" />
     <ClCompile Include="Slime.cpp" />
+    <ClCompile Include="StageMistyForest.cpp" />
     <ClCompile Include="Troll.cpp" />
     <ClCompile Include="Archer.cpp" />
     <ClCompile Include="Warrior.cpp" />
@@ -148,14 +149,17 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameFlowManager.cpp" />
     <ClCompile Include="AttackStrategy.cpp" />
-</ItemGroup>
-<ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="Character.h" />
+    <ClInclude Include="LayoutManager.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="CreateMonster.h" />
     <ClInclude Include="Goblin.h" />
     <ClInclude Include="Orc.h" />
     <ClInclude Include="Slime.h" />
+    <ClInclude Include="StageMistyForest.h" />
+    <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Troll.h" />
     <ClInclude Include="Archer.h" />
     <ClInclude Include="Warrior.h" />
@@ -183,7 +187,7 @@
     <ClInclude Include="StageManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameFlowManager.h" />
-</ItemGroup>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

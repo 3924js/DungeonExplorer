@@ -69,13 +69,11 @@ void BattleSupply::BattleReward(){
     {
         MonsterReward rewardMob = BattleTable::GetRewardToMonster(m);
         float randomChance = RandomManager::GetInstance().GetRange(0.0f, 1.0f);
-        int randomEXP = RandomManager::GetInstance().GetRange(10, 30);
+        int randomEXP = RandomManager::GetInstance().GetRange(40, 70);
         int randomGold = RandomManager::GetInstance().GetRange(rewardMob.minGold, rewardMob.maxGold);
-
         
         // Create item
         Item getItem = ItemFactory::CreateItem(rewardMob.itemId);
-
 
         if (randomChance <= rewardMob.dropRate )
         {
@@ -88,11 +86,10 @@ void BattleSupply::BattleReward(){
         }
         else
         {
-            std::cout << "[System] " << m << " dropped nothing. (" << rewardMob.dropRate * 100 << "% drop) \n";
+            std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT
+            << " " << m << " dropped nothing. (" << rewardMob.dropRate * 100 << "% drop) \n";
         }
     }
     LogSystem::GetReward(totalEXP, totalGold, getItemList);
-
-
     rewardList.clear();
 }

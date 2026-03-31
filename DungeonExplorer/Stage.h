@@ -7,11 +7,13 @@ enum EStage{
     NONE = -1,
     DARK_CAVE,
     DIRTY_SWAMP,
+    MISTY_FOREST,
     STAGE_COUNT  // 3
 };
 
 static const std::string StageNames[EStage::STAGE_COUNT] = {"Dark Cave",
-                                                            "Dirty Swamp"
+                                                            "Dirty Swamp",
+                                                            "Misty Forest"
 };
 
 struct StageEvent {
