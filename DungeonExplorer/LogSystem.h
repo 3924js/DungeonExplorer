@@ -109,7 +109,7 @@ private:
 		LS.LogDeque.push_front(ss.str());
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 1) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
 			LS.LogDeque.pop_back();
 		}
 	}
@@ -120,7 +120,7 @@ private:
 		LS.LogDeque.push_front(log);
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 1) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
 			LS.LogDeque.pop_back();
 		}
 	}
