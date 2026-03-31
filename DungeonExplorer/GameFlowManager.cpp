@@ -146,20 +146,22 @@ void GameFlowManager::battleNode() {
 	// Select Stage
 	if (level <= 3) {
 		if (currentStage != EStage::DARK_CAVE) {
-			cout << gm.getPlayer()->GetName() << " move to the DARK_CAVE\n\n";
+			cout << gm.getPlayer()->GetName() << " move to the Dark_Cave\n\n";
 			sManager.SetStage(EStage::DARK_CAVE);
-			currentStage = sManager.GetCurrentStage();
 		}
 	}
 	else if (level <= 6) {
 		if (currentStage != EStage::DIRTY_SWAMP) {
-			cout << gm.getPlayer()->GetName() << " move to the DIRTY_SWAMP\n\n";
+			cout << gm.getPlayer()->GetName() << " move to the Dirty_Swamp\n\n";
 			sManager.SetStage(EStage::DIRTY_SWAMP);
-			currentStage = sManager.GetCurrentStage();
 		}
 	}
 	else if (level <= 9) {
 		cout << "Stage 3\n";
+		if (currentStage != EStage::MISTY_FOREST) {
+			cout << gm.getPlayer()->GetName() << " move to the Misty  Fores\n\n";
+			sManager.SetStage(EStage::MISTY_FOREST);
+		}
 	}
 	else if (level == 10) {
 		bossNode();
@@ -180,7 +182,6 @@ void GameFlowManager::battleNode() {
 		
 		if (playerJob != nullptr) {
 			gm.getPlayer()->LevelUP(*playerJob);
-			delete playerJob;
 		}
 	}
 }

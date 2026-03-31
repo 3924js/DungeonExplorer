@@ -44,16 +44,16 @@ void GameManager::generateMonster(int level) {
 		MonsterType newMonster;
 		string MonsterName;
 		if (level <= 3) {
-			newMonster = MonsterType::Slime;
-			MonsterName = "Slime";
-		}
-		else if (level <= 6) {
 			newMonster = MonsterType::Goblin;
 			MonsterName = "Goblin";
 		}
+		else if (level <= 6) {
+			newMonster = MonsterType::Slime;
+			MonsterName = "Slime";
+		}
 		else if (level <= 9){
-			newMonster = MonsterType::Orc;
-			MonsterName = "Orc";
+			newMonster = MonsterType::Troll;
+			MonsterName = "Trool";
 		}
 		else {
 			cMonster->createBoss("Boss", level);
@@ -66,10 +66,10 @@ void GameManager::generateMonster(int level) {
 
 // Display all items in the inventory
 void GameManager::displayInventory() {
-	// use this after the inventory has benn added to the Character class
 	inven->ShowInventory();
 }
 
+// Show Inventory & Use Item
 void GameManager::useItem() {
 	inven->ShowInventory();
 	inven->UseItem();
