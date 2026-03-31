@@ -14,7 +14,7 @@ public:
 	static Character* GetInstance();
 	static void DestroyInstance(); //singleton instance delete
 
-	void displayStatus() const;
+	//void displayStatus() const;
 	void LevelUP(const Job& job);
 
 	std::string GetName() const;
@@ -27,7 +27,7 @@ public:
 	int GetAttack() const;
 	int GetDefense() const;
 	int GetEXP() const;
-	int GetGold() const;
+	int& GetGold();
 
 	//void SetName(std::string name);
 	//void SetLevel(int level);
