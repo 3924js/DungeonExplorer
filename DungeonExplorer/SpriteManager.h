@@ -56,7 +56,7 @@ private:
 	std::vector<std::vector<std::string>> SP_Attack = { SP_Attack1, SP_Attack2, SP_Attack3, SP_Attack4, SP_Attack5};
 
 	//Monster Sprites, +6 index for each side(ANSI)
-	std::vector<std::string> SP_Goblin = {	"\033[92m     /----\\   \033[0m",		//Green Gobline
+	std::vector<std::string> SP_Goblin = {	"\033[92m     /----\\   \033[0m",	//Green Gobline
 											"\033[92m@ <<<@_ @  >>> \033[0m",
 											"\033[92m @  \\_^__/    \033[0m",
 											"\033[92m  &  /  \\\\   \033[0m",
@@ -141,7 +141,7 @@ private:
 		}
 	}
 public:
-	static void SetMonsterGroup(std::vector<int> NewMonsters) {
+	static void SetMonsterGroup(std::vector<std::string> NewMonsters) {
 		SpriteManager& SM = GetInstance();
 
 		//Reset Monster Group
@@ -153,53 +153,40 @@ public:
 		int origin = LayoutManager::GetMainLength() / (NewMonsters.size() + 1);
 		SM.Monsters = std::vector<MonstAnimStruct>(NewMonsters.size());
 		for (int i = 0; i < NewMonsters.size(); i++) {
-			switch (NewMonsters[i]) {
-			case 1:
-				SM.Monsters[i] = MonstAnimStruct(SM.SP_Goblin, origin + distance * i - 14, 1);
-				break;
-			case 2:
-				SM.Monsters[i] = MonstAnimStruct(SM.SP_Orc, origin + distance * i - 14, 1);
-				break;
-			case 3:
-				SM.Monsters[i] = MonstAnimStruct(SM.SP_Troll, origin + distance * i - 14, 1);
-				break;
-			case 4:
-				SM.Monsters[i] = MonstAnimStruct(SM.SP_Slime, origin + distance * i - 14, 1);
-				break;
-			case 5:
-				SM.Monsters[i] = MonstAnimStruct(SM.SP_Boss, origin + distance * i - 14, 1);
-				break;
-			}
+			if(NewMonsters[i] == "Goblin") SM.Monsters[i] = MonstAnimStruct(SM.SP_Goblin, origin + distance * i - 14, 1);
+			else if (NewMonsters[i] == "Orc") SM.Monsters[i] = MonstAnimStruct(SM.SP_Orc, origin + distance * i - 14, 1);
+			else if (NewMonsters[i] == "Troll") SM.Monsters[i] = MonstAnimStruct(SM.SP_Troll, origin + distance * i - 14, 1);
+			else if (NewMonsters[i] == "Slime") SM.Monsters[i] = MonstAnimStruct(SM.SP_Slime, origin + distance * i - 14, 1);
+			else if (NewMonsters[i] == "Boss") SM.Monsters[i] = MonstAnimStruct(SM.SP_Boss, origin + distance * i - 14, 1);
 		}
 		SM.Status = std::vector<int>(NewMonsters.size(), 1);
 		GenerateSpriteBuffer();
 	}
 
 	//change Monster's sprite status and update the main buffer
-	static void SetMonsterStatus(int which, int status) {
+	static void SetMonsterStatus(std::vector<int> NewStatus) {
 		//set the status and reset non-target monsters' status
 		SpriteManager& SM = GetInstance();
+		bool isAttacking = false;
 		for (int i = 0; i < SM.Status.size(); i++) {
-			if (i == which) SM.Status[i] = status;
-			else if(SM.Status[i] != 0) SM.Status[i] = 1;
+			//if not dead, update status
+			if (SM.Status[i] != 0) {
+				SM.Status[i] = NewStatus[i];
+				if (NewStatus[i] == 3) {
+					isAttacking = true;
+				}
+				
+			}
 		}
 
 		//Generate Buffer depending on the status
-		if (status == 3) {	//when player attacks
-			SM.Status[which] = status;
+		if (isAttacking) {	//when player attacks
 			GenerateAttackedBuffer();
 		}
 		else {	//else
-			SM.Status[which] = status;
 			GenerateSpriteBuffer();
 		}
 	}
-
-	//Attack Animation Handler
-	static void SpawnAttackAnimation() {
-
-	}
-
 };
 
 /*

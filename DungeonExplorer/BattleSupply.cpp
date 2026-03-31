@@ -10,6 +10,10 @@
 #include "ItemFactory.h"
 #include "Inventory.h"
 #include "LogSystem.h"
+#include "SpriteManager.h"
+#include <sstream>
+
+using namespace std;
 
 BattleSupply::BattleSupply(){
     monsterFactory["Goblin"] = CreateMonster::createGoblin;
@@ -31,19 +35,20 @@ std::vector<Monster*> BattleSupply::BattleSpawnMonster(){
     std::vector<std::string> monsterPool = BattleTable::GetMonsterToStage(currentStage);
     if (monsterPool.empty()) return spawnedList; 
     
-    // Monster random count 1 ~ 4 
+    // Monster random count 1 ~ 4
+    vector<string> SpriteList = {};    //for creating Monster Sprite.
     int count = RandomManager::GetInstance().GetRange(1,4);
     for (int i = 0; i < count; ++i)
     {
         int randomIndex = RandomManager::GetInstance().GetRange(0, monsterPool.size() - 1);
         std::string findMonster = monsterPool[randomIndex];
-        
+        SpriteList.push_back(findMonster);  //Count Monster to add on the screen.
         
         // Check monster in MonsterFactory 
         auto it = monsterFactory.find(findMonster);
         if (it == monsterFactory.end())
         {
-            std::cout << "Error not found monster" << std::endl;
+            LogSystem::PrintStringsOnLog({ "Error not found monster" });
             continue; 
         }
         
@@ -54,6 +59,14 @@ std::vector<Monster*> BattleSupply::BattleSpawnMonster(){
         // for reward
         rewardList.push_back(findMonster);
     }
+    SpriteManager::SetMonsterGroup(SpriteList); //Create Monster on the screen.
+    stringstream SS;
+    SS << "Number of Enemies: " << SpriteList.size() << ": ";
+    for (string i : SpriteList) {
+        SS << i << ", ";
+    }
+    LogSystem::PrintStringsOnLog({SS.str()});
+
     return spawnedList; 
 }
 
@@ -90,11 +103,12 @@ void BattleSupply::BattleReward(){
         }
         else
         {
-            std::cout << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT
-            << " " << m << " dropped nothing. (" << rewardMob.dropRate * 100 << "% drop) \n";
+            stringstream SS;
+            SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT
+                << " " << m << " dropped nothing. (" << rewardMob.dropRate * 100 << "% drop)";
+            LogSystem::PrintStringsOnLog({SS.str()});
         }
     }
-    
     LogSystem::GetReward(totalEXP, totalGold, getItemList);
     rewardList.clear();
 }

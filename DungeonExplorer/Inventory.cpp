@@ -2,57 +2,67 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <sstream>
+#include "LogSystem.h"
 #include "Inventory.h"
 
 using namespace std;
 
 void Inventory::AddItem(const Item& newItem) 
 {
+    stringstream SS;
     for (auto it = ownedItems.begin(); it != ownedItems.end(); ++it)
     {
         if (it->id == newItem.id)
         {
             it->count += newItem.count;
-            cout << "[System] " << newItem.name << " stack increased to " << it->count << "." << endl;
+            SS.str("");
+            SS << "[System] " << newItem.name << " stack increased to " << it->count << ".";
+            LogSystem::PrintStringsOnLog({ SS.str()});
             return;
         }
     }
     ownedItems.push_back(newItem);
-    cout << "[System] Added " << newItem.name << " to inventory." << endl;
+    SS.str("");
+    SS << "[System] Added " << newItem.name << " to inventory.";
+    LogSystem::PrintStringsOnLog({ SS.str() });
 }
 
-void Inventory::ShowInventory() const 
+void Inventory::ShowInventory() const
 {
-    cout << "\n--- Current Inventory ---" << endl;
+    vector<string> Input = {};
+    stringstream SS;
+    Input.push_back("--- Current Inventory ---");
 
     if (ownedItems.empty()) 
     {
-        cout << "(Empty)" << endl;
+        Input.push_back("(Empty)");
+        LogSystem::PrintStringsOnMain(Input);
         return;
     }
 
-    for (size_t i = 0; i < ownedItems.size(); ++i) 
+    for (size_t i = 0; i < ownedItems.size(); ++i)
     {
-        cout << "[" << i + 1 << "] ";
-
-        PrintByRarity(ownedItems[i]);
-
-        cout << " (x" << ownedItems[i].count << ")"
-            << " | " << ownedItems[i].desc << endl; 
+        SS.str("");
+        SS << "[" << i + 1 << "] " 
+            << PrintByRarity(ownedItems[i]) 
+            << " (x" << ownedItems[i].count << ")"
+            << " | " << ownedItems[i].desc;
+        Input.push_back(SS.str());
+        
     }
-
-    cout << "-------------------------\n" << endl;
+    LogSystem::PrintStringsOnMain(Input);
 }
 
 int Inventory::GetItemCount() const { return static_cast<int>(ownedItems.size()); }
 
 void Inventory::UseItem() {
     if (ownedItems.empty()) {
-        std::cout << "[System] Inventory is empty." << std::endl;
+        LogSystem::PrintStringsOnLog({"[System] Inventory is empty."});
         return;
     }
 
-    std::cout << "Enter Item Name: ";
+    LogSystem::PrintStringsOnLog({ "Enter Item Name: " });
     std::string itemName;
     std::cin.ignore();
     std::getline(std::cin, itemName);
@@ -66,28 +76,35 @@ void Inventory::UseItem() {
 
             if (player == nullptr) 
             {
-                std::cout << "[Error] Player not found. Create character first!" << std::endl;
+                LogSystem::PrintStringsOnLog({"[Error] Player not found. Create character first!"});
                 return;
+
             }
 
             if (it->type == ItemType::Potion) 
             {
-                std::cout << "[System] Used " << it->name << "!" << std::endl;
+                stringstream SS;
+                SS << "[System] Used " << it->name << "!";
+                LogSystem::PrintStringsOnLog({ SS.str() });
 
                 // 2. HP Recovery logic
                 if (it->id == 301 || it->id == 302) 
                 {
+                    SS.str("");
                     int finalHP = player->GetHP() + it->value;
                     if (finalHP > player->GetMaxHP()) finalHP = player->GetMaxHP();
                     player->SetHP(finalHP);
-                    std::cout << "[Effect] HP is now " << player->GetHP() << std::endl;
+                    SS << "[Effect] HP is now " << player->GetHP();
+                    LogSystem::PrintStringsOnLog({ SS.str() });
                 }
                 // 3. Temporary Attack Boost logic
                 else if (it->id == 303 || it->id == 304) 
                 {
+                    SS.str("");
                     player->SetAttack(player->GetAttack() + it->value);
                     this->tempAtkBuff = it->value; // add temp attack buff
-                    std::cout << "[Effect] Attack boosted by " << it->value << "!" << " temporarily for this stage!" << std::endl;
+                    SS << "[Effect] Attack boosted by " << it->value << "!" << " temporarily for this stage!";
+                    LogSystem::PrintStringsOnLog({ SS.str() });
                 }
 
                 // 4. Consume item
@@ -97,7 +114,7 @@ void Inventory::UseItem() {
             return;
         }
     }
-    std::cout << "[System] Item not found." << std::endl;
+    LogSystem::PrintStringsOnLog({"[System] Item not found."});
 }
 
 void Inventory::EquipItem(int index) 
@@ -107,7 +124,7 @@ void Inventory::EquipItem(int index)
     // Boundary Check
     if (actualIndex < 0 || actualIndex >= (int)ownedItems.size()) 
     {
-        cout << "[System] Invalid item index!" << endl;
+        LogSystem::PrintStringsOnLog({ "[System] Invalid item index!" });
         return;
     }
 
@@ -116,29 +133,34 @@ void Inventory::EquipItem(int index)
 
     Character* player = Character::GetInstance();
 
+    stringstream SS;
     // Determine the slot based on ItemType
     if (selectedItem.type == ItemType::Weapon) 
     {
         slotIndex = (int)EquipSlot::Weapon;
         player->SetAttack(player->GetAttack() + selectedItem.value);
-        std::cout << "[Effect] Attack boosted by " << selectedItem.value << "!" << std::endl;
+        SS << "[Effect] Attack boosted by " << selectedItem.value << "!";
+        LogSystem::PrintStringsOnLog({ SS.str() });
     }
     else if (selectedItem.type == ItemType::Armor) 
     {
         slotIndex = (int)EquipSlot::Armor;
         player->SetDefense(player->GetDefense() + selectedItem.value);
-        std::cout << "[Effect] Defense boosted by " << selectedItem.value << "!" << std::endl;
+        SS << "[Effect] Defense boosted by " << selectedItem.value << "!";
+        LogSystem::PrintStringsOnLog({ SS.str() });
     }
     else 
     {
-        cout << "[System] This item cannot be equipped." << endl;
+        LogSystem::PrintStringsOnLog({ "[System] This item cannot be equipped." });
         return;
     }
 
     // Assign the item address to the corresponding slot
     equippedSlots[slotIndex] = selectedItem.id;
 
-    cout << "[System] Equipped " << selectedItem.name << " to " << (slotIndex == 0 ? "Weapon" : "Armor") << " slot." << endl;
+    SS.str("");
+    SS << "[System] Equipped " << selectedItem.name << " to " << (slotIndex == 0 ? "Weapon" : "Armor") << " slot.";
+    LogSystem::PrintStringsOnLog({ SS.str() });
 }
 
 void Inventory::SetColor(int color) const
@@ -149,25 +171,28 @@ void Inventory::SetColor(int color) const
     SetConsoleTextAttribute(hConsole, color);
 }
 
-void Inventory::PrintByRarity(const Item& item) const
+string Inventory::PrintByRarity(Item item) const
 {
+    stringstream SS;
     int color = 7; // Default: White
 
     // Selection logic based on Rarity Enum
     switch (item.rarity)
     {
-    case Rarity::Common:    color = 7;  break; // White
-    case Rarity::Rare:      color = 10; break; // Green
-    case Rarity::Legendary: color = 14; break; // Yellow/Gold
-    default:                color = 7;  break;
+    case Rarity::Common:// White
+        SS << TextFormat::WHITE << item.name << TextFormat::DEFAULT;
+        return SS.str();
+    case Rarity::Rare:// Green
+        SS << TextFormat::GREEN << item.name << TextFormat::DEFAULT;
+        return SS.str();
+    case Rarity::Legendary:// Yellow/Gold
+        SS << TextFormat::YELLOW << item.name << TextFormat::DEFAULT;
+        return SS.str();
+    default:// Default
+        SS << TextFormat::WHITE << item.name << TextFormat::DEFAULT;
+        return SS.str();
     }
 
-    // Apply color and print
-    SetColor(color);
-    cout << "[" << item.name << "]";
-
-    // Reset color to White (7) immediately!
-    SetColor(7);
 }
 
 void Inventory::RemoveItem(int index)

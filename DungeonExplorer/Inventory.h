@@ -44,7 +44,7 @@ public:
 
     void SetColor(int color)const;
 
-    void PrintByRarity(const Item& item) const;
+    std::string PrintByRarity(Item item) const;
 
     std::vector<Item>& GetOwnedItems() { return ownedItems; }
 

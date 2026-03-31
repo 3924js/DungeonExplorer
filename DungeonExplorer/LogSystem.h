@@ -109,7 +109,7 @@ private:
 		LS.LogDeque.push_front(ss.str());
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 3) {
 			LS.LogDeque.pop_back();
 		}
 	}
@@ -120,7 +120,7 @@ private:
 		LS.LogDeque.push_front(log);
 
 		//erase the old one if the size is big
-		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 2) {
+		if (LS.LogDeque.size() > LayoutManager::GetLogHeight() - 3) {
 			LS.LogDeque.pop_back();
 		}
 	}
@@ -261,7 +261,6 @@ public:
 		SS.str("");
 		SS << "-> The Monster has taken " << Damage << " damage!";
 		LS.PushLog(SS);
-		LS.PushLog(TextFormat::SPLIT_LINE);
 		PushToLogBuffer(LS.LogDeque);
 		UpdateFrame();
 
@@ -279,7 +278,6 @@ public:
 		SS.str("");
 		SS << "-> The player has taken " << TextFormat::RED << Damage << TextFormat::DEFAULT << " damage!";
 		LS.PushLog(SS);
-		LS.PushLog(TextFormat::SPLIT_LINE);
 		PushToLogBuffer(LS.LogDeque);
 		UpdateFrame();
 		
@@ -372,11 +370,11 @@ public:
 		std::stringstream SS;
 
 		LS.PushLog(">>> There are some items... ");
-		for (const Item& i : Items) {
+		for (int i = 0; i < Items.size(); i++) {
 			SS.str("");
-			SS << "-> " << GetHighlightColor(i) << i.name << TextFormat::DEFAULT
-				<< std::string(15 - i.name.size(), ' ') << i.value << " Gold(s): "
-				<< i.desc;
+			SS << "-> [" << i+1 << "] " << GetHighlightColor(Items[i]) << Items[i].name << TextFormat::DEFAULT
+				<< std::string(15 - Items[i].name.size(), ' ') << Items[i].value << " Gold(s): "
+				<< Items[i].desc;
 			LS.PushLog(SS);
 		}
 		LS.PushLog(TextFormat::SPLIT_LINE);
@@ -421,15 +419,15 @@ public:
 				int len1 = IntStatNames[i].size() + std::to_string(LS.Stats[i]).size();
 				int len2 = IntStatNames[i+1].size() + std::to_string(LS.Stats[i+1]).size();
 				SS << "-> " << IntStatNames[i] << ": " << LS.Stats[i] << "," 
-					<< std::string(std::max(20 - len1, 1), ' ') << "-> " << IntStatNames[i + 1] << ": " << LS.Stats[i + 1]
-					<< std::string(std::max(20 - len2, 1), ' ') << "-> " << IntStatNames[i + 2] << ": " << LS.Stats[i + 2];
+					<< std::string((std::max)(20 - len1, 1), ' ') << "-> " << IntStatNames[i + 1] << ": " << LS.Stats[i + 1]
+					<< std::string((std::max)(20 - len2, 1), ' ') << "-> " << IntStatNames[i + 2] << ": " << LS.Stats[i + 2];
 				i += 2;
 			}
 			else {
 				SS << "-> " << IntStatNames[i] << ": " << LS.Stats[i];
 				if (i + 1 != IntStatTypes::COUNT) {
 					int len1 = IntStatNames[i].size() + std::to_string(LS.Stats[i]).size();
-					SS << std::string(std::max(20 - len1, 1), ' ') << "-> " << IntStatNames[i + 1] << ": " << LS.Stats[i + 1];
+					SS << std::string((std::max)(20 - len1, 1), ' ') << "-> " << IntStatNames[i + 1] << ": " << LS.Stats[i + 1];
 					i++;
 				}
 			}
@@ -442,7 +440,7 @@ public:
 			SS.str("");
 			if (std::next(i) != LS.MonstersEncountered.end()) {
 				int len = (*i).first.size() + std::to_string((*i).second).size();
-				SS << "-> " << (*i).first << ": " << (*i).second << "," << std::string(std::max(20 - len, 1), ' ') << "-> " << (*++i).first << ": " << (*i).second;
+				SS << "-> " << (*i).first << ": " << (*i).second << "," << std::string((std::max)(20 - len, 1), ' ') << "-> " << (*++i).first << ": " << (*i).second;
 			}
 			else {
 				SS << "-> " << (*i).first << ": " << (*i).second;
@@ -455,7 +453,7 @@ public:
 			SS.str("");
 			if (std::next(i) != LS.MonstersKilled.end()) {
 				int len = (*i).first.size() + std::to_string((*i).second).size();
-				SS << "-> " << (*i).first << ": " << (*i).second << "," << std::string(std::max(20 - len, 1), ' ') << "-> " << (*++i).first << ": " << (*i).second;
+				SS << "-> " << (*i).first << ": " << (*i).second << "," << std::string((std::max)(20 - len, 1), ' ') << "-> " << (*++i).first << ": " << (*i).second;
 			}
 			else {
 				SS << "-> " << (*i).first << ": " << (*i).second;
@@ -506,17 +504,35 @@ public:
 		for (std::string input : inputs) {
 			LS.PushMain(input);
 		}
-		LS.PushMain(TextFormat::SPLIT_LINE);
 		PushToMainBuffer(LS.MainDeque);
 		UpdateFrame();
+		Sleep(50);
 	}
 	static void PrintStringsOnLog(std::vector<std::string> inputs) {	//for other class to push content on the main buffer
 		LogSystem& LS = GetInstance();
 		for (std::string input : inputs) {
 			LS.PushLog(input);
 		}
-		LS.PushLog(TextFormat::SPLIT_LINE);
 		PushToLogBuffer(LS.LogDeque);
+		UpdateFrame();
+		Sleep(100);
+	}
+
+	static void ClearMainBuffer() {
+		LogSystem& LS = GetInstance();
+		LS.MainDeque.clear();
+		UpdateFrame();
+	}
+
+	static void ClearLogBuffer() {
+		LogSystem& LS = GetInstance();
+		LS.LogDeque.clear();
+		UpdateFrame();
+	}
+
+	static void ClearSideBuffer() {
+		LogSystem& LS = GetInstance();
+		LS.SideDeque.clear();
 		UpdateFrame();
 	}
 };
