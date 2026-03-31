@@ -143,7 +143,7 @@ public:
 	static void UpdateLog(const std::vector<std::string>& content, int x, int y) {
 		LayoutManager& LM = GetInstance();
 		//place the content to the coordinate
-		for (int i = 0; i < content.size() && y + i < LM.LogHeight - 2; i++) {
+		for (int i = 0; i < content.size() && y + i < LM.LogHeight - 1; i++) {
 			int MaxLength = (std::min)(LM.LogLength - 2 - x, GetPrintLength(content[i]));
 			LM.LogBuffer[y + i + 1].replace(x + 1, MaxLength, content[i]);
 		}
