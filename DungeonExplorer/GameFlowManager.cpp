@@ -14,6 +14,23 @@
 
 using namespace std;
 
+vector<string> chooseAction = {
+	"Choose the next Action" ,
+	"1. Fight Monster",
+	"2. Enter Store",
+	"3. Show Inventory",
+	"Select next path : "
+};
+
+vector<string> InvalidInput = { "is InValid Input" };
+
+vector<string> chooseStoreAction = {
+	"Select Action",
+	"1. buy Item",
+	"2. Sell Item",
+	"3. Leave Store"
+};
+
 // Constructor
 GameFlowManager::GameFlowManager() :
 	gm(GameManager::GetInstance()), 
@@ -39,8 +56,12 @@ void GameFlowManager::run() {
 // Input Player Name & create Player
 void GameFlowManager::setupPlayer() {
 	string name;
-	cout << "Input Player Name: ";
-
+	vector<string> setPlayer;
+	setPlayer.push_back("Welcom to Dungeon Explorer!");
+	setPlayer.push_back("Let's sey your Player name. ");
+	LogSystem::PrintStringsOnLog(setPlayer);
+	setPlayer.clear();
+	cout << TextFormat::YELLOW << "Input Player Name: " << TextFormat::DEFAULT;
 	// Enter name allowing spces
 	while (true) {
 		getline(cin, name);
@@ -50,7 +71,8 @@ void GameFlowManager::setupPlayer() {
 
 		// if the input contains only whitespace
 		if (startBlank == string::npos) {
-			cout << "is InValid value\n Input Player Name: ";
+			LogSystem::PrintStringsOnLog(InvalidInput);
+			cout << "Enter Player Name : ";
 		}
 		else {
 			// Store the input after removing leading whitespace
@@ -62,13 +84,17 @@ void GameFlowManager::setupPlayer() {
 	// Select Player Jobs
 	string jobName;
 	int jNum = 0;
-	cout << "\nSelect Player Job\n";
-	cout << "1. Warrior\n2. Wizard\n3. Archer\n";
-	cout << "Enter Job Number: ";
+	setPlayer.push_back("Select Player Job");
+	setPlayer.push_back("1. Warrior");
+	setPlayer.push_back("2. Wizard");
+	setPlayer.push_back("3. Archer");
+	LogSystem::PrintStringsOnLog(setPlayer);
+	cout << TextFormat::YELLOW << "Enter Job Number: ";
 	while (!(cin >> jNum)) {
 		cin.clear();
 		cin.ignore(1000, '\n');
-		cout << "InVaild Input\nEnter Job Number: ";
+		LogSystem::PrintStringsOnLog(InvalidInput);
+		cout << "Enter Job Number : ";
 	}
 	
 	Job* playerJob = nullptr;
@@ -92,6 +118,7 @@ void GameFlowManager::setupPlayer() {
 
 	LogSystem::CreateCharacter(name, jobName);
 	gm.createPlayer(name, playerJob);
+	LogSystem::UpdateStatus();
 }
 
 // Select next path
@@ -101,15 +128,13 @@ void GameFlowManager::selectNextNode() {
 	int nextNode = 0;
 
 	while (true) {
-		cout << "\nChoose the next Action\n";
-		cout << "1. Fight Monster\n2. Enter Store\n3. Show Status\n";
-		cout << "Select next path : ";
+		LogSystem::PrintStringsOnLog(chooseAction);
 
 		// Guard Invalid Input
 		if (!(cin >> nextNode)) {
 			cin.clear();
 			cin.ignore(1000, '\n');
-			cout << "Invalid Input\n";
+			LogSystem::PrintStringsOnLog(InvalidInput);
 			continue;
 		}
 
@@ -121,10 +146,14 @@ void GameFlowManager::selectNextNode() {
 			storeNode();
 			break;
 		}
+		else if (nextNode == 3) {
+			LogSystem::ShowItems(gm.getInventory()->GetOwnedItems());
+			break;
+		}
 
 		cin.clear();
 		cin.ignore(1000, '\n');
-		cout << "Invaild Input\n";
+		LogSystem::PrintStringsOnLog(InvalidInput);
 	}
 }
 
@@ -138,28 +167,38 @@ void GameFlowManager::battleNode() {
 	}
 
 	int level = gm.getPlayer()->GetLevel();
-
+	vector<string> moveStage;
 	// Select Stage
 	if (level <= 3) {
 		if (currentStage != EStage::DARK_CAVE) {
-			cout << gm.getPlayer()->GetName() << " move to the Dark_Cave\n\n";
+			string move = gm.getPlayer()->GetName() + " move to the Dark_Cave";
+			moveStage.push_back(move);
+			LogSystem::PrintStringsOnLog(moveStage);
+
 			sManager.SetStage(EStage::DARK_CAVE);
 		}
 	}
 	else if (level <= 6) {
 		if (currentStage != EStage::DIRTY_SWAMP) {
-			cout << gm.getPlayer()->GetName() << " move to the Dirty_Swamp\n\n";
+			string move = gm.getPlayer()->GetName() + " move to the Dirty_Swamp";
+			moveStage.push_back(move);
+			LogSystem::PrintStringsOnLog(moveStage);
+
 			sManager.SetStage(EStage::DIRTY_SWAMP);
 		}
 	}
 	else if (level <= 9) {
 		cout << "Stage 3\n";
 		if (currentStage != EStage::MISTY_FOREST) {
-			cout << gm.getPlayer()->GetName() << " move to the Misty  Fores\n\n";
+			string move = gm.getPlayer()->GetName() + " move to the Misty  Fores";
+			moveStage.push_back(move);
+			LogSystem::PrintStringsOnLog(moveStage);
+
 			sManager.SetStage(EStage::MISTY_FOREST);
 		}
 	}
 	else if (level == 10) {
+		string move = gm.getPlayer()->GetName() + " move to the Boss Room";
 		bossNode();
 		return;
 	}
@@ -171,20 +210,22 @@ void GameFlowManager::battleNode() {
 	bManager->StartBattle();
 	
 	// Player Level Up
-	if (gm.getPlayer()->GetEXP() >= 100) {
+	while (gm.getPlayer()->GetEXP() >= 100) {
 		string job = gm.getPlayer()->GetCurrentJob();
 		Job* playerJob = gm.getPlayerJob();
-		
+
 		if (playerJob != nullptr) {
 			gm.getPlayer()->LevelUP(*playerJob);
 		}
 	}
+
+	LogSystem::UpdateStatus();
 }
 
 // Enter Store
 void GameFlowManager::storeNode() {
-	cout << "\nEnter Store\n";
-	// Change to LogSystem Lobby
+	vector<string> enterStore = { "Enter the Store", "Restore Player HP to full"};
+	LogSystem::PrintStringsOnLog(enterStore);
 
 	// Restore HP to maxHP;
 	int maxHp = gm.getPlayer()->GetMaxHP();
@@ -197,8 +238,8 @@ void GameFlowManager::storeNode() {
 
 	int selection;
 	while (1) {
-		cout << "\nSelect Action\n";
-		cout << "1. buy Item\n2. Sell Item\n3. Leave Store\nEnter Choice: ";
+		LogSystem::PrintStringsOnLog(chooseStoreAction);
+		cout << "Enter Choice: ";
 		cin >> selection;
 		int& gold = gm.getPlayer()->GetGold();
 		// Show Store Item & Buy Item
@@ -211,7 +252,7 @@ void GameFlowManager::storeNode() {
 		}
 		// Show Inventory & Sell Item
 		else if (selection == 2) {
-			gm.getInventory()->ShowInventory();
+			LogSystem::ShowItems(gm.getInventory()->GetOwnedItems());
 			int ItemSelect;
 			cout << "Enter the Item Number to Sell: ";
 			cin >> ItemSelect;
@@ -219,16 +260,15 @@ void GameFlowManager::storeNode() {
 		}
 		// Leave Store
 		else if (selection == 3) {
-			cout << "\nLeave the Store\n";
+			vector<string> leaveStore = { "Leave the Store" };
+			LogSystem::PrintStringsOnLog(leaveStore);
 			break;
-
 		}
 	}
 }
 
 // Generate Boss & Battle
 void GameFlowManager::bossNode() {
-	cout << "\nEncounter Boss\n";
 	Monster* boss = gm.generateBoss();
 	if (bManager == nullptr) bManager = &BattleManager::GetInstance();
 	bManager->StartBossBattle(boss);

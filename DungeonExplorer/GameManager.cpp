@@ -36,7 +36,7 @@ GameManager& GameManager::GetInstance() {
 
 // Create Boss Level 10
 Monster* GameManager::generateBoss() {
-	return cMonster->createBoss("Boss", 10);
+	return cMonster->createBoss("Death Knight", 10);
 }
 
 // Display all items in the inventory
