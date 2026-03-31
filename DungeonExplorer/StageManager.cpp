@@ -2,6 +2,7 @@
 #include "StageManager.h"
 #include "StageDarkCave.h"
 #include "StageDirtySwamp.h"
+#include "StageMistyForest.h"
 #include <iostream>
 
 
@@ -30,6 +31,11 @@ void StageManager::SetStage(EStage stageType){
         break; 
     case EStage::DIRTY_SWAMP:
         currentStage = std::make_unique<StageDirtySwamp>();
+        EnterStageEvent();
+        break;
+    case EStage::MISTY_FOREST:
+        currentStage = std::make_unique<StageMistyForest>();
+        EnterStageEvent();
         break;
     }
 }
