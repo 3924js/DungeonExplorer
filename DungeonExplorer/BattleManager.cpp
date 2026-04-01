@@ -50,6 +50,7 @@ void BattleManager::StartBattle(){
 
 bool BattleManager::AutoBattle(std::vector<Monster*>& m){
     stringstream SS;
+    vector<string> Input = {};
     turnCount = 1;
     while (c.GetHP() > 0)
     {
@@ -71,7 +72,7 @@ bool BattleManager::AutoBattle(std::vector<Monster*>& m){
         
         SS.str("");
         SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT  << " Turn count : " << turnCount;
-        LogSystem::PrintStringsOnLog({ SS.str() });
+        Input.push_back(SS.str());
         
         // Check alive monster
         int aliveCount = 0;
@@ -79,7 +80,9 @@ bool BattleManager::AutoBattle(std::vector<Monster*>& m){
         
         SS.str("");
         SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " Alive Monsters count : " << aliveCount << std::endl;
+        Input.push_back(SS.str());
         LogSystem::PrintStringsOnLog({ SS.str() });
+        Input.clear();
         Sleep(500);
         
         UsePotionToPer(0.4f);
@@ -220,9 +223,10 @@ void BattleManager::ApplyDiceResult(DiceResult result){
     LogSystem::RollDice(result.diceNum);
     
     // Dice description
+    vector<string> Input = {};
     stringstream SS;
     SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT << " \"" << result.description << "\"";
-    LogSystem::PrintStringsOnLog({ SS.str() });
+    Input.push_back(SS.str());
     if (result.hpDelta != 0)
     {
         c.SetMaxHP(c.GetMaxHP() + result.hpDelta);
@@ -231,7 +235,7 @@ void BattleManager::ApplyDiceResult(DiceResult result){
         SS.str("");
         SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
         << " Player hp add : " << result.hpDelta << ", Player Max hp : " << c.GetMaxHP();
-        LogSystem::PrintStringsOnLog({ SS.str() });
+        Input.push_back(SS.str());
     }
     if (result.atkDelta != 0)
     {
@@ -242,7 +246,7 @@ void BattleManager::ApplyDiceResult(DiceResult result){
         SS.str("");
         SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
         << " Player attack add : " << result.atkDelta << ", Player Atk : " << c.GetAttack();
-        LogSystem::PrintStringsOnLog({ SS.str() });
+        Input.push_back(SS.str());
     }
     if (result.missChance != 0) 
     { 
@@ -251,9 +255,10 @@ void BattleManager::ApplyDiceResult(DiceResult result){
         SS.str("");
         SS << TextFormat::YELLOW << "[System]" << TextFormat::DEFAULT 
         << " Player miss Chance -" << result.missChance;
-        LogSystem::PrintStringsOnLog({ SS.str() });
+        Input.push_back(SS.str());
         
     }
+    LogSystem::PrintStringsOnLog(Input);
 }
 
 void BattleManager::UsePotionToPer(float perHP){
@@ -269,21 +274,23 @@ void BattleManager::UsePotionToPer(float perHP){
         {
             if (it->id == 301 || it->id == 302)
             {
+                vector<string> Input = {};
                 stringstream SS;
                 // HP 40% message
                 SS << TextFormat::RED 
                 << "[System] " << c.GetName() << " HP is Only " << perHP * 100 << "% !!!!" 
                 << TextFormat::DEFAULT;
-                LogSystem::PrintStringsOnLog({ SS.str() });
+                Input.push_back(SS.str());
 
                 SS.str("");
                 SS << "[System] " << c.GetName() << " HP : " << playerHP;
-                LogSystem::PrintStringsOnLog({ SS.str() });
+                Input.push_back(SS.str());
 
                 inv->UseItem(302);
                 SS.str("");
                 std::cout << "[System] " << c.GetName() << " HP : " << c.GetHP() << std::endl;
-                LogSystem::PrintStringsOnLog({ SS.str() });
+                Input.push_back(SS.str());
+                LogSystem::PrintStringsOnLog(Input);
                 return; 
             }
         }
