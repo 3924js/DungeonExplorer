@@ -39,7 +39,7 @@ private:
 		MainBuffer = std::vector<std::string>(MainHeight, " ");
 		SideBuffer = std::vector<std::string>(SideHeight, " ");
 		LogBuffer = std::vector<std::string>(LogHeight, " ");
-
+		SetConsoleTitle(L"Dungeon Explorer");
 	}
 
 public:
